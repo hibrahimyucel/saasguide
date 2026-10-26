@@ -34,7 +34,13 @@ const monorepo = {
 ## 3. Uyarı Kutuları (Custom Containers)
 
 İçeriklerinizde dikkat çekmek istediğiniz noktalar için yerleşik kutuları kullanın:
+info, tip, warning, danger, details
 
+```
+::: info BİLGİ KUTUSU
+Bu bir genel bilgilendirme kutusudur.
+:::
+```
 ::: info BİLGİ KUTUSU
 Bu bir genel bilgilendirme kutusudur.
 :::
@@ -61,6 +67,13 @@ Bu alan varsayılan olarak kapalı gelir, tıklandığında aşağı doğru aç�
 
 Metinlerin veya başlıkların yanına küçük durum etiketleri yerleştirebilirsiniz:
 
+```
+* Yeni Özellik <Badge type="tip" text="Yeni" />
+* Geliştirme Aşamasında <Badge type="warning" text="Beta" />
+* Zorunlu Alan <Badge type="danger" text="Kritik" />
+* Sürüm Bilgisi <Badge type="info" text="v1.0.0" />
+```
+
 * Yeni Özellik <Badge type="tip" text="Yeni" />
 * Geliştirme Aşamasında <Badge type="warning" text="Beta" />
 * Zorunlu Alan <Badge type="danger" text="Kritik" />
@@ -72,9 +85,15 @@ Metinlerin veya başlıkların yanına küçük durum etiketleri yerleştirebili
 
 Verileri listelemek için hizalama özellikli tablolar kurabilirsiniz:
 
+```
 | Modül | Görevi | Durum |
-| :--- | :--- | :---: |
+| :--- | ---: | :---: |
 | `apps/api` | Backend Servisi | <Badge type="tip" text="Hazır" /> |
 | `apps/docs` | Dokümantasyon | <Badge type="info" text="Güncel" /> |
+```
 
+| Modül | Görevi | Durum |
+| :--- | ---: | :---: |
+| `apps/api` | Backend Servisi | <Badge type="tip" text="Hazır" /> |
+| `apps/docs` | Dokümantasyon | <Badge type="info" text="Güncel" /> |
 

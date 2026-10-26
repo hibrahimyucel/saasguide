@@ -38,6 +38,11 @@ pnpm add <paket-adi> -D -w
 ```bash
 pnpm --filter api add express
 ```
+veya çıkarmak için:
+
+```bash
+pnpm --filter api remove express
+```
 
 ---
 

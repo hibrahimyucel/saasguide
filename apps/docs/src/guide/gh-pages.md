@@ -120,3 +120,18 @@ Kodları push ettikten sonra GitHub tarayıcınızda projenizin sayfasına gidin
 
 Artık her `git push` işleminizde GitHub projenizi otomatik olarak derleyecek ve birkaç dakika içinde dökümantasyon sitenizi yayına alacaktır. Canlı takip sürecini GitHub üzerindeki **Actions** sekmesinden izleyebilirsiniz.
 
+
+### Adım 5: Checkpoint
+  1. Son yapılan tüm güncellemeleri kontrol edin ve ekleyin
+git add .
+
+  2. Checkpoint commit'inizi oluşturun
+git commit -m "checkpoint: pnpm workspaces altyapısı, Türkçe VitePress ve GitHub Pages entegrasyonu tamamlandı"
+
+  3. Bu stabil sürüme kalıcı bir Git Etiketi (Tag) vurun
+git tag -a v1.0.0 -m "Sürüm 1.0.0: İlk kararlı monorepo ve dökümantasyon yapısı"
+
+  4. Kodları ve oluşturduğunuz etiketi GitHub'a push edin
+git push origin main
+git push origin --tags
+
