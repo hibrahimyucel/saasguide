@@ -1,8 +1,4 @@
 {
-  "files": [], // Kök dizinde doğrudan TS kodu derlenmeyecekse boş bırakılır
-  "references": [
-    { "path": "./apps/api" },
-    { "path": "./apps/web" },
-    { "path": "./packages/utils" }
-  ]
+  //"files": [], // Kök dizinde doğrudan TS kodu derlenmeyecekse boş bırakılır
+  "references": []
 }

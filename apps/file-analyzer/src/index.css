@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  /* Varsayılan Tema: Slate Dark (Mevcut sayfa stiliniz) */
+  :root {
+    --color-bg-panel: 2 6 23;
+    /* slate-950 */
+    --color-bg-surface: 15 23 42;
+    /* slate-900 */
+    --color-border-panel: 30 41 59;
+    /* slate-800 */
+    --color-text-main: 203 213 225;
+    /* slate-300 */
+    --color-text-muted: 148 163 184;
+    /* slate-400 */
+    --color-accent: 56 189 248;
+    /* sky-400 */
+  }
+
+  /* Alternatif Tema: Zinc/Gray Dark */
+  [data-theme="zinc-dark"] {
+    --color-bg-panel: 9 9 11;
+    /* zinc-950 */
+    --color-bg-surface: 24 24 27;
+    /* zinc-900 */
+    --color-border-panel: 39 39 42;
+    /* zinc-800 */
+    --color-text-main: 228 228 231;
+    /* zinc-300 */
+    --color-text-muted: 161 161 170;
+    /* zinc-400 */
+    --color-accent: 52 211 153;
+    /* emerald-400 */
+  }
+
+  /* Alternatif Tema: Açık Renk (Light Mode) */
+  [data-theme="light"] {
+    --color-bg-panel: 248 250 252;
+    /* slate-50 */
+    --color-bg-surface: 255 255 255;
+    /* white */
+    --color-border-panel: 226 232 240;
+    /* slate-200 */
+    --color-text-main: 51 65 85;
+    /* slate-700 */
+    --color-text-muted: 100 116 139;
+    /* slate-500 */
+    --color-accent: 37 99 235;
+    /* blue-600 */
+  }
+}

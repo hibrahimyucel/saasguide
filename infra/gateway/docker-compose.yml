@@ -1,0 +1,17 @@
+services:
+  nginx_proxy:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Relative to this specific gateway folder
+      - ./nginx/dev.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    external: true

@@ -1,0 +1,17 @@
+/* Belge içindeki başlık sayılarını (.md içindeki `1.1.A` kısımlarını) şıklaştırır */
+.vp-doc :is(h1, h2, h3, h4) code {
+  background-color: transparent !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-family: var(--vp-font-family-mono), monospace !important;
+  font-variant-numeric: tabular-nums !important;
+  font-size: 0.95em;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* Sayı ile başlık yazısı çok bitişik kalırsa araya hafif boşluk açar */
+.vp-doc h1 code, .vp-doc h2 code, .vp-doc h3 code, .vp-doc h4 code {
+  margin-right: 0.3em;
+}
+

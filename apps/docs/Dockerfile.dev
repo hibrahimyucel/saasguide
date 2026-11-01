@@ -1,0 +1,19 @@
+FROM node:20-alpine
+WORKDIR /app
+
+# Alpine Linux için Git paketini yüklüyoruz
+RUN apk add --no-cache git
+
+RUN npm i -g pnpm turbo
+
+COPY ./package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
+COPY ./apps/docs/package.json ./apps/docs/
+
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+
+COPY . .
+
+EXPOSE 5173
+
+# Geliştirme komutunu Dockerfile içine gömüyoruz
+CMD ["pnpm", "--filter", "docs", "dev"]

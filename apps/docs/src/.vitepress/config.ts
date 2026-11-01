@@ -3,7 +3,7 @@ import { generateDynamicSidebar } from "./sidebar";
 
 export default defineConfig({
 
-  base: "/saasguide/",
+  base: "/",
   title: "SaaS-VPS Rehberi",
   description: "SaaS Rehberi VitePress Sitesi",
   
@@ -12,7 +12,6 @@ export default defineConfig({
      ],
   
   lang: "tr-TR",
-
   themeConfig: {
     logo: {
       light: "/logo.svg",
@@ -56,12 +55,14 @@ export default defineConfig({
     nav: [
       { text: "Rehber", link: "/guide/01-sistem", activeMatch: "/guide/" },
       { text: "Sözlük", link: "/dict/", activeMatch: "/dict/" },
+      { text: "rehber", link: "/rehber/", activeMatch: "/rehber/" },
       { text: "Plan", link: "/plan" },
     ],
 
     sidebar: {
       "/": generateDynamicSidebar("src/", "/"),
       "/guide/": generateDynamicSidebar("src/guide", "/guide/"),
+      "/rehber/": generateDynamicSidebar("src/rehber", "/rehber/"),
       "/dict/": generateDynamicSidebar("src/dict", "/dict/"),
     },
   },

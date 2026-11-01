@@ -1,0 +1,19 @@
+services:
+  docs-dev:
+    build:
+      context: ../../                      # Reaches up to the monorepo root to fetch workspace lockfiles
+      dockerfile: apps/docs/Dockerfile.dev # Exact path relative to the context root
+    container_name: vitepress_docs_dev
+    volumes:
+      # Reaches up to the root to mount the workspace code into the app
+      - ../../:/app
+      - /app/node_modules
+      - /app/apps/docs/node_modules
+    environment:
+      - WATCHPACK_POLLING=true
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    external: true

@@ -295,14 +295,3 @@ pnpm dev --filter docs
   - Varsayılan inglizce ifadeler türkçe olmalı.
    
    
-## Git Checkpoint
-
-Proje kök klasörümüzde çalışmalarımızı kaydedip uzak sunucuyu güncelliyoruz.
-
-```bash
-git add .
-git commit -m "Vitepress Dökümantasyon 1.0.0 stable"
-git tag -a v1.0.0 -m "Vitepress Dökümantasyon 1.0.0 stable"
-git push origin -main
- 
-```

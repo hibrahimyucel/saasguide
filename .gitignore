@@ -190,9 +190,9 @@ docker-compose.override.yml
 .env.*.docker
 
 # Certificates and private keys
-*.pem
-*.key
-*.crt
+# *.pem
+# *.key
+# *.crt
 
 # Logs (IDE/test/build)
 logs/
