@@ -3,7 +3,7 @@ import { generateDynamicSidebar } from "./sidebar";
 
 export default defineConfig({
 
-  base: "/",
+  base: "/saasguide/",
   title: "SaaS-VPS Rehberi",
   description: "SaaS Rehberi VitePress Sitesi",
   
