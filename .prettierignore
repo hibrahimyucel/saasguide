@@ -1,0 +1,16 @@
+# Bağımlılıklar ve Build Çıktıları
+node_modules
+dist
+.pnpm-store
+
+# VitePress Özel Klasörleri
+.vitepress/dist
+.vitepress/cache
+
+# Gelecekte dökümantasyon dosyalarının formatlanmasını engellemek için
+*.md
+
+# Sistem ve Git Dosyaları
+.git
+.github
+

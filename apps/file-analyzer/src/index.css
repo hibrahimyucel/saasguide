@@ -2,53 +2,156 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+/* ==========================================================================
+   1. GITHUB LIGHT (Varsayılan)
+   ========================================================================== */
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #f6f8fa;
+  --color-surface-hover: #eaeef2;
+  --color-border: #d0d7de;
+  --color-text: #1f2328;
+  --color-muted: #657180;
+  --color-primary: #0969da;
+  --color-primary-hover: #0c57b4;
+}
 
-  /* Varsayılan Tema: Slate Dark (Mevcut sayfa stiliniz) */
-  :root {
-    --color-bg-panel: 2 6 23;
-    /* slate-950 */
-    --color-bg-surface: 15 23 42;
-    /* slate-900 */
-    --color-border-panel: 30 41 59;
-    /* slate-800 */
-    --color-text-main: 203 213 225;
-    /* slate-300 */
-    --color-text-muted: 148 163 184;
-    /* slate-400 */
-    --color-accent: 56 189 248;
-    /* sky-400 */
+/* ==========================================================================
+   2. GITHUB DARK
+   ========================================================================== */
+[data-theme="github-dark"] {
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-hover: #21262d;
+  --color-border: #30363d;
+  --color-text: #e6edf3;
+  --color-muted: #7d8590;
+  --color-primary: #2f81f7;
+  --color-primary-hover: #58a6ff;
+}
+
+/* ==========================================================================
+   3. VITEPRESS LIGHT
+   ========================================================================== */
+[data-theme="vitepress-light"] {
+  --color-bg: #ffffff;
+  --color-surface: #f6f6f7;
+  --color-surface-hover: #f1f1f2;
+  --color-border: #e2e2e3;
+  --color-text: #2c3e50;
+  --color-muted: #3c3c4399;
+  --color-primary: #3eaf7c;
+  --color-primary-hover: #4abf8a;
+}
+
+/* ==========================================================================
+   4. VITEPRESS DARK
+   ========================================================================== */
+[data-theme="vitepress-dark"] {
+  --color-bg: #1e1e20;
+  --color-surface: #252529;
+  --color-surface-hover: #2f2f35;
+  --color-border: #2e2e32;
+  --color-text: #ffffffe6;
+  --color-muted: #ebebf599;
+  --color-primary: #42b883;
+  --color-primary-hover: #42d392;
+}
+
+/* ==========================================================================
+   5. DOS PROGRAMMER (Mavi ekran klasiği)
+   ========================================================================== */
+[data-theme="dos-programmer"] {
+  --color-bg: #0000aa;       
+  --color-surface: #000088;  
+  --color-surface-hover: #0000cc;
+  --color-border: #ffffff;   
+  --color-text: #ffffff;     
+  --color-muted: #aaaaaa;    
+  --color-primary: #ffff55;  
+  --color-primary-hover: #ffffff;
+}
+
+/* ==========================================================================
+   6. PINK DREAM (Soft Pastel Pembe)
+   ========================================================================== */
+[data-theme="pink-dream"] {
+  --color-bg: #fff0f5;       
+  --color-surface: #ffe4e1;  
+  --color-surface-hover: #ffd1dc;
+  --color-border: #ffb6c1;   
+  --color-text: #4a2834;     
+  --color-muted: #a37081;    
+  --color-primary: #ff69b4;  
+  --color-primary-hover: #ff1493;
+}
+
+/* ... mevcut @tailwind ve tema tanımlamalarınızın altı ... */
+
+@layer components {
+  /* ==========================================================================
+     1. PANEL BİLEŞENLERİ (Cards / Containers)
+     ========================================================================== */
+  .panel-base {
+    @apply bg-theme-surface border-theme-border rounded-xl border p-6 shadow-sm transition-colors duration-200;
+  }
+  
+  .panel-header {
+    @apply mb-5 flex items-center justify-between border-b border-theme-border pb-3;
   }
 
-  /* Alternatif Tema: Zinc/Gray Dark */
-  [data-theme="zinc-dark"] {
-    --color-bg-panel: 9 9 11;
-    /* zinc-950 */
-    --color-bg-surface: 24 24 27;
-    /* zinc-900 */
-    --color-border-panel: 39 39 42;
-    /* zinc-800 */
-    --color-text-main: 228 228 231;
-    /* zinc-300 */
-    --color-text-muted: 161 161 170;
-    /* zinc-400 */
-    --color-accent: 52 211 153;
-    /* emerald-400 */
+  .label-header {
+    @apply  text-xl font-bold text-theme-primary;
   }
 
-  /* Alternatif Tema: Açık Renk (Light Mode) */
-  [data-theme="light"] {
-    --color-bg-panel: 248 250 252;
-    /* slate-50 */
-    --color-bg-surface: 255 255 255;
-    /* white */
-    --color-border-panel: 226 232 240;
-    /* slate-200 */
-    --color-text-main: 51 65 85;
-    /* slate-700 */
-    --color-text-muted: 100 116 139;
-    /* slate-500 */
-    --color-accent: 37 99 235;
-    /* blue-600 */
+  .label-sub {
+    @apply  text-[12px] text-theme-muted;
+  }
+  /* ==========================================================================
+     2. INPUT & SELECT BİLEŞENLERİ
+     ========================================================================== */
+  .input-base {
+    /* Tüm opaklık modifikatörleri (/60 ve /20) @apply dışına taşındı */
+    @apply bg-theme-bg text-theme-text border-theme-border 
+           focus:border-theme-primary w-full rounded-lg border 
+           px-3 py-2 text-sm font-medium outline-none transition-all ;
+           
+    /* 1. Placeholder Opaklık Çözümü (placeholder:text-theme-muted/60 yerine) */
+    --tw-text-opacity: 1;
+    color: var(--color-text);
+  }
+
+  /* Placeholder rengini ve opaklığını tarayıcı standartlarına göre eşliyoruz */
+  .input-base::placeholder {
+    color: var(--color-muted);
+    opacity: 0.60; /* /60 opaklık değeri */
+  }
+  
+  /* 2. Ring Opaklık Çözümü (focus:ring-theme-primary/20 yerine) */
+  .input-base:focus {
+    --tw-ring-color: var(--color-primary);
+    --tw-ring-opacity: 0.20; /* /20 opaklık değeri */
+  }
+  
+  /* Solunda ikon olan inputlar için özel dolgu */
+  .input-with-icon {
+    @apply input-base pl-9;
+  }
+
+  /* ==========================================================================
+     3. BUTON BİLEŞENLERİ
+     ========================================================================== */
+  /* Ana Aksiyon Butonu (Primary) */
+  .btn-primary {
+    @apply bg-theme-primary text-theme-bg hover:bg-theme-primary-hover 
+           flex items-center justify-center space-x-2 rounded-lg px-4 py-2 
+           text-sm font-semibold shadow-sm transition-colors duration-150 active:scale-[0.98];
+  }
+
+  /* İkincil / İptal Butonu (Secondary) */
+  .btn-secondary {
+    @apply text-theme-muted hover:bg-theme-surface-hover hover:text-theme-text 
+           flex items-center justify-center space-x-2 rounded-lg px-4 py-2 border-theme-bg border
+           text-sm font-semibold transition-colors duration-150;
   }
 }

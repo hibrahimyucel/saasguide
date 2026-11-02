@@ -10,17 +10,21 @@ Uygulama, monorepo kökündeki `apps/file-analyzer` dizini altında tamamen mod�
 
 ```text
 apps/file-analyzer/
-├── index.html            # Ana HTML giriş noktası
-├── package.json          # Workspace bağımlılık ve script tanımları
-├── postcss.config.js     # Tailwind v3 CSS işleme mimarisi
-├── tailwind.config.js    # Stil tarama kapsayıcı ayarları
-├── vite.config.ts        # Vite derleyici konfigürasyonu
-└── src/
-    ├── main.tsx          # React DOM render başlangıcı
-    ├── index.css         # Küresel Tailwind direktifleri
-    ├── types.ts          # file-info.json şema ve tip tanımları
-    ├── FileTree.tsx      # Özyinelemeli (Recursive) görsel ağaç bileşeni
-    └── App.tsx           # Dosya tarama motoru ve ana kontrol paneli
+├── src/
+│   ├── components/
+│   │   ├── FileTree.tsx        # Klasör ağacı görünümü (React Bileşeni)
+│   │   ├── FileViewer.tsx      # Seçilen dosya içeriği (React Bileşeni)
+│   │   └── AnalysisStats.tsx   # İstatistik paneli (React Bileşeni)
+│   ├── utils/
+│   │   ├── fileScanner.ts      # showDirectoryPicker API tarama mantığı (saf TS - küçük harf)
+│   │   └── regexHelpers.ts     # file-info.json kuralları ve ignore eşleşmeleri (saf TS - küçük harf)
+│   ├── types.ts                # FileNode vb. tip tanımlamaları (küçük harf)
+│   ├── main.tsx
+│   └── index.css
+├── tailwind.config.js          # v3.4.4 Yapılandırması
+├── tsconfig.json               # --jsx react-jsx hatası çözülmüş durum
+└── package.json                # "type": "module" ekli
+
 ```
 
 ---
@@ -40,18 +44,20 @@ Projenin kararlı bir şekilde ayağa kalkması için uygulanan adımlar sıras�
 ## 📄 3. Dosya Açıklamaları ve Teknik Rolleri
 
 ### ⚙️ Yapılandırma Dosyaları
-* **`package.json`:** Uygulamanın `@repo/file-analyzer` ismiyle monorepoya kaydolmasını sağlar. `react`, `lucide-react` gibi üretim bağımlılıkları ile `tailwindcss`, `postcss`, `autoprefixer` gibi geliştirme araçlarını yönetir.
-* **`index.html`:** Tarayıcının projeyi yüklediği ana dosyadır. İçerisinde React uygulamasının render edildiği `<div id="root"></div>` alanını barındırır.
-* **`postcss.config.js`:** Tailwind CSS kodlarının tarayıcının anlayacağı standart CSS stil kurallarına dönüştürülmesini tetikleyen eklenti köprüsüdür.
-* **`tailwind.config.js`:** Tailwind motoruna `src/` altındaki hangi dosya uzantılarının (`.ts`, `.tsx`) taranacağını ve içerisindeki CSS sınıflarının ayıklanacağını söyler.
-* **`vite.config.ts`:** Vite'ın React (`@vitejs/plugin-react`) modüllerini ve TypeScript derleme süreçlerini hızlıca yönetmesini sağlayan ana derleyici ayar dosyasıdır.
+
+- **`package.json`:** Uygulamanın `@repo/file-analyzer` ismiyle monorepoya kaydolmasını sağlar. `react`, `lucide-react` gibi üretim bağımlılıkları ile `tailwindcss`, `postcss`, `autoprefixer` gibi geliştirme araçlarını yönetir.
+- **`index.html`:** Tarayıcının projeyi yüklediği ana dosyadır. İçerisinde React uygulamasının render edildiği `<div id="root"></div>` alanını barındırır.
+- **`postcss.config.js`:** Tailwind CSS kodlarının tarayıcının anlayacağı standart CSS stil kurallarına dönüştürülmesini tetikleyen eklenti köprüsüdür.
+- **`tailwind.config.js`:** Tailwind motoruna `src/` altındaki hangi dosya uzantılarının (`.ts`, `.tsx`) taranacağını ve içerisindeki CSS sınıflarının ayıklanacağını söyler.
+- **`vite.config.ts`:** Vite'ın React (`@vitejs/plugin-react`) modüllerini ve TypeScript derleme süreçlerini hızlıca yönetmesini sağlayan ana derleyici ayar dosyasıdır.
 
 ### 💻 Kaynak Kodlar (`src/`)
-* **`main.tsx`:** Uygulamanın giriş kapısıdır. `index.css` dosyasını projeye dahil eder ve ana `App.tsx` bileşenini DOM ağacına basar.
-* **`index.css`:** `@tailwind` direktiflerini barındıran ve tüm uygulamada geçerli olan arka plan rengi, yazı tipi gibi küresel CSS kurallarını içeren dosyadır.
-* **`types.ts` (`file-info.json` Yapısı):** Projenin kural motorunu besleyen şemadır. İçerisinde `.DS_Store`, `node_modules`, `.env.*` ve `*.log` gibi kritik kalıpları barındırır. Her kural için **Regex desteği** (`isRegex: true/false`) ve anlık tarama kontrolü (`ignore: true/false`) anahtarlarını dışa aktarır.
-* **`FileTree.tsx`:** Kendisine gelen hiyerarşik dosya düğümünü (`FileNode`) inceler. Eğer düğüm bir klasörse ve alt kırılımları varsa, kendi kendini tekrar çağırarak (Recursive) ekrana ağaç çizgileri ve ikonlar (`lucide-react`) eşliğinde hiyerarşik olarak basar. Yoksayılan dosyaların üstünü çizerek eşleşen regex kuralını gösterir.
-* **`App.tsx`:** Kontrol merkezidir. Tarayıcının **File System Access API (`showDirectoryPicker`)** motorunu kullanarak asenkron olarak yerel diski tarar. `types.ts` içerisindeki regex kurallarını canlı olarak dosyalar üzerinde test eder. Sol paneldeki switch butonları değiştikçe dosya ağacını anlık olarak yeniden filtreler ve sağ panelde dinamik bir **Markdown Raporu** (.md tablosu) üreterek önizleme sunar.
+
+- **`main.tsx`:** Uygulamanın giriş kapısıdır. `index.css` dosyasını projeye dahil eder ve ana `App.tsx` bileşenini DOM ağacına basar.
+- **`index.css`:** `@tailwind` direktiflerini barındıran ve tüm uygulamada geçerli olan arka plan rengi, yazı tipi gibi küresel CSS kurallarını içeren dosyadır.
+- **`types.ts` (`file-info.json` Yapısı):** Projenin kural motorunu besleyen şemadır. İçerisinde `.DS_Store`, `node_modules`, `.env.*` ve `*.log` gibi kritik kalıpları barındırır. Her kural için **Regex desteği** (`isRegex: true/false`) ve anlık tarama kontrolü (`ignore: true/false`) anahtarlarını dışa aktarır.
+- **`FileTree.tsx`:** Kendisine gelen hiyerarşik dosya düğümünü (`FileNode`) inceler. Eğer düğüm bir klasörse ve alt kırılımları varsa, kendi kendini tekrar çağırarak (Recursive) ekrana ağaç çizgileri ve ikonlar (`lucide-react`) eşliğinde hiyerarşik olarak basar. Yoksayılan dosyaların üstünü çizerek eşleşen regex kuralını gösterir.
+- **`App.tsx`:** Kontrol merkezidir. Tarayıcının **File System Access API (`showDirectoryPicker`)** motorunu kullanarak asenkron olarak yerel diski tarar. `types.ts` içerisindeki regex kurallarını canlı olarak dosyalar üzerinde test eder. Sol paneldeki switch butonları değiştikçe dosya ağacını anlık olarak yeniden filtreler ve sağ panelde dinamik bir **Markdown Raporu** (.md tablosu) üreterek önizleme sunar.
 
 ---
 
@@ -68,4 +74,3 @@ pnpm turbo run dev --filter=@repo/file-analyzer --force
 ```
 
 Uygulama başarıyla başladığında tarayıcınızda `http://localhost:5173` (veya terminalde belirtilen portta) yan yana iki sütunlu, modern, karanlık mod odaklı proje analiz paneli açılacaktır.
-

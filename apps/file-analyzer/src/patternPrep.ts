@@ -1,4 +1,4 @@
-import { editDescPattern, FileInfoSchema } from './types'; // Temel tip dosyanızdan import edin
+import { DescPattern, FileInfoSchema } from './types'; // Temel tip dosyanızdan import edin
 
 function isWildcardPattern(val: string): boolean {
     return val.includes('*');
@@ -19,7 +19,7 @@ function wildcardToRegex(wildcard: string): RegExp | null {
  * FileInfoSchema yapısına uygun alt dizilere dağıtır.
  */
 export const generateFileInfoSchema = (
-    rawPatterns: editDescPattern[],
+    rawPatterns: DescPattern[],
     maxFileSizeMB = 50,
     flagEmptyDirectories = true
 ): FileInfoSchema => {

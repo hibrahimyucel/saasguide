@@ -5,12 +5,14 @@ export default {
     extend: {
       colors: {
         theme: {
-          panel: 'rgb(var(--color-bg-panel) / <alpha-value>)',
-          surface: 'rgb(var(--color-bg-surface) / <alpha-value>)',
-          border: 'rgb(var(--color-border-panel) / <alpha-value>)',
-          main: 'rgb(var(--color-text-main) / <alpha-value>)',
-          muted: 'rgb(var(--color-text-muted) / <alpha-value>)',
-          accent: 'rgb(var(--color-accent) / <alpha-value>)',
+          bg: 'var(--color-bg)',
+          surface: 'var(--color-surface)',
+          'surface-hover': 'var(--color-surface-hover)',
+          border: 'var(--color-border)',
+          text: 'var(--color-text)',
+          muted: 'var(--color-muted)',
+          primary: 'var(--color-primary)',
+          'primary-hover': 'var(--color-primary-hover)',
         }
       }
     },
