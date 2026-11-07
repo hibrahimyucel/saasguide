@@ -1,0 +1,181 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   1. GLOBAL NATIVE CSS DEĞİŞKENLERİ VE TEMA KATMANLARI
+   Tailwind v4 standartlarında ham CSS değişkenleri bağımsız olarak en üstte durur.
+   ========================================================================== */
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #f6f8fa;
+  --color-surface-hover: #eaeef2;
+  --color-border: #d0d7de;
+  --color-text: #1f2328;
+  --color-muted: #657180;
+  --color-primary: #0969da;
+  --color-primary-hover: #0c57b4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-hover: #21262d;
+  --color-border: #30363d;
+  --color-text: #e6edf3;
+  --color-muted: #7d8590;
+  --color-primary: #2f81f7;
+  --color-primary-hover: #58a6ff;
+ }
+}
+[data-theme='github-light'] {
+  --color-bg: #ffffff;
+  --color-surface: #f6f8fa;
+  --color-surface-hover: #eaeef2;
+  --color-border: #d0d7de;
+  --color-text: #1f2328;
+  --color-muted: #657180;
+  --color-primary: #0969da;
+  --color-primary-hover: #0c57b4;
+}
+
+[data-theme='github-dark'] {
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-hover: #21262d;
+  --color-border: #30363d;
+  --color-text: #e6edf3;
+  --color-muted: #7d8590;
+  --color-primary: #2f81f7;
+  --color-primary-hover: #58a6ff;
+}
+
+[data-theme='vitepress-light'] {
+  --color-bg: #ffffff;
+  --color-surface: #f6f6f7;
+  --color-surface-hover: #f1f1f2;
+  --color-border: #e2e2e3;
+  --color-text: #2c3e50;
+  --color-muted: #3c3c4399;
+  --color-primary: #3eaf7c;
+  --color-primary-hover: #4abf8a;
+}
+
+[data-theme='vitepress-dark'] {
+  --color-bg: #1e1e20;
+  --color-surface: #252529;
+  --color-surface-hover: #2f2f35;
+  --color-border: #2e2e32;
+  --color-text: #ffffffe6;
+  --color-muted: #ebebf599;
+  --color-primary: #42b883;
+  --color-primary-hover: #42d392;
+}
+
+[data-theme='dos-programmer'] {
+  --color-bg: #0000aa;
+  --color-surface: #000088;
+  --color-surface-hover: #3983c8;
+  --color-border: #ffffff;
+  --color-text: #ffffff;
+  --color-muted: #aaaaaa;
+  --color-primary: #ffff55;
+  --color-primary-hover: #0200cc;
+}
+
+[data-theme='pink-dream'] {
+  --color-bg: #fff0f5;
+  --color-surface: #ffe4e1;
+  --color-surface-hover: #ffd1dc;
+  --color-border: #ffb6c1;
+  --color-text: #4a2834;
+  --color-muted: #a37081;
+  --color-primary: #ff69b4;
+  --color-primary-hover: #ff1493;
+}
+
+/* ==========================================================================
+   2. TAILWIND v4 TEMA BAĞLAMLARI (@theme)
+   Üstte tanımlanan yerel değişkenler güvenli bir şekilde Tailwind sınıflarına eşlenir.
+   ========================================================================== */
+@theme {
+  --color-theme-bg: var(--color-bg);
+  --color-theme-surface: var(--color-surface);
+  --color-theme-surface-hover: var(--color-surface-hover);
+  --color-theme-border: var(--color-border);
+  --color-theme-text: var(--color-text);
+  --color-theme-muted: var(--color-muted);
+  --color-theme-primary: var(--color-primary);
+  --color-theme-primary-hover: var(--color-primary-hover);
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+/* ==========================================================================
+   3. UTILITY BİLEŞENLERİ (Özel Sınıflar)
+   ========================================================================== */
+@utility panel-app {
+  @apply bg-theme-bg text-theme-text flex h-screen w-screen flex-col overflow-hidden font-sans select-none;
+}
+
+@utility panel-module {
+  @apply bg-theme-surface flex min-h-0 w-full flex-1 overflow-hidden p-1;
+}
+
+@utility panel-base {
+  @apply bg-theme-surface border-theme-border rounded-xl border p-1 shadow-xs transition-colors duration-200;
+}
+
+@utility panel-header {
+  @apply mb-1 flex items-center justify-between border-b border-theme-border pb-1;
+}
+
+@utility label-header {
+  @apply text-xl font-bold text-theme-primary;
+}
+
+@utility label-sub {
+  @apply text-[12px] text-theme-muted;
+}
+
+@utility input-base {
+  @apply bg-theme-bg text-theme-text border-theme-border 
+           focus:border-theme-primary rounded-sm border 
+            text-sm outline-hidden  px-2 py-1;
+
+  --tw-text-opacity: 1;
+  color: var(--color-text);
+
+  &::placeholder {
+    color: var(--color-muted);
+    opacity: 0.6;
+  }
+
+  &:focus {
+    --tw-ring-color: var(--color-primary);
+    --tw-ring-opacity: 0.2;
+  }
+}
+
+@utility input-with-icon {
+  @apply input-base pl-9;
+}
+
+@utility btn-primary {
+  @apply  text-theme-primary hover:bg-theme-primary-hover hover:text-theme-text 
+           flex items-center justify-center  rounded-md px-2 py-1 border-theme-primary border
+           text-sm font-semibold transition-colors duration-150;
+}
+
+@utility btn-secondary {
+  @apply text-theme-muted hover:bg-theme-surface-hover hover:text-theme-text 
+           flex items-center justify-center space-x-2 rounded-md px-2 py-1 border-theme-muted border
+           text-sm font-semibold transition-colors duration-150;
+}

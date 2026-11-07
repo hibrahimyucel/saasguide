@@ -1,3 +1,13 @@
+Tema seçimi
+Klasör seçimi
+Klasör Taraması
+FileTree
+
+
+
+
+
+
 # 🚀 Monorepo File Analyzer - Geliştirme ve Kurulum Kılavuzu
 
 Bu doküman, Turborepo monorepo mimarisi içerisinde sıfırdan, şablon kalıntılarından arındırılmış olarak inşa edilen **Vite + React + TypeScript + Tailwind CSS (v3)** tabanlı dosya analiz uygulamasının yapısını, kurulum adımlarını ve teknik detaylarını içerir.

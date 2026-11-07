@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FileNode } from "../types";
+import { FileTree } from "./file-info-tree";
 import {
   ChevronDown,
   Folder,
@@ -8,52 +8,9 @@ import {
   Copy,
   EyeOff,
 } from "lucide-react";
+import { FileNode } from "../types";
 
-interface FileTreeProps {
-  items: FileNode[];
-  depth?: number;
-  parentPath?: string;
-  copyPath: (path: string) => void;
-  getFileColor: (path: string) => string;
-  RowReverse?: boolean;
-}
-
-export const FileTree: React.FC<FileTreeProps> = React.memo(
-  ({
-    items,
-    depth = 0,
-    parentPath = "",
-    copyPath,
-    getFileColor,
-    RowReverse,
-  }) => {
-    return (
-      <div
-        className={`flex flex-col ${depth > 0 ? "ml-2 border-l border-slate-800/60" : ""}`}
-      >
-        {items.map((item) => {
-          const currentPath = parentPath
-            ? `${parentPath}/${item.name}`
-            : item.name;
-
-          return (
-            <FileTreeNodeItem
-              key={currentPath}
-              item={item}
-              currentPath={currentPath}
-              depth={depth}
-              copyPath={copyPath}
-              getFileColor={getFileColor}
-              RowReverse={RowReverse}
-            />
-          );
-        })}
-      </div>
-    );
-  },
-);
-
-const FileTreeNodeItem: React.FC<{
+export const FileTreeNodeItem: React.FC<{
   item: FileNode;
   currentPath: string;
   depth: number;
@@ -73,10 +30,10 @@ const FileTreeNodeItem: React.FC<{
         {/* Satır Kapsayıcısı: py-0.5 ile dikey yükseklik minimuma indirildi */}
         <div
           onClick={() => isFolder && setIsOpen((prev) => !prev)}
-          className={`flex h-6 cursor-pointer select-none items-center gap-2 rounded px-2 py-0.5 leading-none transition-all duration-150 ${isOpen && isFolder ? "bg-slate-800/40 text-slate-100" : "text-slate-400 hover:bg-slate-800/20 hover:text-slate-200"} ${isIgnored ? "bg-slate-950/10 opacity-50 hover:opacity-80" : ""} "flex-row"}`}
+          className={`flex h-6 cursor-pointer items-center gap-2 rounded-sm px-2 py-0.5 leading-none transition-all duration-150 select-none ${isOpen && isFolder ? "bg-slate-800/40 text-slate-100" : "text-slate-400 hover:bg-slate-800/20 hover:text-slate-200"} ${isIgnored ? "bg-slate-950/10 opacity-50 hover:opacity-80" : ""} "flex-row"}`}
         >
           {/* Sol Ok İkonu */}
-          <div className="flex h-3.5 w-3.5 flex-shrink-0 items-center justify-center">
+          <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center">
             {isFolder && (
               <div
                 className={`transform transition-transform duration-200 ${isOpen ? "rotate-0" : "-rotate-90"}`}
@@ -90,7 +47,7 @@ const FileTreeNodeItem: React.FC<{
           </div>
 
           {/* Tip İkonu */}
-          <div className="flex flex-shrink-0 items-center justify-center">
+          <div className="flex shrink-0 items-center justify-center">
             {isFolder ? (
               isOpen ? (
                 <FolderOpen
@@ -116,13 +73,13 @@ const FileTreeNodeItem: React.FC<{
             {/* İsim Bölümü */}
             <div className="col-span-7 flex min-w-0 items-center gap-1.5 truncate">
               <span
-                className={`truncate py-0.5 text-xs font-medium ${!isFolder && !isIgnored ? textColors : "text-slate-300"} ${isIgnored ? "font-normal italic text-slate-500 line-through" : ""} `}
+                className={`truncate py-0.5 text-xs font-medium ${!isFolder && !isIgnored ? textColors : "text-slate-300"} ${isIgnored ? "font-normal text-slate-500 italic line-through" : ""} `}
               >
                 {item.name}
               </span>
 
               {item.size && !isIgnored && (
-                <span className="flex-shrink-0 font-mono text-[9px] text-slate-600 transition-colors group-hover:text-slate-500">
+                <span className="shrink-0 font-mono text-[9px] text-slate-600 transition-colors group-hover:text-slate-500">
                   ({item.size})
                 </span>
               )}
@@ -130,8 +87,8 @@ const FileTreeNodeItem: React.FC<{
 
             {/* Açıklama Bölümü: Yükseklik taşmasını önlemek için py-0 yapıldı */}
             <div className="col-span-5 flex h-full min-w-0 items-center">
-              <span className="flex h-[18px] w-full items-center gap-1 truncate rounded border border-slate-800 bg-slate-950 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide text-slate-500 shadow-inner">
-                <EyeOff size={8} className="flex-shrink-0 text-amber-500/60" />
+              <span className="flex h-4.5 w-full items-center gap-1 truncate rounded-sm border border-slate-800 bg-slate-950 px-1.5 py-0.5 text-[9px] font-medium tracking-wide text-slate-500 uppercase shadow-inner">
+                <EyeOff size={8} className="shrink-0 text-amber-500/60" />
                 <span className="truncate leading-none">
                   {item.description || "Filtrelendi"}
                 </span>
@@ -140,13 +97,13 @@ const FileTreeNodeItem: React.FC<{
           </div>
 
           {/* Aksiyon Butonu: Yoğunluğu bozmamak için daha küçük text ve padding uygulandı */}
-          <div className="flex w-14 flex-shrink-0 justify-end">
+          <div className="flex w-14 shrink-0 justify-end">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 copyPath(currentPath);
               }}
-              className="flex items-center gap-0.5 rounded border border-slate-700/50 bg-slate-800 px-1.5 py-0.5 text-[10px] font-medium text-slate-300 opacity-0 shadow-sm transition-all duration-150 hover:bg-indigo-600 hover:text-white group-hover:opacity-100"
+              className="flex items-center gap-0.5 rounded-sm border border-slate-700/50 bg-slate-800 px-1.5 py-0.5 text-[10px] font-medium text-slate-300 opacity-0 shadow-xs transition-all duration-150 group-hover:opacity-100 hover:bg-indigo-600 hover:text-white"
             >
               <Copy size={9} />
             </button>
@@ -159,8 +116,6 @@ const FileTreeNodeItem: React.FC<{
             <FileTree
               items={item.children}
               depth={depth + 1}
-              copyPath={copyPath}
-              getFileColor={getFileColor}
               parentPath={currentPath}
               RowReverse={!RowReverse}
             />

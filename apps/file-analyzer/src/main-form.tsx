@@ -10,7 +10,7 @@ export const AppLayout: React.FC = () => {
     <div className="flex h-screen w-screen select-none flex-col overflow-hidden bg-theme-bg font-sans text-theme-text">
       {/* 1. ÜST TOOLBAR */}
 
-      <header className="z-10 flex h-16 flex-shrink-0 items-center justify-between border-b bg-theme-surface px-6 shadow-md">
+      <header className="z-10 flex h-16 shrink-0 items-center justify-between border-b bg-theme-surface px-6 shadow-md">
         <div className="flex items-center gap-3">
           <Shield className="animate-pulse text-indigo-500" size={24} />
           <div>
@@ -83,7 +83,7 @@ export const AppLayout: React.FC = () => {
           {/* TAB BAR / ÇALIŞMA ALANI BAŞLIĞI */}
           <div className="bg-theme-surface/30 flex h-10 shrink-0 items-center justify-between border-b border-theme-border px-4">
             <div className="flex space-x-1">
-              <span className="rounded border border-theme-border bg-theme-surface px-2 py-1 text-xs font-semibold text-theme-text">
+              <span className="rounded-sm border border-theme-border bg-theme-surface px-2 py-1 text-xs font-semibold text-theme-text">
                 Desen Düzenleyici
               </span>
             </div>

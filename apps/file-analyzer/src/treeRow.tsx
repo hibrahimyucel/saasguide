@@ -29,7 +29,7 @@ export const TreeRow: React.FC<TreeRowProps> = React.memo(
           onClick={() => onToggleFolder(item.name)}
           className={`group flex cursor-pointer items-center justify-between bg-slate-200/10`}
         >
-          <span className="flex-shrink-0 p-3">
+          <span className="shrink-0 p-3">
             {isCollapsed ? <Folder size={16} /> : <FolderOpen size={16} />}
           </span>
 
@@ -46,7 +46,7 @@ export const TreeRow: React.FC<TreeRowProps> = React.memo(
         style={{ color: getFileColor(item.name) }}
       >
         <div className="text-xs">
-          <span className="flex-shrink-0 p-3">
+          <span className="shrink-0 p-3">
             <FileText size={16} />
           </span>
           <span className="item-name">{item.name}</span>

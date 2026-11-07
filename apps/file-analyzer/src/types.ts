@@ -1,4 +1,4 @@
-import { initialSchema } from "./file-info";
+import { initialSchema } from "./file-info/file-info-data";
 
 /**
  * Klasör tarayıcı tarafından üretilen her bir dosya veya klasör düğümü (node)
@@ -15,7 +15,6 @@ export interface FileNode {
  */
 
 export interface DescPattern {
-  type?: "regex" | "wildcard";
   expression: string; // ifade dosya ismi, dosya uzantısı olabilir. wilcard içerebilir (ör: "src/**/*.ts" veya "^node_modules/")
   description: string; // Dosya açıklaması veya metadata bilgisi
   ignore: boolean; // Bu kurala eşleşen dosyalar yoksayılsın mı?
@@ -100,8 +99,6 @@ export const generateDescMap = (): FileInfoSchema => {
     // 2. If 'kind' is the same, sort by 'expression' alphabetically
     return a.expression.localeCompare(b.expression);
   });
-
-  console.log(items);
 
   // 1. Diziyi 'kind' alanına göre 3 gruba ayırıyoruz
   const groupedPatterns = Object.groupBy(items, (item) => item.kind);

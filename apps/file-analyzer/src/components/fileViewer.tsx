@@ -51,11 +51,11 @@ export const FileViewer: React.FC<FileViewerProps> = ({
   };
 
   return (
-    <div className="border-analyzer-border bg-analyzer-surface flex h-full flex-col overflow-hidden rounded-xl border shadow-sm backdrop-blur-md">
+    <div className="border-analyzer-border bg-analyzer-surface flex h-full flex-col overflow-hidden rounded-xl border shadow-xs backdrop-blur-md">
       {/* Üst Bar (Header) */}
       <div className="border-analyzer-border bg-analyzer-surface/50 flex items-center justify-between border-b px-4 py-3">
         <div className="flex min-w-0 items-center space-x-3">
-          <span className="text-analyzer-muted flex-shrink-0">
+          <span className="text-analyzer-muted shrink-0">
             <FileCode size={18} />
           </span>
           <div className="min-w-0">
@@ -104,7 +104,7 @@ export const FileViewer: React.FC<FileViewerProps> = ({
               : "bg-blue-500/5 text-blue-600 dark:text-blue-400"
           }`}
         >
-          <AlertCircle size={14} className="mt-0.5 flex-shrink-0" />
+          <AlertCircle size={14} className="mt-0.5 shrink-0" />
           <div className="truncate">
             <span className="font-semibold">
               {isIgnored ? "Yoksayılan Dosya: " : "Dosya Bilgisi: "}

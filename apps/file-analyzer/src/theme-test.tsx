@@ -43,7 +43,7 @@ export const ThemeTestDrive: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-xl rounded-xl border border-theme-border bg-theme-surface p-6 shadow-sm transition-colors duration-200">
+      <div className="max-w-xl rounded-xl border border-theme-border bg-theme-surface p-6 shadow-xs transition-colors duration-200">
         {/* Kart Başlığı */}
         <div className="mb-5 flex items-center space-x-2">
           <Layers size={18} className="text-theme-primary" />
@@ -68,7 +68,7 @@ export const ThemeTestDrive: React.FC = () => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Desen veya dosya adı girin..."
-                className="focus:ring-theme-primary/20 placeholder:text-theme-muted/60 w-full rounded-lg border border-theme-border bg-theme-bg py-2 pl-9 pr-4 text-sm font-medium text-theme-text outline-none transition-all focus:border-theme-primary focus:ring-2"
+                className="focus:ring-theme-primary/20 placeholder:text-theme-muted/60 w-full rounded-lg border border-theme-border bg-theme-bg py-2 pl-9 pr-4 text-sm font-medium text-theme-text outline-hidden transition-all focus:border-theme-primary focus:ring-2"
               />
             </div>
           </div>
@@ -81,7 +81,7 @@ export const ThemeTestDrive: React.FC = () => {
             <select
               value={selectValue}
               onChange={(e) => setSelectValue(e.target.value)}
-              className="focus:ring-theme-primary/20 w-full cursor-pointer rounded-lg border border-theme-border bg-theme-bg px-3 py-2 text-sm font-medium text-theme-text outline-none transition-all focus:border-theme-primary focus:ring-2"
+              className="focus:ring-theme-primary/20 w-full cursor-pointer rounded-lg border border-theme-border bg-theme-bg px-3 py-2 text-sm font-medium text-theme-text outline-hidden transition-all focus:border-theme-primary focus:ring-2"
             >
               <option value="all" className="bg-theme-surface text-theme-text">
                 Tüm Proje Dosyaları (.ts, .js)
@@ -112,7 +112,7 @@ export const ThemeTestDrive: React.FC = () => {
 
             <button
               type="button"
-              className="flex items-center space-x-2 rounded-lg bg-theme-primary px-4 py-2 text-sm font-semibold text-theme-bg shadow-sm transition-colors duration-150 hover:bg-theme-primary-hover"
+              className="flex items-center space-x-2 rounded-lg bg-theme-primary px-4 py-2 text-sm font-semibold text-theme-bg shadow-xs transition-colors duration-150 hover:bg-theme-primary-hover"
             >
               <Send size={14} />
               <span>Analizi Başlat</span>

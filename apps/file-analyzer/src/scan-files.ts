@@ -1,8 +1,11 @@
-import { initialSchema } from './file-info.ts';
-import { DescPattern, FileInfoSchema, FileNode } from './file-info.ts';
+import { initialSchema } from "./file-info/file-info-data.js";
+import {
+  DescPattern,
+  FileInfoSchema,
+  FileNode,
+} from "./file-info/file-info-data.js";
 
-type RegExpDescPattern = Omit<DescPattern, 'expr'> & { expr: RegExp };
-
+type RegExpDescPattern = Omit<DescPattern, "expr"> & { expr: RegExp };
 
 // --- GLOBAL DEĞİŞKENLER VE BAŞLANGIÇ DEĞERLERİ ---
 let extensionDescriptions: DescPattern[] = [];
@@ -12,14 +15,14 @@ let regExpIgnoreList: RegExpDescPattern[] = [];
 
 // --- İŞLEM ADIMLARI FONKSİYONLARI ---
 function wildcardToRegex(wildcard: string): RegExp | null {
-  let pattern = wildcard.trim().replace(/^\/+|\/+$/g, '');
+  let pattern = wildcard.trim().replace(/^\/+|\/+$/g, "");
   if (!pattern) return null;
 
   // Özel regex karakterlerini kaçır (escape)
-  pattern = pattern.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+  pattern = pattern.replace(/[.+^${}()|[\]\\]/g, "\\$&");
 
   // ** ve * kalıplarını regex formatına çevir
-  pattern = pattern.replace(/\*\*+/g, '.*').replace(/\*/g, '[^/]*');
+  pattern = pattern.replace(/\*\*+/g, ".*").replace(/\*/g, "[^/]*");
   return new RegExp(`^${pattern}$|^${pattern}/|/${pattern}$|/${pattern}/`);
 }
 
@@ -34,7 +37,7 @@ const generateDescMap = () => {
       // 2. Kalan özellikleri (...rest) ve yeni oluşturulan 'expr: r' değerini birleştiriyoruz
       regExpIgnoreList.push({
         expr: r,
-        ...rest
+        ...rest,
       });
     } else {
       // Regex'e dönüşemiyorsa orijinal item'ı aynen ekliyoruz
@@ -43,11 +46,14 @@ const generateDescMap = () => {
   }
 };
 
-
 /**
  * 4. Adım: Hiyerarşik Dizin Tarama (Özyinelemeli / Recursive)
  */
-function scanDirectoryTree(dirPath: string, relativePath: string = '', regexRules: RegExp[] = []): TreeNode[] {
+function scanDirectoryTree(
+  dirPath: string,
+  relativePath: string = "",
+  regexRules: RegExp[] = [],
+): TreeNode[] {
   const results: TreeNode[] = [];
 
   try {
@@ -66,18 +72,25 @@ function scanDirectoryTree(dirPath: string, relativePath: string = '', regexRule
     });
 
     // Önce klasörleri, sonra dosyaları kendi içlerinde alfabetik sırala
-    const folders = analyzedItems.filter((i) => i.isDirectory).sort((a, b) => a.item.localeCompare(b.item));
-    const files = analyzedItems.filter((i) => !i.isDirectory).sort((a, b) => a.item.localeCompare(b.item));
+    const folders = analyzedItems
+      .filter((i) => i.isDirectory)
+      .sort((a, b) => a.item.localeCompare(b.item));
+    const files = analyzedItems
+      .filter((i) => !i.isDirectory)
+      .sort((a, b) => a.item.localeCompare(b.item));
     const sortedItems = [...folders, ...files];
 
     sortedItems.forEach(({ item, isDirectory }) => {
-      const currentRelPath = relativePath ? path.join(relativePath, item) : item;
+      const currentRelPath = relativePath
+        ? path.join(relativePath, item)
+        : item;
 
       // Yoksayma kurallarına uyup uymadığını kontrol et (Windows/Linux yol uyumluluğu ile)
-      const shouldIgnore = regexRules.some((regex) =>
-        regex.test(item) ||
-        regex.test(currentRelPath) ||
-        regex.test(currentRelPath.replace(/\\/g, '/'))
+      const shouldIgnore = regexRules.some(
+        (regex) =>
+          regex.test(item) ||
+          regex.test(currentRelPath) ||
+          regex.test(currentRelPath.replace(/\\/g, "/")),
       );
 
       if (shouldIgnore) return;
@@ -86,10 +99,13 @@ function scanDirectoryTree(dirPath: string, relativePath: string = '', regexRule
       const ext = path.extname(item).toLowerCase();
 
       // Açıklama ataması yap (Özel isim -> Uzantı -> Varsayılan)
-      const desc = exactDescriptions[item] || extensionDescriptions[ext] || (isDirectory ? 'Klasör' : 'Dosya');
+      const desc =
+        exactDescriptions[item] ||
+        extensionDescriptions[ext] ||
+        (isDirectory ? "Klasör" : "Dosya");
 
       const node: TreeNode = {
-        type: isDirectory ? 'folder' : 'file',
+        type: isDirectory ? "folder" : "file",
         name: item,
         desc: desc,
       };
@@ -124,15 +140,14 @@ export function generateFileTree(): void {
     .filter((r): r is RegExp => r !== null);
 
   // 4. Kök dizinden itibaren ağaç yapısını tara
-  const treeData = scanDirectoryTree('.', '', regexRules);
+  const treeData = scanDirectoryTree(".", "", regexRules);
 
   // 5. Çıktıyı formatlı bir JavaScript modülü olarak diske yaz
   const fileContent = `export const fileTree = ${JSON.stringify(treeData, null, 2)};\n`;
-  fs.writeFileSync('fileTree.js', fileContent, 'utf-8');
+  fs.writeFileSync("fileTree.js", fileContent, "utf-8");
 
   console.log('✔ Yeni nesil hiyerarşik "fileTree.js" başarıyla oluşturuldu!');
 }
 
 // Betik doğrudan çalıştırıldığında tetiklenmesi için:
 generateFileTree();
-
