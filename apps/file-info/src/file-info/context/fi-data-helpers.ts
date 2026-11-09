@@ -96,25 +96,40 @@ export const addPattern = (
   prevPatterns: FileInfo[],
   newItem: Omit<FileInfo, "kind" | "regExp">,
 ): { updatedList: FileInfo[]; isSuccess: boolean } => {
-  if (prevPatterns.some((p) => p.expression === newItem.expression)) {
-    alert("Bu kural zaten mevcut!");
-    return { updatedList: prevPatterns, isSuccess: false };
-  }
-
   const { regExp, kind } = parseExpression(
     newItem.expression,
     newItem.extension,
   );
 
-  const completedItem: FileInfo = {
-    ...newItem,
-    kind,
-    regExp,
-    checked: false,
-    isActive: true,
-  };
+  const patternExists = prevPatterns.some(
+    (p) => p.expression === newItem.expression,
+  );
+  let baseList: FileInfo[];
 
-  const updatedList = [...prevPatterns, completedItem].sort((a, b) => {
+  if (patternExists) {
+    baseList = prevPatterns.map((p) =>
+      p.expression === newItem.expression
+        ? {
+            ...p,
+            ...newItem,
+            kind,
+            regExp,
+          }
+        : p,
+    );
+  } else {
+    const completedItem: FileInfo = {
+      ...newItem,
+      kind,
+      regExp,
+      checked: false,
+      isActive: true,
+    };
+    baseList = [...prevPatterns, completedItem];
+  }
+
+  // 📐 Anayasa v3 standartlarına göre listeyi sıralıyoruz
+  const updatedList = baseList.sort((a, b) => {
     const kindCompare = (a.kind || "").localeCompare(b.kind || "");
     if (kindCompare !== 0) return kindCompare;
     return a.expression.localeCompare(b.expression);

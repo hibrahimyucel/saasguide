@@ -50,7 +50,7 @@ export const FileInfoFolderButton = () => {
   );
 
   const handleSelectDirectory = async () => {
-    const filterStrategy: FilterStrategy = "2-shallow-add";
+    const filterStrategy: FilterStrategy = "3-flag-only";
     const maxFileSizeMB: number = 1;
     const flagEmptyDirectories: boolean = true;
 
@@ -67,18 +67,13 @@ export const FileInfoFolderButton = () => {
         const nodePath = `${currentPath}/${handle.name}`;
 
         const matchedFilter = evaluateFiltering(handle.name, nodePath);
-        const isMatched = !!matchedFilter;
 
-        // DÜZELTME: matchedFilter?.ignore şeklinde güvenli hale getirildi
-        if (
-          isMatched &&
-          matchedFilter?.ignore &&
-          (filterStrategy as string) === "1-exclude"
-        ) {
+        let isIgnored = matchedFilter ? matchedFilter.ignore : false;
+
+        if (isIgnored && (filterStrategy as string) === "1-exclude") {
           return null;
         }
 
-        let isIgnored = matchedFilter ? matchedFilter.ignore : false;
         let matchedRule = matchedFilter ? matchedFilter.description : "";
         let sizeInMB = 0;
 
@@ -97,16 +92,12 @@ export const FileInfoFolderButton = () => {
           isIgnored: isIgnored,
           size: sizeInMB,
           description: matchedRule,
-
-          // 🚀 DÜZELTME: Statik o anki checked durumunu atamak yerine,
-          // reaktif takibin yapılabilmesi için eşleşen kuralın ifadesini match alanına güvenle yazıyoruz.
           match: matchedFilter ? matchedFilter.expression : undefined,
           isFiltered: matchedFilter ? matchedFilter.checked : false,
         };
         if (handle.kind === "directory") {
-          const shouldScanChildren = !(
-            isMatched && filterStrategy === "2-shallow-add"
-          );
+          const shouldScanChildren =
+            !isIgnored || (filterStrategy as string) === "2-shallow-add";
 
           if (shouldScanChildren) {
             node.children = [];
@@ -121,7 +112,6 @@ export const FileInfoFolderButton = () => {
             if (flagEmptyDirectories && node.children.length === 0) {
               node.description += " ⚠️ Boş Klasör";
             } else {
-              // DÜZELTME: node.children dizisinin varlığı garanti altına alınarak sıralandı
               node.children?.sort((a, b) => {
                 if (a.isDirectory && !b.isDirectory) return -1;
                 if (!a.isDirectory && b.isDirectory) return 1;
