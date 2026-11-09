@@ -1,0 +1,40 @@
+{
+  "name": "desktop-wrapper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo Desktop Client for SaaS File Analyzer",
+  "author": "İbrahim Yücel <hibrahimyucel@example.com>",
+  "homepage": "https://github.com",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "desktop:compile": "tsc",
+    "desktop:build": "rm -rf dist-electron release && pnpm desktop:compile && electron-builder"
+  },
+  "build": {
+    "appId": "com.saasguide.desktop",
+    "productName": "Monorepo Desktop Suite",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      {
+        "from": "../file-info/dist",
+        "to": "dist"
+      },
+      "dist-electron/main.js",
+      "package.json"
+    ],
+    "asar": true,
+    "linux": {
+      "target": ["AppImage", "rpm"],
+      "maintainer": "İbrahim Yücel <hibrahimyucel@example.com>",
+      "category": "Utility"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

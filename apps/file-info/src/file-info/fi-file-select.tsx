@@ -41,6 +41,7 @@ export const FileInfoFolderButton = () => {
 
         // KOL 3: RegExp / Joker Karakter Kontrolü (2-regExp) -> RegExp ile test
         // return rule.regExp.test(name) || rule.regExp.test(path);
+        return false;
       });
 
       return matchingRule ?? null;

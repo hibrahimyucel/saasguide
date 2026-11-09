@@ -4,7 +4,10 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "**/dist/**", "**/.vitepress/dist/**"]
-
+    },
+    "desktop:build": {
+      "dependsOn": ["build"],
+      "outputs": ["dist-electron/**", "release/**"]
     },
     "dev": {
       "cache": false,
