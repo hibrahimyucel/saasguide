@@ -3,37 +3,28 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "electron:build": "vite build && electron-builder"
+    "electron:compile": "tsc -p tsconfig.electron.json",
+    "electron:build": "pnpm build && pnpm electron:compile && electron-builder"
   },
   "build": {
-    "appId": "com.saas.fileinfo",
-    "productName": "SaaS File Info Analyser",
+    "appId": "com.saasguide.fileinfo",
+    "productName": "Monorepo File Analyzer",
     "directories": {
       "output": "release"
     },
     "files": [
       "dist/**/*",
-      "dist-electron/**/*"
+      "dist-electron/main.js",
+      "package.json"
     ],
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
-    },
+    "asar": true,
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    }
+      "target": ["AppImage", "deb"]
+       }
   },
   "dependencies": {
     "lucide-react": "^0.395.0",
