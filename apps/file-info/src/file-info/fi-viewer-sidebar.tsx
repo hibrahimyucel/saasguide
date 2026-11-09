@@ -7,8 +7,9 @@ import {
   Square,
   Search,
 } from "lucide-react";
-import { useData } from "./context/fi-data-provider";
+import { useData } from "./context/fi-context";
 import { FileInfo } from "./context/fi-types";
+import { SizeFilterPanel } from "./fi-viewer-size-filter";
 
 // --- 🚀 1. EN ALT SATIR BİLEŞENİ (MEMOIZED PATTERN ROW) ---
 // Sadece kendi prop'ları değiştiğinde re-render olur. Arama kutusuna harf yazılması bunu etkilemez!
@@ -120,14 +121,23 @@ export const FileInfoViewerSidebar: React.FC = () => {
       extension: filtered.filter((p) => p.kind === "3-ext"),
     };
   }, [patterns, sidebarSearch]);
+  // FileInfoViewerSidebar.tsx veya ilgili bileşenin üst kısmı
+  const activeCheckedCount = useMemo(() => {
+    return patterns.filter((p) => p.checked && p.isActive).length;
+  }, [patterns]);
 
   return (
     <div className="bg-theme-surface/30 border-theme-border flex h-full w-80 shrink-0 flex-col space-y-2 overflow-hidden border-r p-2">
       <div className="flex shrink-0 items-center justify-between">
         <div className="flex items-center space-x-2">
           <FolderTree size={16} className="text-indigo-500" />
-          <h3 className="text-theme-text text-sm font-bold tracking-tight">
-            Şema Kuralları
+          <h3 className="text-theme-text flex items-center gap-2 text-sm font-bold tracking-tight">
+            <span>Şema Kuralları</span>
+            {activeCheckedCount > 0 && (
+              <span className="animate-fadeIn border-theme-primary rounded-full border px-1.5 py-0.5 font-mono text-[10px] font-bold text-indigo-500">
+                {activeCheckedCount} aktif
+              </span>
+            )}
           </h3>
         </div>
         <button
@@ -152,7 +162,7 @@ export const FileInfoViewerSidebar: React.FC = () => {
           className="bg-theme-surface w-full rounded-lg border border-gray-300 py-1.5 pr-3 pl-8 text-xs focus:border-indigo-500 focus:outline-none"
         />
       </div>
-
+      <SizeFilterPanel />
       <div className="custom-scrollbar flex-1 space-y-4 overflow-y-auto pr-1">
         <RenderSection
           title="Tam eşleşme kuralları"

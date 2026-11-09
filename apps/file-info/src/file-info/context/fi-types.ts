@@ -1,4 +1,8 @@
-// Şema tanımı
+/**
+ * @field expression; dosya tanımlaması için temel ifade
+ * @field ignore; dosya, tarama sırasında yoksayılır
+ *
+ */
 export interface FileInfo {
   expression: string;
   description: string;
@@ -11,17 +15,30 @@ export interface FileInfo {
   kind?: "1-regular" | "2-regExp" | "3-ext";
 }
 
-// Dosya arama ve listelemede kullanılacak tip. filtered alanı özel filtreleme (FileInfo.checked) için kısayol olarak kullanılacak
+/**
+ * Dosya tarama sonuçlarını saklamak için kullanılacak tip.
+ *
+ * Kök bilgiler : name, path, isDirectory, children
+ *
+ * Tarama verileri : size, depth, isIgnored, description, match
+ *
+ * Hesaplanan alanlar :  isFiltered, hasFilteredChild
+ */
 export interface FileNode {
   name: string;
   path: string; // Kök dizine göre göreceli yol (relative path)
   isDirectory: boolean;
   children?: FileNode[]; // Eğer klasörse alt elemanları
-  filtered?: boolean;
-  hasFilteredChild?: boolean;
   depth?: number;
+  size?: number;
   isIgnored?: boolean;
-  size?: string;
   description?: string;
   match?: string;
+  isFiltered?: boolean;
+  hasFilteredChild?: boolean;
+}
+export interface SizeFilter {
+  mode: "all" | "greater" | "less";
+  value: number;
+  unit: "KB" | "MB";
 }

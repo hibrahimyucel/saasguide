@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import { Folder, CheckCircle2, AlertCircle } from "lucide-react";
-import { useData } from "./context/fi-data-provider";
+import { useData } from "./context/fi-context";
 import { FileNode } from "./context/fi-types";
 
 export const FileInfoFilePicker: React.FC = () => {
@@ -72,7 +72,7 @@ export const FileInfoFilePicker: React.FC = () => {
               name: part,
               path: cumulativePath,
               isDirectory: !isLast,
-              filtered: isFiltered,
+              isFiltered,
               ...(isLast ? {} : { children: [] }),
             };
             currentLevel.children.push(newNode);

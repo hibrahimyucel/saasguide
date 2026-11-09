@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { EditableCell, ActionCell } from "../components/edit-cell";
 import { FileInfo } from "./context/fi-types";
-import { useData } from "./context/fi-data-provider";
+import { useData } from "./context/fi-context";
 import { FileInfoSearch } from "./fi-editor-search";
 import { FileInfoEditorTabs } from "./fi-editor-tabs";
 import { FileInfoActions } from "./fi-editor-actions";
@@ -10,13 +10,12 @@ import { PatternForm } from "./fi-editor-new";
 export const FileInfoManager: React.FC = () => {
   const {
     patterns,
-    addPattern,
+    handleAddPattern,
     updatePattern,
     removePattern,
     exportToJSON,
     importFromJSON,
   } = useData();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [editingExpression, setEditingExpression] = useState<string | null>(
     null,
@@ -53,17 +52,9 @@ export const FileInfoManager: React.FC = () => {
   }, [patterns, debouncedSearchTerm, activeFilter]);
 
   const handleAdd = (newData: FileInfo) => {
-    const isSuccess = addPattern(newData);
+    const isSuccess = handleAddPattern(newData);
 
     return isSuccess;
-  };
-
-  const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    await importFromJSON(file);
-    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleInputChange = (
@@ -103,12 +94,8 @@ export const FileInfoManager: React.FC = () => {
               onFilterChange={setActiveFilter}
             />
             <FileInfoActions
-              onExport={exportToJSON}
-              onImportClick={() => fileInputRef.current?.click()}
               onAddNewClick={() => setIsNewFormOpen(true)}
               isNewFormOpen={isNewFormOpen}
-              fileInputRef={fileInputRef}
-              handleImportFile={handleImportFile}
             />
           </div>
           <div className="border-theme-border/30 custom-scrollbar max-h-[77vh] overflow-x-auto overflow-y-auto rounded-lg border">

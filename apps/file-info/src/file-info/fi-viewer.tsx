@@ -5,7 +5,7 @@
 
 import React from "react";
 import { FileInfoViewerSidebar } from "./fi-viewer-sidebar";
-import { useData } from "./context/fi-data-provider";
+import { useData } from "./context/fi-context";
 import { LayoutGrid } from "lucide-react";
 import { FileInfoFilePicker } from "./fi-file-picker";
 import { FileInfoFileDropZone } from "./fi-file-dropzone";

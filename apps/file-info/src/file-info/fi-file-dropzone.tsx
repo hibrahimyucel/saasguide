@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { UploadCloud, CheckCircle2, AlertCircle } from "lucide-react";
-import { useData } from "./context/fi-data-provider";
+import { useData } from "./context/fi-context";
 import { FileNode } from "./context/fi-types";
 
 export const FileInfoFileDropZone: React.FC = () => {
@@ -44,7 +44,7 @@ export const FileInfoFileDropZone: React.FC = () => {
         name: entry.name,
         path: currentPath,
         isDirectory: false,
-        filtered: isFiltered,
+        isFiltered,
       };
     } else if (entry.isDirectory) {
       const dirReader = entry.createReader();
@@ -76,7 +76,7 @@ export const FileInfoFileDropZone: React.FC = () => {
         path: currentPath,
         isDirectory: true,
         children: childrenNodes,
-        filtered: isFiltered,
+        isFiltered,
       };
     }
     return null;

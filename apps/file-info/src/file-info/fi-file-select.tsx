@@ -9,7 +9,8 @@ import {
   Layers,
 } from "lucide-react";
 import type { FileInfo, FileNode } from "./context/fi-types";
-import { useData } from "./context/fi-data-provider";
+import { useData } from "./context/fi-context";
+
 type FilterStrategy = "1-exclude" | "2-shallow-add" | "3-flag-only";
 
 export const FileInfoFolderButton = () => {
@@ -78,21 +79,12 @@ export const FileInfoFolderButton = () => {
 
         let isIgnored = matchedFilter ? matchedFilter.ignore : false;
         let matchedRule = matchedFilter ? matchedFilter.description : "";
-        let nodeSizeStr = "";
+        let sizeInMB = 0;
 
         if (handle.kind === "file") {
           try {
             const fileData = await handle.getFile();
-            const sizeInMB = fileData.size / (1024 * 1024);
-            nodeSizeStr =
-              sizeInMB < 0.1
-                ? `${(fileData.size / 1024).toFixed(1)} KB`
-                : `${sizeInMB.toFixed(2)} MB`;
-
-            if (sizeInMB > maxFileSizeMB) {
-              isIgnored = true;
-              matchedRule += ` Boyut Sınırı İhlali (> ${maxFileSizeMB}MB)`;
-            }
+            sizeInMB = fileData.size; // (1024 * 1024);
           } catch {}
         }
 
@@ -102,13 +94,13 @@ export const FileInfoFolderButton = () => {
           depth: depth,
           isDirectory: handle.kind === "directory",
           isIgnored: isIgnored,
-          size: nodeSizeStr,
+          size: sizeInMB,
           description: matchedRule,
 
           // 🚀 DÜZELTME: Statik o anki checked durumunu atamak yerine,
           // reaktif takibin yapılabilmesi için eşleşen kuralın ifadesini match alanına güvenle yazıyoruz.
           match: matchedFilter ? matchedFilter.expression : undefined,
-          filtered: matchedFilter ? matchedFilter.checked : false,
+          isFiltered: matchedFilter ? matchedFilter.checked : false,
         };
         if (handle.kind === "directory") {
           const shouldScanChildren = !(
@@ -207,7 +199,7 @@ export const FileInfoFolderButton = () => {
           depth: depth,
           isDirectory: entry.isDirectory,
           isIgnored: isIgnored,
-          size: nodeSizeStr,
+          //size: nodeSizeStr,
           description: matchedRule,
         };
 

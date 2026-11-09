@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-// Desteklenen görünüm tipleri
 export type ActiveView = "editor" | "explorer";
 
 interface ViewContextType {
@@ -22,7 +21,6 @@ export const FiMenuProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-// Alt bileşenlerin context'i tüketmesi için güvenli özel kanca (custom hook)
 export const useView = () => {
   const context = useContext(FiMenuContext);
   if (!context) {
