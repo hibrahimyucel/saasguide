@@ -1,65 +1,96 @@
 
 # `1.1.3.` Docker
 
+Geliştirme ortamımızda Nginx, MariaDB gibi servisleri çalıştırır. Projelerimizi, **development** veya **preview** modunda bağımsız olarak çalıştırmamızı sağlar.
+
+Bu sayede her bir servisin çalışmasını ve kaynak tüketimini bütün olarak yönetmiş olacağız. Tüm servislerin işlem geçmişini de Docker üzerinden görebileceğiz. 
+
+
 
 ## AlmaLinux Docker Kurulumu
 
-::: info Çakışan paketleri temizleme
+- Çakışan paketleri temizleme
  
 ```bash
    sudo dnf remove -y podman buildah docker docker-engine docker.io containerd runc
 ```
- :::
- 
- ::: info Docker reposunu ekleme
+
+
+*** 
+
+- Docker reposunu ekleme
 ```bash
    sudo dnf install -y yum-utils
    sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 ```
-:::
 
-::: info Kurulum
+***
+
+- Kurulum
 ```bash
    sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
-::: info Servisi başlatma ve enable etme
+
+***
+
+- Servisi başlatma ve otomatik başlangıç için ayarlama
 ```bash
 sudo systemctl start docker
 sudo systemctl enable docker
 ```
-:::
-::: info Non-root kullanıcı yetkilendirmesi
+
+***
+
+- Non-root kullanıcı yetkilendirmesi
 ```bash
    sudo usermod -aG docker $USER
    newgrp docker
 ```
-:::
 
-::: info Kurulumun başarıyla tamamlandığını test etmek için örnek `hello-world` konteynerini çalıştırın:
+- Kurulumun başarıyla tamamlandığını test etmek için örnek `hello-world` konteynerini çalıştırın:
 ```bash
    sudo docker run hello-world
 ```
-:::
+
+***
+
+## Docker Veri Yönetimi
+
+### **Docker Volumes** 
+
+ Docker host (ana makine) üzerinde Docker tarafından yönetilen depolama alanlarıdır. Linux'ta genellikle `/var/lib/docker/volumes/` altında tutulur). Docker süreci dışındaki uygulamaların veya kullanıcıların bu verilere doğrudan müdahale etmesi önerilmez. 
+   
+   - **Named Volumes**
+   
+Sizin veya `docker-compose` dosyasının özel bir isim vererek oluşturduğu alanlardır. Konteynerler arasında rahatça paylaşılabilir. Konteyner silinse bile veriler kaybolmaz.  Veritabanı verileri gibi kalıcı olması gereken senaryolar için en çok önerilen yöntemdir.
+   
+   - **Anonymous Volumes** 
+   
+`docker run -v /konteyner` şeklinde, kaynak ismi belirtilmeden oluşturulan alanlardır. Docker bunlara rastgele uzun bir ID atar. Genellikle geçici veriler için kullanılır ve konteyner silindiğinde birlikte temizlenir.
+
+***
+### Bind Mounts 
+Host makine üzerindeki herhangi bir dosya veya klasör yolunun doğrudan konteynerin içine bağlanmasıdır.
+
+• Host ile konteyner arasında çift yönlü ve anlık (*real-time*) veri senkronizasyonu sağlar.
+
+• Genellikle yerel yazılım geliştirme (local development) süreçlerinde kodda yapılan değişikliğin konteyner içinde anında görünmesi (*hot-reload*) için tercih edilir.
+
+• Host sistemin dosya yapısına bağlı olduğu için taşınabilirliği Docker volume'lara göre daha azdır.
+
+***
+### Konteyner Katmanı (`COPY` komutları)  
+`/var/lib/docker/overlay2/` altında şifreli adlarla saklanır. Geçici katmandır, konteyner kapatıldığında (`down`)  buradaki değişiklikler yok olur.
 
 
-## Konteyner Verileri
+## Mikroservis Çalıştırma
 
-1. **Named Volumes (`volumes: db_data`) :** Host sistemde `/var/lib/docker/volumes/` altında izole ve güvenli saklanır. Konteyner silinse de veriler kaybolmaz.
+`docker-compose up/down` komutu aktif klasördeki `docker-compose.yml` dosyasını çalıştırır veya durdurur. Farklı bir klasördeki dosyayı veya farklı isimde bir dosyayı işlemek için `docker-compose -f docker-compose.test.yml  up` şeklinde `-f` parametresi ile kullanılır. 
 
-2. **Bind Mounts (`./saas-app:/usr/src/app`):** Host üzerindeki kaynak kod dizinini doğrudan konteynere köprüler. Canlı kod takibi (hot-reload) sağlar. İlk kısım (`./saas-app`) fiziksel yolu, ikinci kısım (`/usr/src/app`) docker içindeki dosya yolunu gösterir. 
+Örnekte Nginx servisi istekleri kabul eder, uygulama ve veritabanı iç ağda çalışır. 
+Servislerin bağımlılıkları, disk kaynakları, ağ parametreleri ve servisi çalıştırmak için kullanılacak komutlar `docker-compose.yml` içindedir. 
 
-Çalışan servislerin disk ihtiyacı bu şekilde sağlanır. `.env` gibi yapılandırma dosyaları, statik siteler, veritabanları gibi kaynakları docker servisine bağlar.
-
-
-4. **Konteyner Katmanı (`COPY` komutları):** `/var/lib/docker/overlay2/` altında şifreli adlarla saklanır. Geçici katmandır, konteyner `down` edildiğinde buradaki kalıcılaştırılmamış değişiklikler yok olur.
-
-
-## Mikroservis Mimarisi
-
-Geliştirme ve test süreçlerinde tüm servisleri tek bir konteyner içine hapsetmek (Docker-in-Docker) yerine, izole servisleri `docker-compose` orkestrasyonu ile ayağa kaldırmak en doğru yaklaşımdır. 
-
-
-Örnekte Nginx servisi istekleri kabul eder, uygulama ve veritabanı iç ağda çalışır.
+ 
 
 ::: details  `docker-compose.yml`
 ```yaml

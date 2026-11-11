@@ -1,6 +1,10 @@
 
 # `1.1.1.` Node - <code>pnpm</code>
 
+Nodejs projelerini bağımsız olarak çalıştırmak ve IDE özelliklerini kullanabilmek için gereklidir. 
+
+Docker ortamı, proje ayarlarına göre indirilen araçları veya derlenmiş imajları kullandığından yayın ortamında sadece Docker kurmak yeterlidir. 
+
 AlmaLinux üzerinde Node.js'in en güncel LTS (Long Term Support) sürümünü ve performanslı paket yöneticisi olan **pnpm**'i kurarak işe başlıyoruz.
 
 ## Node

@@ -1,21 +1,14 @@
 
-# SaaS Geliştirme Kılavuzu
+# SaaS Geliştirme Rehberi
 
 ---
   
-# `1.` Geliştirme Ortamı
+- Nodejs
 
---- 
-### `1.1.` Kurulum
+- Docker
 
-### `1.2.` Hazırlık
----
+- Nginx
 
-# `2.` Dökümantasyon 
+- Vitepres-Vue
 
---- 
-### `1.1.` Kurulum
-
-### `1.2.` Hazırlık
----
 

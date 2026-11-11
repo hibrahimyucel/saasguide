@@ -9,7 +9,9 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "infra:up": "docker compose -f infra/docker-compose.yml up -d",
-    "infra:down": "docker compose -f infra/docker-compose.yml down"
+    "infra:down": "docker compose -f infra/docker-compose.yml down",
+    "dev:ytb": "pnpm --filter @saasguide/yt-backend dev",
+    "dev:ytp": "pnpm --filter @saasguide/yt-player dev"
   },
   "devDependencies": {
     "turbo": "^2.11.10",

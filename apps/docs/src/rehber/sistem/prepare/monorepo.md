@@ -1,7 +1,6 @@
 
 # `1.2.1.` Monorepo
 
-[Monorepo dosya açıklamaları](/dict/monorepo-example)
 
 ## Repo oluştur.
 
@@ -25,7 +24,7 @@ Bu işlem klasörümüzde `.git` klasörünü oluşturur.
 [.dockerignore dosyası](../../EK/dockerignore)
 :::
 
-::: info README.md dosyamızı ekleyip ve ilk `commit`i yapıyoruz.
+::: info README.md dosyamızı ekleyip ilk `commit`i yapıyoruz.
 ```bash
 echo "# saasguide" >> README.md
 git add .

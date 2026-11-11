@@ -1,0 +1,30 @@
+# saasguide/docker-compose.yml
+
+services:
+  yt-server:
+    build:
+      context: .
+      dockerfile: apps/yt-server/Dockerfile
+    container_name: saasguide-yt-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      # İndirilen video ve ses dosyalarını yerel diskte kalıcı tut
+      - ./apps/yt-server/public/videos:/app/apps/yt-server/public/videos
+      - ./apps/yt-server/public/audio:/app/apps/yt-server/public/audio
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
+  yt-client:
+    build:
+      context: .
+      dockerfile: apps/yt-client/Dockerfile
+    container_name: saasguide-yt-client
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - yt-server
+

@@ -1,0 +1,14 @@
+services:
+  youtube_frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: youtube_player_web
+    # Nginx proxy katmanımız istekleri bu container üzerinden karşılayacak
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    external: true
+

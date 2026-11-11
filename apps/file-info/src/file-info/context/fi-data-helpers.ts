@@ -311,24 +311,54 @@ export const extractBigFiles = (
  * @param node Gezilen mevcut dosya/klasör düğümü
  * @param prefix Sadece derinliklerdeki dikey çizgileri (│   ) taşır
  */
-export const convertTreeToMarkdown = (node: FileNode, prefix = ""): string => {
-  // İlk çalıştırmada (Kök dizin) direkt adını yazdırır
-  let result = `${node.isDirectory ? "📁 " : "📄 "}${node.name}\n`;
+export const convertTreeToMarkdown = (
+  node: FileNode,
+  prefix = "",
+  padEndOverride = 0,
+): string => {
+  let targetPadWidth = padEndOverride;
 
+  // 🚀 Initial execution (Root directory): Calculate max pad bounds exactly once
+  if (prefix === "" && padEndOverride === 0) {
+    let maxDepth = 0;
+    let maxNameLength = 0;
+
+    const scan = (currentNode: FileNode, currentDepth: number) => {
+      if (currentDepth > maxDepth) maxDepth = currentDepth;
+      if (currentNode.name.length > maxNameLength)
+        maxNameLength = currentNode.name.length;
+
+      if (currentNode.isDirectory && currentNode.children) {
+        currentNode.children.forEach((child) => scan(child, currentDepth + 1));
+      }
+    };
+
+    scan(node, 0);
+    // 📐 Rule Index: max depth * 4 + node name length
+    targetPadWidth = maxDepth * 4 + maxNameLength;
+  }
+
+  // 📝 Line generation logic
+  const description = node.description ? " # " + node.description : "";
+  const mainLineText = `${node.isDirectory ? "📁 " : "📄 "}${node.name}`;
+
+  // Apply padding using the single-pass computed target width minus the current text indent layout
+  let result =
+    mainLineText.padEnd(targetPadWidth - prefix.length) + description + "\n";
+
+  // Recursively process child directories/files
   if (node.isDirectory && node.children && node.children.length > 0) {
     node.children.forEach((child, idx) => {
       const isLast = idx === node.children!.length - 1;
-
-      // 1. Bu seviyedeki dosyanın/klasörün önüne gelecek olan connector
       const connector = isLast ? "└── " : "├── ";
 
-      // 2. Recursive çağrı: Kendi adını, üstten gelen prefix + connector birleşimiyle basar
+      // Pass down the computed targetPadWidth down the recursive tree sequence
       const childContent = convertTreeToMarkdown(
         child,
         prefix + (isLast ? "    " : "│   "),
+        targetPadWidth,
       );
 
-      // Çıktıyı ana ağaca ekle
       result += `${prefix}${connector}${childContent}`;
     });
   }

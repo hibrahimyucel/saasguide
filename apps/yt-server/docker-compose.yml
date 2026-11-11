@@ -1,0 +1,13 @@
+services:
+  backend_app:
+    # ... backend tanımları
+    volumes:
+      # İndirilen videoların backend konteyneri silinse bile diskte kalması için volume bağı
+      - video_storage:/usr/src/app/public/videos:z
+    networks:
+      - dev_network
+
+volumes:
+  video_storage:
+    driver: local # AlmaLinux üzerinde yerel depolama birimi
+
