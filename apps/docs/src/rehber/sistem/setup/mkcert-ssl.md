@@ -1,4 +1,8 @@
-# `1.1.4.` Yerel SSL (`mkcert`)
+# `1.1.4.` Yerel SSL/TLS
+
+*Güncel olarak TLS (Transport Layer Security) kullanılmaktadır. SSL (Secure Socket Layer) terimi alışkanlıklardan kalmadır.*
+
+Yerel sertifika aracı olarak `mkcert` kullanacağız.
 
 ::: info `mkcert` aracını yükleyin
 

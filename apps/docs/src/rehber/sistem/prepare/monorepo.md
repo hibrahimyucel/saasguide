@@ -1,6 +1,9 @@
 
 # `1.2.1.` Monorepo
 
+Bu adımdaki dosyalara, monorepo [*infrastructure*](https://github.com/hibrahimyucel/saasrehberi/tree/infrastructure)
+branşı üzerinden erişebilirsiniz.
+
 
 ## Repo oluştur.
 
@@ -9,8 +12,8 @@
 Bu işlem klasörümüzde `.git` klasörünü oluşturur.
 
 ```bash
-   mkdir saasguide
-   cd saasguide
+   mkdir saasrehberi
+   cd saasrehberi
    git init
    git branch -m main
 ```
@@ -26,7 +29,7 @@ Bu işlem klasörümüzde `.git` klasörünü oluşturur.
 
 ::: info README.md dosyamızı ekleyip ilk `commit`i yapıyoruz.
 ```bash
-echo "# saasguide" >> README.md
+echo "# Monorepo-SaaS Geliştirme Rehberi" >> README.md
 git add .
 git commit -m "Repo oluşturuldu"
 ```
@@ -52,26 +55,30 @@ git commit -m "Repo oluşturuldu"
 ::: details `package.json` Monorepo kök bağımlılıkları ve scriptleri
 ```json
 {
-  "name": "saasguide",
+  "name": "saasrehberi",
   "private": true,
-  "engines": { "node": ">=20.0.0" },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint"
-   },
+  },
   "devDependencies": {
-    "turbo": "^2.0.0",
+    "turbo": "^2.11.10",
     "typescript": "^5.0.0"
   },
   "packageManager": "pnpm@9.0.0"
 }
+
 ```
 :::
 
 ::: details `turbo.json` Turborepo yapılandırma dosyası
 
 ```json
+{
 {
   "$schema": "https://turbo.build",
   "tasks": {
@@ -88,6 +95,7 @@ git commit -m "Repo oluşturuldu"
     }
   }
 }
+
 ```
 :::
 
@@ -116,7 +124,7 @@ Monorepo araçlarının (Turborepo, Nx vb.) ve kod editörünüzün proje ve pak
 
 ```json
 {
-  "files": [], // Kök dizinde doğrudan TS kodu derlenmeyecekse boş bırakılır
+  "files": [], 
   "references": []
 }
 ```
@@ -142,11 +150,3 @@ pnpm add turbo -D -w
 ```
 :::
 ---
-::: info Değişikleri uygula (`git commit-push`).
-```bash
-git add .
-git commit -m "Monorepo kök dosyaları eklendi"
-git push origin
-```
-
-:::

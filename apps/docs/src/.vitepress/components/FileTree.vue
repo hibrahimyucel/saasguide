@@ -73,7 +73,7 @@ const getFileColor = (filename) => {
       
      <!-- KLASÖR SATIRI -->
 <div 
-  v-if="item.type === 'folder'" 
+  v-if="item.isDirectory" 
   class="tree-item folder-item"
   @click="toggleFolder(item.name)"
 >
@@ -84,7 +84,7 @@ const getFileColor = (filename) => {
     <span class="item-name">{{ item.name }}</span>
   </div>
   <!-- Açıklama grid sayesinde her zaman sağ kolonda kalacak -->
-  <span class="item-desc">{{ item.desc }}</span>
+  <span class="item-desc">{{ item.description }}</span>
 </div>
 
 <!-- DOSYA SATIRI -->
@@ -98,11 +98,11 @@ const getFileColor = (filename) => {
     <span class="custom-icon file-icon">📄</span>
     <span class="item-name" :style="{ color: getFileColor(item.name) }">{{ item.name }}</span>
   </div>
-  <span class="item-desc">{{ item.desc }}</span>
+  <span class="item-desc">{{ item.description }}</span>
 </div>
 
       <!-- REKÜRSİF ÇAĞRI -->
-      <div v-if="item.type === 'folder' && !openFolders[item.name] && item.children && item.children.length > 0">
+      <div v-if="item.isDirectory && !openFolders[item.name] && item.children && item.children.length > 0">
         <FileTree 
           :items="item.children" 
           :depth="depth + 1" 

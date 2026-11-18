@@ -1,17 +1,46 @@
-# Dosya ve Klasörler
+# Özet
 
-# Dosya ve Klasörler
+- *pnpm* paket yöneticisi, *Turbo* monorepo aracı geliştirme ortamına eklendi.
 
-Aşağıda projemizin güncel klasör hiyerarşisi yer almaktadır. Dosya yollarını kopyalamak için üzerlerine tıklayabilirsiniz.
+- Proje altyapısı, Docker-Nginx orkestrasyonu ile oluşturuldu.  
 
+- Bu adımdaki dosyalara, monorepo [*infrastructure*](https://github.com/hibrahimyucel/saasrehberi/tree/infrastructure)
+branşı üzerinden erişebilirsiniz.
+
+
+## Dosya Listesi 
+
+```
+📁 saasrehberi                         
+├── 📁 .git                             # Git veritabanı. Bulunduğu klasörün ham verilerini ve tüm versiyon kontrol bilgilerini  saklar.
+├── 📁 infra                            # Proje altyapı (Infrastructure) klasörü.
+│   └── 📁 gateway                      # Edge Router-Reverse Proxy. Servislerin dış ağlar ve birbirleri ile haberleşmesini sağlayan arabirim.
+│       ├── 📁 nginx                    # NGINX yapılandırma klasörü
+│       │   ├── 📁 certs                # HTTPS bağlantısı için gerekli olan SSL/TLS sertifikaları klasörü.
+│       │   │   ├── 📄 localhost.crt    # SSL/TLS Sertifikası
+│       │   │   └── 📄 localhost.key    # SSL/TLS Sertifika anahtarı
+│       │   ├── 📄 dev.conf             # Configuration - yapılandırma ve ayar dosyası
+│       │   └── 📄 test.conf            # Configuration - yapılandırma ve ayar dosyası
+│       └── 📄 docker-compose.yml       # Docker konteyner yapılandırma dosyası
+├── 📁 node_modules                     # Node.js/npm paket bağımlılıkları dizini.
+├── 📄 .dockerignore                    # Docker tarafından yoksayılacak dosya-klasör listesi
+├── 📄 .gitignore                       # Git tarafından yoksayılacak dosya klasör listesi
+├── 📄 package.json                     # Node.js proje manifestosu; bağımlılıkları, betikleri ve meta verileri tanımlar.
+├── 📄 pnpm-lock.yaml                   # pnpm paket yöneticisinin içerik adreslemeli depolama kilit dosyası.
+├── 📄 pnpm-workspace.yaml              # Monorepo kök dosyası. Bağlı klasörleri, genel paketleri ve versiyonları tanımlar.
+├── 📄 README.md                        # Projenin amacını, kurulum adımlarını ve kullanım talimatlarını içeren ana kılavuz.
+├── 📄 tsconfig.base.json               # Typescript ayarları 
+├── 📄 tsconfig.json                    # Typescript ayarları 
+└── 📄 turbo.json                       # Turborepo monorepo görev yönetim, önbellekleme ve pipeline yapılandırma dosyası.
+
+```
+
+
+## Dosya Listesi (Vue)
+
+*(örnek olarak eklenmiştir)*
 
 <FileTree :items="fileTree" />
-
-```bash
-   git add .
-   git commit -m "Docker, Nginx-SSL Testi tamamlandı."
-   git push origin
-```
 
 <script setup>
 import FileTree from '../../.vitepress/components/FileTree.vue';
@@ -19,140 +48,154 @@ import FileTree from '../../.vitepress/components/FileTree.vue';
 // Klasör yapınızı ve açıklamalarınızı buradan düzenleyebilirsiniz:
 const fileTree = [
   {
-    "type": "folder","name": "infra","desc": "Docker operasyonel dosyaları ve orkestrasyon",
-    "children": [
-      {"type": "folder","name": "gateway","desc": "Edge Router",
-        "children": [
-          {"type": "folder","name": "nginx","desc": "Nginx yapılandırma klasörü",
-            "children": [
-              {"type": "folder","name": "certs",
-                "desc": "SSL dosyaları",
-                "children": [
-                  {
-                    "type": "file",
-                    "name": "localhost.crt",
-                    "desc": "SSL Sertifikası"
-                  },
-                  {
-                    "type": "file",
-                    "name": "localhost.key",
-                    "desc": "SSL Sertifika anahtarı"
-                  }
-                ]
-              },
-              {
-                "type": "file",
-                "name": "dev.conf",
-                "desc": "Nginx Geliştirici Yapılandırma Dosyası"
-              },
-              {
-                "type": "file",
-                "name": "test.conf",
-                "desc": "Nginx Test Yapılandırma Dosyası"
-              }
-            ]
-          },
-          {
-            "type": "file",
-            "name": "docker-compose.yml",
-            "desc": "Docker Konteyner orkestrasyon dosyası"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "file",
-    "name": ".dockerignore",
-    "desc": "Docker tarafından takip edilmeyecek dosyalar"
-  },
-  {
-    "type": "file",
-    "name": ".gitignore",
-    "desc": "Git tarafından takip edilmeyecek dosyalar"
-  },
-  {
-    "type": "file",
-    "name": "dosya-config.json",
-    "desc": "JSON Veri Dosyası"
-  },
-  {
-    "type": "file",
-    "name": "dosya.js",
-    "desc": "JavaScript Betiği"
-  },
-  {
-    "type": "file",
-    "name": "fileTree.js",
-    "desc": "JavaScript Betiği"
-  },
-  {
-    "type": "file",
-    "name": "package.json",
-    "desc": "Monorepo-Proje bağımlılık ve yönetim dosyası"
-  },
-  {
-    "type": "file",
-    "name": "pnpm-lock.yaml",
-    "desc": "Dosya"
-  },
-  {
-    "type": "file",
-    "name": "pnpm-workspace.yaml",
-    "desc": "Dosya"
-  },
-  {
-    "type": "file",
-    "name": "README.md",
-    "desc": "Dokümantasyon Dosyası"
-  },
-  {
-    "type": "file",
-    "name": "tsconfig.base.json",
-    "desc": "JSON Veri Dosyası"
-  },
-  {
-    "type": "file",
-    "name": "tsconfig.json",
-    "desc": "JSON Veri Dosyası"
-  },
-  {
-    "type": "file",
-    "name": "turbo.json",
-    "desc": "JSON Veri Dosyası"
+  "name": "saasrehberi",
+  "path": "/saasrehberi",
+  "isDirectory": true,
+  "children": [
+    {
+      "name": ".git",
+      "path": "/saasrehberi/.git",
+      "isDirectory": true,
+      "description": "Git veritabanı. Bulunduğu klasörün ham verilerini ve tüm versiyon kontrol bilgilerini  saklar."
+    },
+    {
+      "name": "infra",
+      "path": "/saasrehberi/infra",
+      "isDirectory": true,
+      "description": "Proje altyapı (Infrastructure) klasörü.",
+      "children": [
+        {
+          "name": "gateway",
+          "path": "/saasrehberi/infra/gateway",
+          "isDirectory": true,
+          "description": "Edge Router-Reverse Proxy. Servislerin dış ağlar ve birbirleri ile haberleşmesini sağlayan arabirim.",
+          "children": [
+            {
+              "name": "nginx",
+              "path": "/saasrehberi/infra/gateway/nginx",
+              "isDirectory": true,
+              "description": "NGINX yapılandırma klasörü",
+              "children": [
+                {
+                  "name": "certs",
+                  "path": "/saasrehberi/infra/gateway/nginx/certs",
+                  "isDirectory": true,
+                  "description": "HTTPS bağlantısı için gerekli olan SSL/TLS sertifikaları klasörü.",
+                  "children": [
+                    {
+                      "name": "localhost.crt",
+                      "path": "/saasrehberi/infra/gateway/nginx/certs/localhost.crt",
+                      "isDirectory": false,
+                      "size": 1671,
+                      "description": "SSL/TLS Sertifikası"
+                    },
+                    {
+                      "name": "localhost.key",
+                      "path": "/saasrehberi/infra/gateway/nginx/certs/localhost.key",
+                      "isDirectory": false,
+                      "size": 1704,
+                      "description": "SSL/TLS Sertifika anahtarı"
+                    }
+                  ]
+                },
+                {
+                  "name": "dev.conf",
+                  "path": "/saasrehberi/infra/gateway/nginx/dev.conf",
+                  "isDirectory": false,
+                  "size": 2562,
+                  "description": "Configuration - yapılandırma ve ayar dosyası"
+                },
+                {
+                  "name": "test.conf",
+                  "path": "/saasrehberi/infra/gateway/nginx/test.conf",
+                  "isDirectory": false,
+                  "size": 2176,
+                  "description": "Configuration - yapılandırma ve ayar dosyası"
+                }
+              ]
+            },
+            {
+              "name": "docker-compose.yml",
+              "path": "/saasrehberi/infra/gateway/docker-compose.yml",
+              "isDirectory": false,
+              "size": 695,
+              "description": "Docker konteyner yapılandırma dosyası"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "node_modules",
+      "path": "/saasrehberi/node_modules",
+      "isDirectory": true,
+      "description": "Node.js/npm paket bağımlılıkları dizini."
+    },
+    {
+      "name": ".dockerignore",
+      "path": "/saasrehberi/.dockerignore",
+      "isDirectory": false,
+      "size": 103,
+      "description": "Docker tarafından yoksayılacak dosya-klasör listesi"
+    },
+    {
+      "name": ".gitignore",
+      "path": "/saasrehberi/.gitignore",
+      "isDirectory": false,
+      "size": 3326,
+      "description": "Git tarafından yoksayılacak dosya klasör listesi"
+    },
+    {
+      "name": "package.json",
+      "path": "/saasrehberi/package.json",
+      "isDirectory": false,
+      "size": 313,
+      "description": "Node.js proje manifestosu; bağımlılıkları, betikleri ve meta verileri tanımlar."
+    },
+    {
+      "name": "pnpm-lock.yaml",
+      "path": "/saasrehberi/pnpm-lock.yaml",
+      "isDirectory": false,
+      "size": 2389,
+      "description": "pnpm paket yöneticisinin içerik adreslemeli depolama kilit dosyası."
+    },
+    {
+      "name": "pnpm-workspace.yaml",
+      "path": "/saasrehberi/pnpm-workspace.yaml",
+      "isDirectory": false,
+      "size": 40,
+      "description": "Monorepo kök dosyası. Bağlı klasörleri, genel paketleri ve versiyonları tanımlar."
+    },
+    {
+      "name": "README.md",
+      "path": "/saasrehberi/README.md",
+      "isDirectory": false,
+      "size": 12,
+      "description": "Projenin amacını, kurulum adımlarını ve kullanım talimatlarını içeren ana kılavuz."
+    },
+    {
+      "name": "tsconfig.base.json",
+      "path": "/saasrehberi/tsconfig.base.json",
+      "isDirectory": false,
+      "size": 237,
+      "description": "Typescript ayarları "
+    },
+    {
+      "name": "tsconfig.json",
+      "path": "/saasrehberi/tsconfig.json",
+      "isDirectory": false,
+      "size": 39,
+      "description": "Typescript ayarları "
+    },
+    {
+      "name": "turbo.json",
+      "path": "/saasrehberi/turbo.json",
+      "isDirectory": false,
+      "size": 277,
+      "description": "Turborepo monorepo görev yönetim, önbellekleme ve pipeline yapılandırma dosyası."
+    }
+  ]
   }
 ];
 </script>
-
-
-```
-├── 📁 .github/                  # CI/CD (GitHub Actions) iş akışları
-├── 📁 apps/                     # Dağıtılabilir / çalıştırılabilir ana uygulamalar
-│   ├── 📁 admin-dashboard/      # Yönetim paneli (React/Next.js)
-│   └── 📁 api-server/           # Backend servisi (NestJS/Express)
-├── 📁 packages/                 # Ortak kullanılan paylaşılan kütüphaneler
-│   ├── 📁 database/             # Prisma/Mongoose şemaları ve DB bağlantısı
-│   ├── 📁 ui-components/        # Ortak UI bileşenleri (Design System)
-│   └── 📁 utils/                # Ortak yardımcı fonksiyonlar
-├── 📁 docker/                   # 
-│   ├── 📁 nginx/                # Nginx konfigürasyon klasörü
-│   │   └── 📄 nginx.conf        # Nginx ana veya reverse proxy ayarları
-│   ├── 📄 Dockerfile.api        # API servisi için Docker imaj talimatları
-│   ├── 📄 Dockerfile.web        # Frontend servisi için Docker imaj talimatları
-│   └── 📄 docker-compose.yml    # Çoklu konteyner orkestrasyon dosyası
-├── 📄 .gitignore                # Git tarafından takip edilmeyecek dosyalar
-├── 📄 .prettierrc               # Kod biçimlendirme kuralları
-├── 📄 eslint.config.js          # Kod kalitesi ve stil denetimi kuralları
-├── 📄 package.json              # Monorepo kök bağımlılıkları ve scriptleri
-├── 📄 pnpm-workspace.yaml       # Çalışma alanlarını (workspaces) tanımlayan dosya
-├── 📄 turbo.json                # Turborepo yapılandırma dosyası (kullanılıyorsa)
-└── 📄 tsconfig.json             # Ortak TypeScript ana yapılandırması
-```
-
-
-```bash
-   git add .
-   git commit -m "Docker, Nginx-SSL Testi tamamlandı."
-   git push origin
-```
 

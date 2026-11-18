@@ -3,8 +3,18 @@
 
  
  Yerel geliştirme ortamımızda her servis ve proje için ayrı konteynır oluşturarak servisleri Docker içinde çalıştırıp Nginx ile orkestrasyonu sağlayacağız.
-   
+
+Bunun için monorepo ekosistemindeki tüm mikroservislere ve ön yüz (frontend) uygulamalarına gelen istekleri tek bir merkezden karşılayan, yönlendiren ve güvenliğini sağlayan **NGINX API Gateway / Ters Proxy (Reverse Proxy)** yapılandırmasını hazırlıyoruz.
+
  Subdomain ve `http-only` çerezler için HTTPS protokolünü kullanmamız gerekir. Ayrıca tarayıcıda sürekli güvenlik uyarısı görmek istemeyiz.
+
+
+### Temel İşlevleri
+
+1.  **Ters Proxy (Reverse Proxy):** İstemcilerden gelen istekleri mimariyi dışarıya açmadan arkadaki doğru mikroservise iletir.
+2.  **Yük Dengeleme (Load Balancing):** Aynı servisin birden fazla replikası varsa, trafiği bu replikalar arasında eşit veya ağırlıklı olarak dağıtır.
+3.  **SSL/TLS Sonlandırma:** HTTPS trafiğini burada sonlandırarak arkadaki servislerin SSL yükünü hafifletir ve iç ağda HTTP ile haberleşmelerini sağlar.
+4.  **Güvenlik ve Sınırlandırma (Rate Limiting):** API uçlarına gelebilecek DDoS veya kötü niyetli bot saldırılarını engellemek için istek limitleri uygular.
   
 ## Docker - Ortak Ağ
 
@@ -16,30 +26,7 @@
 :::
  
   
-## 🌐 Gateway (NGINX)
-
-Bu dizin, monorepo ekosistemindeki tüm mikroservislere ve ön yüz (frontend) uygulamalarına gelen istekleri tek bir merkezden karşılayan, yönlendiren ve güvenliğini sağlayan **NGINX API Gateway / Ters Proxy (Reverse Proxy)** yapılandırmasını barındırır.
-
-### 📁 Klasör Yapısı ve Açıklamalar
-
-*   **`conf.d/`**: Mikroservis ve uygulama bazlı yönlendirme kurallarını (`proxy_pass`) içeren bağımsız yapılandırma dosyalarının bulunduğu klasördür.
-    *   `auth.conf`: Kimlik doğrulama (auth) servisine giden isteklerin kurallarını içerir.
-    *   `api.conf`: Ana backend API servislerine yönlendirme şemalarını barındırır.
-    *   `web.conf`: Ön yüz (frontend) uygulamalarına giden trafiği yönetir.
-*   **`certs/`** *(veya `ssl/`)*: Güvenli HTTPS bağlantısı için gerekli olan SSL/TLS sertifikalarını (`.crt`) ve özel anahtarları (`.key`) barındıran dizindir.
-*   **`nginx.conf`**: Gateway sunucusunun en üst düzey ana konfigürasyon dosyasıdır. Genel HTTP blok ayarları, log formatları, sıkıştırma (gzip) ve bağlantı limitleri burada tanımlanır.
-*   **`upstream.conf`**: Monorepo içindeki servislerin veya Docker konteynerlerinin ağ üzerindeki adreslerini gruplayarak yük dengeleme (load balancing) havuzlarını tanımlar.
-*   **`Dockerfile`**: NGINX Gateway sunucusunun Docker imajını oluşturan talimatları içerir. Konfigürasyonları imaj içine kopyalar ve `80/443` portlarını dış dünyaya açar.
-
-### 🛠️ Temel Görevleri
-
-1.  **Ters Proxy (Reverse Proxy):** İstemcilerden gelen istekleri mimariyi dışarıya açmadan arkadaki doğru mikroservise iletir.
-2.  **Yük Dengeleme (Load Balancing):** Aynı servisin birden fazla replikası varsa, trafiği bu replikalar arasında eşit veya ağırlıklı olarak dağıtır.
-3.  **SSL/TLS Sonlandırma:** HTTPS trafiğini burada sonlandırarak arkadaki servislerin SSL yükünü hafifletir ve iç ağda HTTP ile haberleşmelerini sağlar.
-4.  **Güvenlik ve Sınırlandırma (Rate Limiting):** API uçlarına gelebilecek DDoS veya kötü niyetli bot saldırılarını engellemek için istek limitleri uygular.
-
-  
-  
+## Gateway (NGINX)
   
   
 ::: info Kök dizinde Nginx yapılandırması ve sertifikalar için kullanacağımız klasörleri oluşturuyoruz.
@@ -57,16 +44,24 @@ Bu dizin, monorepo ekosistemindeki tüm mikroservislere ve ön yüz (frontend) u
 services:
   nginx_proxy:
     image: nginx:alpine
-    container_name: nginx_proxy
+    container_name: sr_proxy
     ports:
       - "80:80"
       - "443:443"
+    # 
     volumes:
-      # Relative to this specific gateway folder
       - ./nginx/test.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/certs:/etc/nginx/certs:ro
     networks:
       - dev_network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'        # Maksimum kullanabileceği CPU çekirdek sayısı
+          memory: 512M       # Maksimum kullanabileceği RAM miktarı
+        reservations:
+          cpus: '0.25'       # Servis için ayrılan / garanti edilen minimum CPU
+          memory: 128M       # Servis için ayrılan / garanti edilen minimum RAM
 
 networks:
   dev_network:
@@ -127,102 +122,17 @@ http {
 
         # Alt Klasör Test Bağlantısı (/events)
         location /events {
-            return 200 "🎉 Harika! Nginx /events alt klasor testi başarılı.\n\nErişilen Sunucu: $subdomain_name\nKonum: Alt Klasor (/events)\nSSL Baglantısı: Güvenli (OK)\n";
+            return 200 "🎉 Nginx /events alt klasor testi başarılı.\n\nErişilen Sunucu: $subdomain_name\nKonum: Alt Klasor (/events)\nSSL Baglantısı: Güvenli (OK)\n";
         }
 
         # Ana Dizin / Kök Bağlantı (/)
         location / {
-            return 200 "🚀 Harika! Nginx ayakta ve sorunsuz çalışıyor.\n\nErişilen Sunucu: $subdomain_name\nKonum: Ana Dizin (/)\nSSL Baglantısı: Güvenli (OK)\n";
+            return 200 "🚀  Nginx ayakta ve sorunsuz çalışıyor.\n\nErişilen Sunucu: $subdomain_name\nKonum: Ana Dizin (/)\nSSL Baglantısı: Güvenli (OK)\n";
         }
     }
 }
-
-
 ```
 :::
-
-
-
-
-::: details Nginx (developper) konfigürasyon dosyası `infra/gateway/nginx/dev.conf`
-
-```nginx
-events { 
-    worker_connections 1024; 
-}
-
-http { 
-    resolver 127.0.0.11 valid=5s; 
-
-    # ---------------------------------------------------- 
-    # GLOBAL SUBDOMAIN YÖNLENDİRME TABLOSU (Routing Map)
-    # ---------------------------------------------------- 
-    map $http_host $backend_target {
-        hostnames; 
-
-        "docs.localhost"      "http://vitepress_docs_dev:5173";
-        "dashboard.localhost" "http://vitepress_docs_dev:5173";
-
-        default               "http://127.0.0.1:80";
-    }
-
-    # ---------------------------------------------------- 
-    # HTTP -> HTTPS Kesin Zorlama (Bütün .localhost istekleri için)
-    # ---------------------------------------------------- 
-    server {
-        listen 80;
-        server_name localhost *.localhost;
-        
-        # Tarayıcıya HTTP isteklerini doğrudan güvenli HTTPS'e yönlendirmesini söyler
-        return 301 https://$host$request_uri;
-    }
-
-    # ---------------------------------------------------- 
-    # HTTPS Sunucusu (SSL İşlemlerinin Yapıldığı Yer)
-    # ---------------------------------------------------- 
-    server {
-        listen 443 ssl;
-        # server_name tanımını map tablosuyla tam eşleşecek şekilde genişlettik
-        server_name localhost *.localhost; 
-
-        # mkcert Sertifika Yolları
-        ssl_certificate /etc/nginx/certs/localhost.crt;
-        ssl_certificate_key /etc/nginx/certs/localhost.key;
-
-        ssl_protocols TLSv1.2 TLSv1.3;
-        ssl_ciphers HIGH:!aNULL:!MD5;
-
-        # HSTS Başlığı (Tarayıcıya bu siteye 1 yıl boyunca sadece HTTPS ile girmesini söyler)
-        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-
-        location / {
-            proxy_pass $backend_target;
-
-            # Proxy Başlıkları
-            proxy_set_header Host $http_host; # $host yerine $http_host kullanarak port bilgilerini koruruz
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-
-            # VitePress WebSocket Desteği
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-
-            proxy_intercept_errors on;
-            error_page 502 503 504 = @konteyner_yok;
-        }
-
-        location @konteyner_yok {
-            default_type text/plain;
-            return 503 "Hedef Docker konteyneri şu an aktif değil veya başlatılamadı.";
-        }
-    }
-}
-
-```
-:::
-
 
 ---
 
@@ -247,8 +157,8 @@ Bu sorunu çözmek için sertifikaya alan adlarını eklemeniz gerekir.
 ```
 ::: 
 
-## Test - Yedekleme
-::: info `infra/gateway/` klasöründe Docker Nginx servisini çalıştırıp test ediyoruz.
+## Test
+::: info `infra/gateway/` klasöründe Docker Nginx servisini çalıştırıp test ediyoruz. `
    
 ```bash
    cd infra/gateway
@@ -266,13 +176,40 @@ Bu sorunu çözmek için sertifikaya alan adlarını eklemeniz gerekir.
  
 ::: 
 
-::: tip Test başarılı ise proje kök dizinine gelip kodlarımızı yedekliyoruz. 
+## Yedekleme
+
+::: tip Testler başarılı ise proje kök dizinine gelip kodlarımızı yedekliyoruz. 
 
 ```bash
    git add .
    git commit -m "Docker, Nginx-SSL Testi tamamlandı."
    git push origin
 ```
+:::
+
+## Kaynak Yönetimi
+
+`docker stats` komutu çalışan servislerin kaynak kullanımını gösterir. Servisi bağımsız (detached) `docker compose up -d` çalıştırıyoruz ve kaynak kullanımını listeliyoruz.
+
+```bash
+   docker compose up -d
+   docker stats sr_proxy
+```
+
+
+::: info Bu komut size anlık olarak şu bilgileri gösterecektir: 
+<pre>
+CONTAINER ID      : Konteynerin benzersiz kimlik numarası.
+NAME              : Konteynerin adı (Örn: nginx_proxy).
+CPU %             : Konteynerin anlık işlemci kullanım yüzdesi.
+MEM USAGE / LIMIT : Harcanan RAM miktarı ve atanan maksimum sınır.
+MEM %             : Bellek kullanımının yüzde olarak oranı.
+NET I/O           : Konteynerin aldığı ve gönderdiği toplam ağ trafiği.
+BLOCK I/O         : Diske yazılan ve diskten okunan toplam veri miktarı.
+PIDS              : Konteyner tarafından oluşturulan aktif süreç sayısı.
+</pre>
+:::
+
 
 
 ---

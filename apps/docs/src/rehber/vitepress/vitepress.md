@@ -1,57 +1,26 @@
-
 # Proje Oluşturma
 
 Monorepo yapımıza `apps/` dizini altına bir VitePress dökümantasyon projesi ekliyoruz.
 
----
-## Klasör Yapısını Oluşturun
-Monorepo projenizin kök dizindeyken `apps` altında proje  klasörlerinizi oluşturun.
 
-
-
-
-```text
-📁 
-├── 📁 apps/                        # Dağıtılabilir / çalıştırılabilir ana uygulamalar
-│   └── 📁 docs/                    # Dökümantasyon (Vitepress)
-│
-├── 📁 infra/                       # Docker operasyonel dosyaları ve orkestrasyon
-│   └── 📁 gateway/                 # Edge Router - Nginx klasörü
-│       ├── 📁 nginx/               # Nginx konfigürasyon klasörü
-│       │   ├── 📁 certs/           # SSL 
-│       │   ├── 📄 test.conf        # Nginx test yapılandırması
-│       │   └── 📄 dev.conf         # Nginx developper reverse proxy ayarları
-│       └── 📄 docker-compose.yml   # Çoklu konteyner orkestrasyon dosyası
-│
-├── 📁 .github/                     # CI/CD (GitHub Actions) iş akışları
-│   └── 📁 workflows/
-│       └── 📄 deploy-docs.yml
-│
-├── 📄 .gitignore                   # Git tarafından takip edilmeyecek dosyalar
-├── 📄 .dockerignore                # Docker tarafından takip edilmeyecek dosyalar
-├── 📄 package.json                 # Monorepo kök bağımlılıkları ve scriptleri
-├── 📄 pnpm-workspace.yaml          # Çalışma alanlarını (workspaces) tanımlayan dosya
-├── 📄 README.md                    # Proje açıklamaları
-├── 📄 turbo.json                   # Turborepo yapılandırma dosyası
-└── 📄 tsconfig.json                # Ortak TypeScript ana yapılandırması
-```
-
-
-
-
-
+## Klasör ve dosyalar
+ 
+ Monorepo projenizin kök dizindeyken `apps` altında proje  klasörlerinizi, giriş sayfanızı ve örnek dosyanızı (`index.md`,`plan.md`) oluşturun:
 
 ```bash
-mkdir -p apps/docs
 mkdir -p apps/docs/src/.vitepress
 mkdir -p apps/docs/src/public
+
+echo '# Monorepo Dökümantasyonu' > apps/docs/src/index.md
+echo '# Monorepo İş Listesi' > apps/docs/src/plan.md
+echo '  ' > apps/docs/package.json
+echo '# Monorepo İş Listesi' > apps/docs/src/.vitepress/config.ts
 ```
 
 ---
+ ### Proje dosyasını oluşturun ve aşağıdaki içeriği ekleyin:
 
-## Alt Proje `package.json` Dosyasını Oluşturun
-`apps/docs/package.json` dosyasını oluşturun ve aşağıdaki içeriği ekleyin:
-
+:::details `apps/docs/package.json`
 ```json
 {
   "name": "docs",
@@ -59,7 +28,7 @@ mkdir -p apps/docs/src/public
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev src",
+    "dev": "vitepress dev src --host 0.0.0.0 --port 5173",
     "build": "vitepress build src",
     "preview": "vitepress preview src"
   },
@@ -69,38 +38,53 @@ mkdir -p apps/docs/src/public
   }
 }
 ```
+:::
+
+:::info dosya parametreleri
+
+- name : **docs** projemizin adı
+- scripts : projeyi çalıştırmak-derlemek kullanılan komutlar.
+  - "dev": "vitepress dev src --host 0.0.0.0 --port 5173",
+  
+    **`"dev":`** Bu, komutun takma adıdır. Terminalde tüm komutu yazmak yerine sadece `npm run dev` yazarak bu işlemi tetiklemenizi sağlar.
+    
+    **`vitepress dev`** VitePress geliştirme sunucusunu başlatır.
+    
+    **`src`** Dokümantasyon dosyalarınızın (Markdown dosyaları, yapılandırma vb.) bulunduğu ana klasörü belirtir. VitePress bu klasörü kök dizin olarak kabul eder.
+    
+    **`--host 0.0.0.0`**  Projemiz *statik site* olmasına rağmen geliştirme ortamında sayfalar **`vitepress dev`** komutunun oluşturduğu *backend* ile soket bağlantısı üzerinden haberleşerek çalışır. Bu parametre ile geliştirme sunucusu tüm adreslerden gelen talepleri dinler ve **HMR** (Hot Module Replacement), yaptığınız değişikliklerin anlık olarak uygulanmasını sağlar. Geliştirme ortamımız (Docker-Nginx) proxy ile çalışacağı için bu parametre olmadan **HMR** çalışmaz. 
+         
+       **`--port 5173`** Geliştirme sunucusunun hangi port üzerinden yayın yapacağını belirler. Tarayıcınızda `http://localhost:5173` adresine giderek sitenizi görüntüleyebilirsiniz.
+ 
+ `pnpm --filter docs dev` monorepo içindeki **docs** projesi için `package.json` içindeki `dev` komutunu çalıştırır.
+
+:::
 
 ---
-
-## Bağımlılıkları Yükleyin
-Projenin en kök dizinine (root) dönün ve pnpm filtresiyle bağımlılıkları sadece `docs` projesine geliştirme bağımlılığı (`-D`) olarak yükleyin:
-
-```bash
-pnpm --filter docs add -D vitepress vue
-```
-
----
-
-## Kaynak Klasörünü ve İlk Sayfayı Oluşturun
-VitePress dosyalarının düzenli durması için kodları `src` altında toplayın. İlk giriş sayfalarımızı (`index.md`,`plan.md`) oluşturun:
-
-```bash
-
-echo '# Merhaba Monorepo Dökümantasyonu' > apps/docs/src/index.md
-echo '# Monorepo Kılavuz İş Listesi' > apps/docs/src/plan.md
-```
-
----
-
-## VitePress Ayar Dosyasını Oluşturun
-`apps/docs/src/.vitepress/config.ts` dosyasını oluşturun ve temel tema ayarlarını ekleyin:
+ - VitePress ayar dosyasını oluşturun
+ 
+:::details `apps/docs/src/.vitepress/config.ts`
 
 ```typescript
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
-  title: "Proje Dökümantasyonu",
-  description: "Monorepo VitePress Sitesi",
+  base: "/",
+  lang: "tr-TR",
+  title: "SaaS-VPS Rehberi",
+  description: "SaaS Rehberi VitePress Sitesi",
+
+  head: [
+    [
+      "meta",
+      {
+        name: "keywords",
+        content:
+          "vitepress, dökümantasyon, markdown, seo, vue, nodejs, docker, monorepo, nestjs, turborepo, typescript",
+      },
+    ],
+  ],
+
   themeConfig: {
     logo: {
       light: "/logo.svg",
@@ -109,6 +93,43 @@ export default defineConfig({
     },
 
     siteTitle: "Dökümantasyon",
+    
+    socialLinks: [
+      { icon: "github", link: "https://github.com" },
+    ],
+
+    footer: {
+      message: "MIT Lisansı ile korunmaktadır.",
+      copyright: `Telif Hakkı © ${new Date().getFullYear()} SaaS Rehberi`,
+    },
+
+    outline: { label: "Bu Sayfada" },
+    docFooter: { prev: "Önceki Sayfa", next: "Sonraki Sayfa" },
+    lastUpdated: { text: "Son Güncelleme" },
+    returnToTopLabel: "Başa Dön",
+    sidebarMenuLabel: "Menü",
+    darkModeSwitchLabel: "Görünüm",
+    lightModeSwitchTitle: "Açık Mod",
+    darkModeSwitchTitle: "Karanlık Mod",
+
+    search: {
+      provider: "local",
+      options: {
+        translations: {
+          button: { buttonText: "Ara", buttonAriaLabel: "Arama yap" },
+          modal: {
+            noResultsText: "Sonuç bulunamadı",
+            resetButtonTitle: "Aramayı temizle",
+            footer: {
+              selectText: "Seçmek için",
+              navigateText: "Gezinmek için",
+              closeText: "Kapatmak için",
+            },
+          },
+        },
+      },
+    },
+    
     nav: [
       { text: "Ana Sayfa", link: "/" },
       { text: "Plan", link: "/plan" },
@@ -125,15 +146,25 @@ export default defineConfig({
   },
 })
 ```
+:::
 
-## Site ikonu
-`apps/docs/src/public` klasörünü oluşturun. Açık ve karanlık mod için iki svg (`logo.svg`,`logod.svg`) dosyası kopyalayaın. 
+
+  - `base: "/"` tanımlaması uygulamanın kök dizinden (`http://localhost:5173/`) çalışacağını gösterir. Dizin adı belirtmek için  `base: "/docs/"` şeklinde yazmalısınız. Bu durumda site `http://localhost:5173/docs"` adresinden yayınlanır. Vitepress tüm site içi bağlantıları bu parametre ile oluşturur. *Github-pages yayını için burada repo adınız olmalıdır.* 
+  
+  - `head -> meta -> content` **SEO** ( Search Engine Optimization ), arama motorları için anahtar kelimeler.
+  
+  - `themeConfig -> logo` sol üstte görünecek uygulama ikonlarıdır. Dosyalar `src/public` içinde olmalıdır.
+  - `siteTitle` sol üstte görünecek olan site başlığı.
+  - `search` gezinti çubuğuna site içi arama yapmanızı sağlayan bir buton ekler.
+  - `docFooter: { prev: "Önceki Sayfa", next: "Sonraki Sayfa" }` Sitenin ingilizce varsayılanlar (`Next Page`) yerine  yerine Türkçe karşılığı ile derlenmesini sağlar.
+  - `nav : []`, gezinti çubuğunda görünecek bağlantılar.
+  - `sidebar:[]`, sol panel menüsü.
+
 
 ---
+## Turborepo ayarlarını güncelleyin
 
-## Turborepo ayarlarını (`turbo.json`) Güncelleyin
-
-Kökte bulunan ana `turbo.json` dosyanızdaki `build` görevinin çıktılarına (`outputs`) VitePress derleme klasörünü ekleyin. Bu sayede Turborepo önbellekleme (caching) yapabilir:
+Kök dizinde bulunan `turbo.json` dosyanızdaki `build` görevinin çıktılarına (`outputs`) VitePress derleme klasörünü ekleyin. Bu sayede Turborepo önbellekleme (caching) yapabilir. `**/dist/**`, `**/.vitepress/dist/**` ifadesini de kapsadığı için biri yeterlidir.
 
 ```json
 {
@@ -142,7 +173,6 @@ Kökte bulunan ana `turbo.json` dosyanızdaki `build` görevinin çıktılarına
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "**/dist/**", "**/.vitepress/dist/**"]
-
     },
     "dev": {
       "cache": false,
@@ -155,11 +185,36 @@ Kökte bulunan ana `turbo.json` dosyanızdaki `build` görevinin çıktılarına
 }
 ```
 
----
+
+## Bağımlılıkları Yükleyin
+Projenin en kök dizinine (root) dönün ve pnpm filtresiyle bağımlılıkları sadece `docs` projesine geliştirme bağımlılığı (`-D`) olarak yükleyin. Ekleyeceğimiz kütüphaneler  `package.json` dosyasında tanımlı olduğu için `pnpm install` komutu da yeterli olacaktır. 
+
+```bash
+pnpm --filter docs add -D vitepress vue
+```
+
+
 
 ## Projeyi Çalıştırma
 
-Dökümantasyon projesini yerelde ayağa kaldırmak için monorepo kök dizininde şu komutu çalıştırın.
+
+```text
+📁 apps                     
+└── 📁 docs                 
+    ├── 📁 node_modules      # Node.js/npm paket bağımlılıkları dizini.
+    ├── 📁 src              
+    │   ├── 📁 .vitepress   
+    │   │   ├── 📁 cache     # geçici çalıştırma dosyaları
+    │   │   └── 📄 config.ts
+    │   ├── 📁 public       
+    │   │   ├── 📄 logo.svg 
+    │   │   └── 📄 logod.svg
+    │   ├── 📄 index.md     
+    │   └── 📄 plan.md      
+    └── 📄 package.json      # Node.js proje manifestosu; bağımlılıkları, betikleri ve meta verileri tanımlar.
+```
+
+- Dökümantasyon projesini yerelde ayağa kaldırmak için monorepo kök dizininde şu komutu çalıştırın.
 
 ```bash
 pnpm dev --filter docs
@@ -170,15 +225,12 @@ pnpm --filter docs build
 ```
 Derlenmiş kodu çalıştırmak için :
 ```bash
-
 pnpm --filter docs preview
-
 ```
 
-## Kontrol
-  - Başlık çubuğunda site adresiniz yerine etiketiniz görünür.
-  - Başlık çubuğunda Ana Sayfa ve Plan düğmeleri sağdadır.
-  - Dark-Light mod için sayfa ikonunuz değişir.
-  - Sidebar otomatik olarak oluşturulmuştur. index.md (Başlangıç) ve plan.md (Plan) dosya içeriği görünür.
-  - İçerik bölümünün alında önceki ve sonraki sayfa bağlantıları görünür.
-   
+Siteye git
+```
+http://localhost:5173
+```
+
+

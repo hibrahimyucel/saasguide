@@ -1,5 +1,5 @@
 
-# `2.` Dökümantasyon
+# `2.` Vitepress SSG
 
 İlk projemiz dökümanlarımız için [Vitepress SSG](https://vitepress.dev/) ile hazırlayacağımız statik bir site olacak.
 

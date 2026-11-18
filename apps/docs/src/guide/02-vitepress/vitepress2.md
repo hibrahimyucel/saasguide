@@ -21,8 +21,7 @@
   - `[Anasayfa](/)` projenizin giriş sayfasını (`src/index.md`) açar. ( [Anasayfa](/) )
   
   - `[Rehber](/guide)`,  `src/guide` içindeki `index.md` dosyasını açar. ( [Rehber](/guide/) )
-  
-  - `[Plan](/plan)`,  bağlantılarda uzantı kullanılmaz, `plan.md` yerine sadece `plan`.  ( [Plan](/plan) ) 
+   
   
   - `[Github](https://github.com/)` ilgli bağlanıtıyı yeni sayfada açar. [Github](https://github.com/)
   

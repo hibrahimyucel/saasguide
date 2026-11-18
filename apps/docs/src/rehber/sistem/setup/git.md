@@ -2,7 +2,7 @@
 
 # `1.1.2.` Repo Araçları
 
-Kod takibi için Git versiyon kontrol aracını, yedekleme ve paylaşım için Github platformunu kullnacağız.
+Kod takibi için Git versiyon kontrol aracını, yedekleme ve paylaşım için Github platformunu kullanacağız.
 
 
 ## Git
