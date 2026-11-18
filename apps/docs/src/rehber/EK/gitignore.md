@@ -1,226 +1,74 @@
 
 # .gitignore
 
-::: details `.gitignore`
+
 ```
-# -------------------------
-# OS
-# -------------------------
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails, desktop.ini
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# -------------------------
-# Node / package managers
-# -------------------------
-# Ignore node_modules anywhere in the repo
-**/node_modules/
+# ==========================================
+# Node.js & Paket Yöneticileri
+# ==========================================
 node_modules/
-
-# pnpm store/cache (usually global, do not commit)
-.pnpm-store/
-.pnpm-debug.log*
-
-# Keep lockfiles in source control (do NOT ignore pnpm-lock.yaml / package-lock.json / yarn.lock)
-# pnpm-lock.yaml
-# package-lock.json
-# yarn.lock
-
-# corepack / binary artifacts
-*.tgz
-
-# -------------------------
-# Monorepo / caching / build tools
-# -------------------------
-# Turborepo
-.turbo/
-.turbo/**
-
-# Vite/VitePress build output (ignore all .vitepress/dist in subpackages)
-**/.vitepress/dist/
-.vitepress/dist/
-
-# Common build output
-dist/
-build/
-out/
-. output/
-
-# Parcel
-.cache
-.parcel-cache
-
-# Next/Nuxt / SvelteKit / Astro / Remix
-.next/
-.nuxt/
-.build/
-.astro/
-.svelte-kit/
-.vercel/
-.serverless/
-
-# -------------------------
-# Logs, coverage, reports
-# -------------------------
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
-*.log
+.pnp
+.pnp.js
 
-coverage/
-.nyc_output/
-coverage-*.json
+# ==========================================
+# Turborepo
+# ==========================================
+.turbo/
 
-# TypeScript incremental and cache files
-*.tsbuildinfo
-.vscode-test/
+# ==========================================
+# VitePress (Dökümantasyon)
+# ==========================================
+# Kök dizin ve alt paketlerdeki VitePress geçici ve derleme dosyaları
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+apps/docs/.vitepress/cache/
+apps/docs/.vitepress/dist/
+**/.vitepress/cache/
+**/.vitepress/dist/
 
-# -------------------------
-# Env / secrets
-# -------------------------
+# ==========================================
+# Genel Build ve Dağıtım Çıktıları (apps/web, backend vb.)
+# ==========================================
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+
+# ==========================================
+# Ortam Değişkenleri (Environment Variables)
+# ==========================================
 .env
-.env.*.local
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env.*.secret
-# Keep example envs
-!.env.example
-!.env.sample
+.env*.local
 
-# -------------------------
-# Editor / IDE
-# -------------------------
-# VSCode
+# ==========================================
+# Test ve Kapsama (Coverage) Raporları
+# ==========================================
+coverage/
+.nyc_output/
+
+# ==========================================
+# IDE, Editör ve İşletim Sistemi Dosyaları
+# ==========================================
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
-# JetBrains (IntelliJ, WebStorm, PhpStorm...)
 .idea/
-*.iml
-
-# Sublime
-*.sublime-workspace
-*.sublime-project
-
-# Emacs / Vim
-*~
-.*.swp
-*.swo
-.session
-# macOS resource forks
-._*
-# Windows file locks
-*.lnk
-
-# -------------------------
-# Language specific
-# -------------------------
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Ruby
-*.gem
-*.rbc
-.bundle/
-vendor/bundle/
-
-# Java
-*.class
-*.war
-*.ear
-
-# Go
-*.exe
-*.exe~
-*.test
-*.out
-
-# Rust / Cargo
-/target/
-
-# -------------------------
-# Tooling caches & misc
-# -------------------------
-.eslintcache
-.stylelintcache
-.cache/
-.cache/**
-
-# Storybook
-.out/
-storybook-static/
-
-# Test results
-test-results/
-junit-*.xml
-
-# BrowserStack/Playwright/Webdriver artifacts
-playwright-report/
-screenshots/
-
-# Yarn PnP
-.pnp.*
-.yarn/*
-!.yarn/releases
-!.yarn/plugins
-!.yarn/patches
-!.yarn/releases/*
-!.yarn/plugins/*
-
-# npm pack output
-*.tgz
-
-# Docker
-docker-compose.override.yml
-.env.*.docker
-
-# Certificates and private keys
-*.pem
-*.key
-*.crt
-
-# Logs (IDE/test/build)
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
-
-# -------------------------
-# Optional / project-specific
-# -------------------------
-# If you DON'T want to ignore dist for a package that must be committed,
-# remove or comment out the matching dist/ line above.
-# If you want to ignore only specific package dist directories, use:
-# apps/some-package/dist/
-
-# VitePress nested path issues: ignore any accidental nested dist dirs
-**/.vitepress/**/.vitepress/dist/
-
-# -------------------------
-# Local OS/Dev machine files
-# -------------------------
-.vagrant/
-*.swp
-.sass-cache
-.cache-loader
-
-# -------------------------
-# End
-# -------------------------
-
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
 ```
-:::
 

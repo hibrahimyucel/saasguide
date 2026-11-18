@@ -1,9 +1,11 @@
+name: docs
 services:
   docs-dev:
     build:
       context: ../../                      # Reaches up to the monorepo root to fetch workspace lockfiles
       dockerfile: apps/docs/Dockerfile.dev # Exact path relative to the context root
     container_name: vitepress_docs_dev
+    restart: unless-stopped
     volumes:
       # Reaches up to the root to mount the workspace code into the app
       - ../../:/app
@@ -13,6 +15,11 @@ services:
       - WATCHPACK_POLLING=true
     networks:
       - dev_network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'        # Maksimum kullanabileceği CPU çekirdek sayısı
+          memory: 512M       # Maksimum kullanabileceği RAM miktarı
 
 networks:
   dev_network:

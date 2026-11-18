@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "SaaS-VPS"
   text: "Geliştirici Dökümantasyonu"
-  tagline: "Almalinux, VPS, Node, Turborepo, Docker, Nginx geliştirme ve yayınlama süreçleri"
+  tagline: "AlmaLinux, Tailscale, Docker, DuckDNS Wildcard SSL, Nginx ve Monorepo geliştirme süreçleri"
   image:
     src: /logo.svg
     alt: Proje Logosu
@@ -14,12 +14,36 @@ hero:
       link: /guide/
     - theme: alt
       text: GitHub Pages
-      link: https://hibrahimyucel.github.io/saasguide/
+      link: https://github.io
     - theme: alt
       text: GitHub Repository
-      link: https://github.com/hibrahimyucel/saasguide
+      link: https://github.com
 
 features:
+  - icon: 🌐
+    title: AlmaLinux & Tailscale VPN
+    details: Kurumsal Linux güvenliği ve sıfır port açma prensibiyle özel VPN ağı üzerinden izole sunucu erişimi.
+  - icon: 🐳
+    title: Docker & Monorepo Gücü
+    details: SELinux uyumlu izole konteynerler ve Turborepo ile tüm frontend, backend paketlerini tek repoda yönetin.
+  - icon: 🔒
+    title: DuckDNS & Wildcard SSL
+    details: DNS-01 doğrulaması ve Certbot otomasyonu ile istemci kurulumu gerektirmeyen tarayıcı onaylı HTTPS güvenliği.
+  - icon: 🛡️
+    title: Nginx Ters Proxy & Gateway
+    details: Dinamik alt alan adı yönlendirmesi ve yüksek performanslı ters vekil mimarisiyle mikro servislerinizi yönetin.
+  - icon: ☕
+    title: Gitea & MariaDB Altyapısı
+    details: Self-hosted Git deposu, Container Registry ve yüksek performanslı ilişkisel veritabanı yönetimi.
+  - icon: ✉️
+    title: Mailcow E-Posta Sunucusu
+    details: Tamamen sizin kontrolünüzde olan, SPF/DKIM destekli kurumsal e-posta altyapısı entegrasyonu.
+  - icon: 🦁
+    title: NestJS Backend Mimarisi
+    details: Modüler, test edilebilir ve ölçeklenebilir kurumsal Node.js backend altyapısı. TypeScript'in tüm gücünü hissedin.
+  - icon: ⚡
+    title: Vite & VitePress Dokümantasyonu
+    details: Yıldırım hızında çalışan frontend araçları ve geliştiriciler için optimize edilmiş statik dökümantasyon motoru.
   - icon: 📦
     title: Node.js & Monorepo Gücü
     details: Tüm frontend, backend ve paketlerinizi tek bir repoda yönetin. Paylaşımlı kod ve bağımlılık yönetimiyle geliştirme hızınızı katlayın.

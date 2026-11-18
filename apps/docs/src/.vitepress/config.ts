@@ -1,8 +1,37 @@
 import { defineConfig } from "vitepress";
 import { generateDynamicSidebar } from "./sidebar";
+import fs from "node:fs";
 
 export default defineConfig({
-  base: "/",
+  base: "/docs/",
+  vite: {
+    server: {
+      host: true,
+      port: 5173,
+      watch: {
+        usePolling: true, // Docker volume üzerinde yeni dosya olaylarını yakalar
+        interval: 300,
+      },
+    },
+    plugins: [
+      {
+        name: "auto-sidebar-reload",
+        configureServer(server) {
+          const touchConfig = (file: string) => {
+            if (file.endsWith(".md")) {
+              const now = new Date();
+              // config.ts dosyasına dokunarak VitePress'in sidebar fonksiyonunu yeniden çalıştırmasını sağlar
+              fs.utimesSync(__filename, now, now);
+            }
+          };
+
+          server.watcher.on("add", touchConfig);
+          server.watcher.on("unlink", touchConfig);
+        },
+      },
+    ],
+  },
+
   title: "SaaS-VPS Rehberi",
   description: "SaaS Rehberi VitePress Sitesi",
 
