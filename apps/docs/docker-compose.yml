@@ -5,7 +5,7 @@ services:
       context: ../../                      # Reaches up to the monorepo root to fetch workspace lockfiles
       dockerfile: apps/docs/Dockerfile.dev # Exact path relative to the context root
     container_name: vitepress_docs_dev
-    restart: unless-stopped
+    # restart: unless-stopped
     volumes:
       # Reaches up to the root to mount the workspace code into the app
       - ../../:/app

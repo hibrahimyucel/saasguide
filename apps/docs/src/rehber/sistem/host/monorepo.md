@@ -29,9 +29,9 @@ Proje kaynak kodları için `source` dizinini oluşturup versiyon kontrol için 
 
  `git` ve `docker` tarafından takip edilmeyecek dosya ve klasörleri belirtmek için kök dizinde `.gitignore`,`.dockerignore`dosyalarını oluşturuyoruz. Bunlar sisteminizin sağlıklı çalışması için gerekli en temel dosyalardır.
 
-[.gitignore dosyası](../../EK/gitignore)
+[.gitignore dosyası](../../ek/gitignore)
 
-[.dockerignore dosyası](../../EK/dockerignore)
+[.dockerignore dosyası](../../ek/dockerignore)
 
 
 

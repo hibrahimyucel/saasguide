@@ -1,0 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppLayout = void 0;
+var jsx_runtime_1 = require("react/jsx-runtime");
+var AppLayout = function () {
+    return ((0, jsx_runtime_1.jsxs)("div", { className: "bg-theme-surface text-theme-text flex h-screen w-screen flex-col overflow-hidden font-sans select-none", children: [(0, jsx_runtime_1.jsx)("div", { className: "m-0 block w-full shrink-0 p-0", children: "FormHeader" }), (0, jsx_runtime_1.jsxs)("div", { className: "flex min-h-0 w-full flex-1 overflow-hidden", children: [(0, jsx_runtime_1.jsxs)("aside", { className: "bg-theme-surface/50 border-theme-border flex min-h-0 w-64 shrink-0 flex-col border-r", children: [(0, jsx_runtime_1.jsx)("div", { className: "border-theme-border text-theme-muted border-b p-3 text-[10px] font-bold tracking-wider uppercase", children: "Gezgin" }), (0, jsx_runtime_1.jsx)("div", { className: "min-h-0 flex-1 space-y-1 overflow-auto p-2", children: "sidebar" })] }), (0, jsx_runtime_1.jsxs)("main", { className: "bg-theme-bg flex min-h-0 flex-1 flex-col overflow-hidden", children: [(0, jsx_runtime_1.jsx)("div", { className: "bg-theme-surface/30 border-theme-border flex h-10 shrink-0 items-center justify-between border-b px-4", children: "sub-menu" }), (0, jsx_runtime_1.jsx)("div", { className: "min-h-0 flex-1 overflow-auto p-2", children: "content" })] })] }), (0, jsx_runtime_1.jsxs)("footer", { className: "border-theme-border bg-theme-surface text-theme-muted flex h-6 shrink-0 items-center justify-between border-t px-4 text-[10px]", children: [(0, jsx_runtime_1.jsx)("div", { children: "Durum: Haz\u0131r" }), (0, jsx_runtime_1.jsx)("div", { className: "font-mono", children: "LN 1, Col 1" })] })] }));
+};
+exports.AppLayout = AppLayout;

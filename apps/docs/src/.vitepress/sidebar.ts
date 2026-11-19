@@ -1,40 +1,50 @@
 import fs from "fs";
 import path from "path";
+import matter from "gray-matter";
 import type { DefaultTheme } from "vitepress";
 
-/**
- * Markdown dosyasının ilk satırındaki "# Başlık" kısmını okur.
- */
-function getTitleFromMarkdown(filePath: string, fallback: string): string {
-  try {
-    const content = fs.readFileSync(filePath, "utf-8");
-    const match = content.match(/^#\s+(.+)$/m);
-    if (!match) return fallback;
-    const rawTitle = match[1].trim();
-    // Sadece metnin en başındaki hiyerarşi alanındaki ilk iki ters tırnağı bulur ve siler.
-    const cleanedTitle = rawTitle.replace(/^`([^`]+)`/, "$1");
-    return cleanedTitle;
-  } catch {
-    return fallback;
-  }
+interface SidebarFrontMatter {
+  index?: number;
+  isContent?: boolean;
+  link?: string;
+  sidebarTitle?: string;
+  hidden?: boolean;
+  collapsed?: boolean;
 }
 
-/**
- * index.md dosyasının başlıktan fazlasını içerip içermediğini kontrol eder.
- * Sadece başlık ve boşluklardan oluşuyorsa `false`, başka içerik varsa `true` döner.
- */
-function isIndexRichContent(filePath: string): boolean {
+interface ExtendedSidebarItem extends DefaultTheme.SidebarItem {
+  _index: number;
+  _isContent?: boolean;
+  _hasExplicitLink?: boolean;
+  items?: ExtendedSidebarItem[];
+}
+
+function parseMarkdownMetadata(
+  filePath: string,
+  fallbackTitle: string,
+): { title: string; meta: SidebarFrontMatter } {
   try {
-    if (!fs.existsSync(filePath)) return false;
-    const content = fs.readFileSync(filePath, "utf-8");
-    
-    // Başlık satırını ve tüm boşlukları/yeni satırları temizle
-    const cleanContent = content.replace(/^#\s+.+$/m, "").trim();
-    
-    // Eğer geriye kalan karakter varsa içerik zengindir
-    return cleanContent.length > 0;
+    if (!fs.existsSync(filePath)) {
+      return { title: fallbackTitle, meta: {} };
+    }
+
+    const rawFile = fs.readFileSync(filePath, "utf-8");
+    const { data, content } = matter(rawFile);
+    const meta = data as SidebarFrontMatter;
+
+    if (meta.sidebarTitle) {
+      return { title: meta.sidebarTitle.trim(), meta };
+    }
+
+    const match = content.match(/^#\s+(.+)$/m);
+    if (!match) {
+      return { title: fallbackTitle, meta };
+    }
+
+    const cleanedTitle = match[1].trim().replace(/^`([^`]+)`/, "$1");
+    return { title: cleanedTitle, meta };
   } catch {
-    return false;
+    return { title: fallbackTitle, meta: {} };
   }
 }
 
@@ -65,33 +75,26 @@ function findFirstDeepLink(item: DefaultTheme.SidebarItem): string | undefined {
  * en derindeki İLK geçerli döküman linki ile değiştirir.
  * 🎯 YENİ KURAL: Klasörün kendi index.md dosyası zengin içerik barındırıyorsa link DEĞİŞTİRİLMEZ.
  */
-function fixIndexLinks(
-  menuItems: DefaultTheme.SidebarItem[], 
-  scanPath: string
+function resolveFolderLinks(
+  menuItems: ExtendedSidebarItem[],
 ): DefaultTheme.SidebarItem[] {
-  for (const item of menuItems) {
+  return menuItems.map((item) => {
     if (item.items && item.items.length > 0) {
-      // Önce alt kırılımları kendi içinde çöz (Bottom-up)
-      // Alt klasörün taranacak fiziksel yolunu bulabilmek için ilgili klasör adını ekliyoruz
-      // Not: item.text temizlenmiş olabileceği için bu yapı klasör adlarının orijinal kalması durumunda en sağlıklı sonucu verir.
-      const currentFolder = item.link?.split("/").filter(Boolean).pop() || "";
-      const subScanPath = path.join(scanPath, currentFolder);
+      item.items = resolveFolderLinks(item.items) as ExtendedSidebarItem[];
 
-      fixIndexLinks(item.items, subScanPath);
-
-      // İlgili klasörün index.md yolunu kontrol et
-      const indexFilePath = path.join(scanPath, currentFolder, "index.md");
-
-      // Eğer index.md zengin içerik İÇERMİYORSA linki en derindeki ilk sayfaya taşı
-      if (!isIndexRichContent(indexFilePath)) {
+      // Açıkça symlink (link) tanımlanmamışsa ve içerik barındırmıyorsa (isContent !== true) ilk alt düğüme yönlendir
+      if (!item._hasExplicitLink && item._isContent !== true) {
         const deepLink = findFirstDeepLink(item.items[0]);
         if (deepLink) {
           item.link = deepLink;
         }
       }
     }
-  }
-  return menuItems;
+
+    // VitePress çıktısını kirletmemek için iç yardımcı alanları temizle
+    const { _index, _isContent, _hasExplicitLink, ...cleanItem } = item;
+    return cleanItem;
+  });
 }
 
 /**
@@ -103,12 +106,12 @@ function fixIndexLinks(
 export function generateDynamicSidebar(
   scanPath: string,
   basePath: string,
-  depth: number = 1
+  depth: number = 1,
 ): DefaultTheme.SidebarItem[] {
   const absolutePath = path.resolve(process.cwd(), scanPath);
   if (!fs.existsSync(absolutePath)) return [];
 
-  const items: DefaultTheme.SidebarItem[] = [];
+  const items: ExtendedSidebarItem[] = [];
   const files = fs.readdirSync(absolutePath);
 
   for (const file of files) {
@@ -118,49 +121,67 @@ export function generateDynamicSidebar(
     const stat = fs.statSync(fullPath);
 
     if (stat.isDirectory()) {
+      const subIndexFullPath = path.join(fullPath, "index.md");
+      const { title: folderTitle, meta } = parseMarkdownMetadata(
+        subIndexFullPath,
+        cleanMenuText(file),
+      );
+
+      // Klasörün index.md dosyasında hidden: true varsa tüm alt ağacı atla
+      if (meta.hidden === true) continue;
+
       const subItems = generateDynamicSidebar(
         path.join(scanPath, file),
         `${basePath}${file}/`,
-        depth + 1
-      );
+        depth + 1,
+      ) as ExtendedSidebarItem[];
 
-      if (subItems.length > 0) {
-        const subIndexFullPath = path.join(fullPath, "index.md");
-        const folderTitle = fs.existsSync(subIndexFullPath)
-          ? getTitleFromMarkdown(subIndexFullPath, cleanMenuText(file))
-          : cleanMenuText(file);
+      const hasExplicitLink = Boolean(meta.link);
 
-        const isCollapsed = depth > 1;
-
-        items.push({
+      // Alt öğesi varsa VEYA sembolik menü olarak açık link verilmişse ağaca ekle
+      if (subItems.length > 0 || hasExplicitLink) {
+        const node: ExtendedSidebarItem = {
           text: folderTitle,
-          link: `${basePath}${file}/`,
-          collapsible: true,
-          collapsed: isCollapsed,
-          items: subItems,
-        });
+          link: meta.link || `${basePath}${file}/`,
+          _index: meta.index ?? Number.MAX_SAFE_INTEGER,
+          _isContent: meta.isContent,
+          _hasExplicitLink: hasExplicitLink,
+        };
+
+        if (subItems.length > 0) {
+          node.collapsed = meta.collapsed ?? depth > 1;
+          node.items = subItems;
+        }
+
+        items.push(node);
       }
     } else if (file.endsWith(".md")) {
       const nameWithoutExt = path.parse(file).name;
-      const fallbackTitle = cleanMenuText(nameWithoutExt);
-      const title = getTitleFromMarkdown(fullPath, fallbackTitle);
+      const { title, meta } = parseMarkdownMetadata(
+        fullPath,
+        cleanMenuText(nameWithoutExt),
+      );
+
+      if (meta.hidden === true) continue;
 
       items.push({
         text: title,
-        link: `${basePath}${nameWithoutExt}`,
+        link: meta.link || `${basePath}${nameWithoutExt}`,
+        _index: meta.index ?? Number.MAX_SAFE_INTEGER,
       });
     }
   }
 
-  // OLUŞAN LİSTEYİ TÜRKÇE KARAKTERLERE UYGUN SIRALAMA
+  // 1. Öncelik: Front Matter 'index' değeri | 2. Öncelik: Türkçe alfabetik sıralama
   items.sort((a, b) => {
-    const titleA = a.text || "";
-    const titleB = b.text || "";
-    return titleA.localeCompare(titleB, "tr", { numeric: true, sensitivity: "base" });
+    if (a._index !== b._index) {
+      return a._index - b._index;
+    }
+    return (a.text || "").localeCompare(b.text || "", "tr", {
+      numeric: true,
+      sensitivity: "base",
+    });
   });
 
-  // Eğer en dış çağrıdaysak (depth === 1) link düzeltme fonksiyonunu çalıştır
-  // fixIndexLinks fonksiyonuna başlangıç scanPath yolunu da veriyoruz ki fiziksel dosyaları kontrol edebilsin.
-  return depth === 1 ? fixIndexLinks(items, scanPath) : items;
+  return depth === 1 ? resolveFolderLinks(items) : items;
 }
-

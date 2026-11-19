@@ -2,8 +2,22 @@ import { defineConfig } from "vitepress";
 import { generateDynamicSidebar } from "./sidebar";
 import fs from "node:fs";
 
+// config.ts en üstüne bir Set ekleyin:
+const hiddenUrls = new Set<string>();
+const siteURL = "https://pr2cloud.duckdns.org/docs/";
+
 export default defineConfig({
   base: "/docs/",
+
+  markdown: {
+    languageAlias: {
+      env: "dotenv",
+      gitignore: "ini",
+      dockerignore: "ini",
+      cron: "bash",
+    },
+  },
+
   vite: {
     server: {
       host: true,
@@ -27,6 +41,7 @@ export default defineConfig({
 
           server.watcher.on("add", touchConfig);
           server.watcher.on("unlink", touchConfig);
+          server.watcher.on("change", touchConfig); // Front matter değişikliklerinde sidebar'ı canlı yeniler
         },
       },
     ],
@@ -47,6 +62,69 @@ export default defineConfig({
   ],
 
   lang: "tr-TR",
+  cleanUrls: true, // URL sonlarındaki .html uzantılarını kaldırır (SEO için kritik)
+
+  sitemap: {
+    hostname: siteURL,
+    transformItems: (items) => {
+      return items.filter((item) => {
+        const cleanItemUrl = item.url.replace(/^\/docs\//, "");
+        // Tam eşleşen gizli sayfaları veya gizli klasör altındaki tüm alt sayfaları dışla
+        for (const hidden of hiddenUrls) {
+          if (
+            cleanItemUrl === hidden ||
+            (hidden.endsWith("/") && cleanItemUrl.startsWith(hidden))
+          ) {
+            return false;
+          }
+        }
+        return true;
+      });
+    },
+  },
+
+  // Her sayfanın Front Matter verisinden dinamik SEO ve OpenGraph etiketleri üretir
+  transformPageData(pageData) {
+    const relativeCleanPath = pageData.relativePath
+      .replace(/index\.md$/, "")
+      .replace(/\.md$/, "");
+    const canonicalUrl = siteURL;
+
+    const pageTitle =
+      pageData.frontmatter.title || pageData.title || "SaaS-VPS Rehberi";
+    const pageDesc =
+      pageData.frontmatter.description ||
+      "Self-hosted SaaS altyapısı ve monorepo geliştirme rehberi.";
+
+    pageData.frontmatter.head ??= [];
+    pageData.frontmatter.head.push(
+      ["link", { rel: "canonical", href: canonicalUrl }],
+      ["meta", { property: "og:locale", content: "tr_TR" }],
+      ["meta", { property: "og:type", content: "article" }],
+      ["meta", { property: "og:title", content: pageTitle }],
+      ["meta", { property: "og:description", content: pageDesc }],
+      ["meta", { property: "og:url", content: canonicalUrl }],
+      ["meta", { name: "twitter:card", content: "summary" }],
+      ["meta", { name: "twitter:title", content: pageTitle }],
+      ["meta", { name: "twitter:description", content: pageDesc }],
+    );
+
+    if (Array.isArray(pageData.frontmatter.keywords)) {
+      pageData.frontmatter.head.push([
+        "meta",
+        { name: "keywords", content: pageData.frontmatter.keywords.join(", ") },
+      ]);
+    }
+
+    if (pageData.frontmatter.hidden === true) {
+      hiddenUrls.add(relativeCleanPath);
+      pageData.frontmatter.head.push([
+        "meta",
+        { name: "robots", content: "noindex, nofollow" },
+      ]);
+    }
+  },
+
   themeConfig: {
     logo: {
       light: "/logo.svg",
@@ -61,7 +139,7 @@ export default defineConfig({
 
     footer: {
       message: "MIT Lisansı ile korunmaktadır.",
-      copyright: `Telif Hakkı © ${new Date().getFullYear()} SaaS Rehberi`,
+      copyright: `Telif Hakkı © ${new Date().getFullYear()} İbrahim YÜCEL`,
     },
 
     outline: { label: "Bu Sayfada" },
@@ -92,14 +170,13 @@ export default defineConfig({
     },
 
     nav: [
-      { text: "Rehber", link: "/guide/01-sistem", activeMatch: "/guide/" },
       { text: "Sözlük", link: "/dict/", activeMatch: "/dict/" },
-      { text: "rehber", link: "/rehber/", activeMatch: "/rehber/" },
+      { text: "Rehber", link: "/rehber/", activeMatch: "/rehber/" },
+      { text: "tümü", link: "/", activeMatch: "/" },
     ],
 
     sidebar: {
       "/": generateDynamicSidebar("src/", "/"),
-      "/guide/": generateDynamicSidebar("src/guide", "/guide/"),
       "/rehber/": generateDynamicSidebar("src/rehber", "/rehber/"),
       "/dict/": generateDynamicSidebar("src/dict", "/dict/"),
     },
