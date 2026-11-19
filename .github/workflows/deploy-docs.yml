@@ -18,8 +18,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: \${{ steps.deployment.outputs.page_url }}
-      VITE_BASE_PATH: /saasguide/ 
+      url: \${{ steps.deployment.outputs.page_url }} 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,7 +41,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build Documentation
-        run: pnpm --filter docs build
+        run: pnpm --filter docs build VITE_BASE_PATH: "/saasguide/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
