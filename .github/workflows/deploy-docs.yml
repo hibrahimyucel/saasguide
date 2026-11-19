@@ -41,7 +41,10 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build Documentation
-        run: pnpm --filter docs build VITE_BASE_PATH: "/saasguide/"
+            - name: Build Documentation
+        env:
+          VITE_BASE_PATH: /saasguide/
+        run: pnpm --filter docs build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
