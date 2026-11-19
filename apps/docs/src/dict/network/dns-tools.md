@@ -1,10 +1,20 @@
 ---
-tarih: 2026-11-15
-saat: 18:30
-konu: "Dış Erişim ve DNS Çözümleri: ngrok, No-IP ve nip.io Teknik Analizi"
-baglam: "apps/docs (VitePress Rehberi) / Sunucu ve Geliştirme Ortamı Ağ Mimarisi"
-durum: "Tamamlandı"
-etiketler: [vitepress, ar-ge, ag-mimarisi, ngrok, no-ip, nip-io, dns]
+title: 'Dış Erişim ve DNS Çözümleri: ngrok, No-IP ve nip.io Teknik Analizi'
+description: >-
+  Bu doküman, yerel geliştirme ortamlarını veya dinamik/statik IP'li sunucuları
+  dış dünyaya açmak için kullanılan ngrok, No-IP ve nip.io araçlarının tekni...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - vitepress
+  - ar-ge
+  - ag-mimarisi
+  - ngrok
+  - no-ip
+  - nip-io
+  - dns
 ---
 
 # Dış Erişim ve DNS Çözümleri (ngrok, No-IP, nip.io)

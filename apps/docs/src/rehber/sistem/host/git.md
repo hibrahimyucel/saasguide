@@ -1,10 +1,16 @@
 ---
-tarih: 2026-11-13
-saat: 15:54
-konu: "Kurulum Rehberi Giriş: Neden Git ve Neden İlk Adım?"
-baglam: "apps/docs (VitePress Rehber Dökümantasyonu) / Geliştirme Ortamı Kurulumu"
-durum: "Tamamlandı"
-etiketler: [git, versiyon-kontrol, mimari, vitepress, kurulum-rehberi]
+title: 'Kurulum Rehberi Giriş: Neden Git ve Neden İlk Adım?'
+description: sudo dnf install -y git curl
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - git
+  - versiyon-kontrol
+  - mimari
+  - vitepress
+  - kurulum-rehberi
 ---
 
 # `1.` Git & GitHub CLI

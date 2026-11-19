@@ -1,8 +1,20 @@
 ---
 title: Yerel Gitea Kurulumu ve Dual Remote Origin Yapılandırması
-description: pr2 monorepo altyapısında Docker ile izole Gitea kurulumu, Nginx SSL reverse proxy entegrasyonu ve GitHub ile çift yönlü Git senkronizasyonu.
-date: 2026-11-14
-tags: [gitea, docker, nginx, reverse-proxy, git, dual-remote, monorepo]
+description: >-
+  pr2 monorepo altyapısında Docker ile izole Gitea kurulumu, Nginx SSL reverse
+  proxy entegrasyonu ve GitHub ile çift yönlü Git senkronizasyonu.
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - gitea
+  - docker
+  - nginx
+  - reverse-proxy
+  - git
+  - dual-remote
+  - monorepo
 ---
 
 # `7.` Gitea - Dual Remote Yapılandırması

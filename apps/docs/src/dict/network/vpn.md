@@ -1,10 +1,20 @@
 ---
-tarih: 2026-11-17
-saat: 23:10
-konu: "VPN: Sanal Özel Ağ Protokolleri (Kavramsal Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Ağ ve Güvenlik Temelleri (Katman 5: Tailscale Altyapı Kavramı)"
-durum: "Tamamlandı"
-etiketler: [vpn, tunneling, cryptography, network-security, lexical-database, referans]
+title: 'VPN: Sanal Özel Ağ Protokolleri (Kavramsal Tanıtım, Referans ve Sözlük)'
+description: >-
+  VPN (Virtual Private Network), herkese açık ve güvensiz bir ağ altyapısı
+  (internet) üzerinde noktadan noktaya şifreli sanal tüneller (tunneling)
+  oluştur...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - vpn
+  - tunneling
+  - cryptography
+  - network-security
+  - lexical-database
+  - referans
 ---
 
 # VPN - Virtual Private Network

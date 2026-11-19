@@ -1,12 +1,20 @@
 ---
-title: "Nginx Reverse Proxy ve Wildcard TLS Yapılandırması"
-description: "pr2cloud PaaS & SaaS Documentation"
-sidebarTitle: "Sistem Mimarisi"
+title: Nginx Reverse Proxy ve Wildcard TLS Yapılandırması
+description: pr2cloud PaaS & SaaS Documentation
+outline:
+  - 2
+  - 3
+sidebarTitle: Sistem Mimarisi
 index: 1
-outline: [2, 3]
-status: "published"
-tags: [ai-reference, architecture, monorepo, self-hosted-paas, security, sso, devops]
-subject: "AI Workspace / Single Source of Truth (System Prompt & Context Reference)"
+status: published
+tags:
+  - ai-reference
+  - architecture
+  - monorepo
+  - self-hosted-paas
+  - security
+  - sso
+  - devops
 ---
 
 # System Reference  

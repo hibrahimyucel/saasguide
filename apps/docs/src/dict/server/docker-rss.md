@@ -1,3 +1,14 @@
+---
+title: Docker Kaynak Yönetimi
+description: docker volume create --label keep=true gitea_data
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - dict
+  - server
+---
 
 # Docker Kaynak Yönetimi
 

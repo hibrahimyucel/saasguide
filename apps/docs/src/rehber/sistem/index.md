@@ -1,3 +1,15 @@
+---
+title: 1 Sistem
+description: 1. Sunucu Hazırlığı ve Güvenli Ağ (AlmaLinux & Tailscale)
+outline:
+  - 2
+  - 3
+isContent: true
+status: published
+tags:
+  - rehber
+  - sistem
+---
 # 1 Sistem
 1. Sunucu Hazırlığı ve Güvenli Ağ (AlmaLinux & Tailscale)
 

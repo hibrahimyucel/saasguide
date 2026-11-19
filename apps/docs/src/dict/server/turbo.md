@@ -1,10 +1,23 @@
 ---
-tarih: 2026-11-17
-saat: 23:20
-konu: "Turborepo: Yüksek Performanslı Monorepo Derleme Sistemi (Tanıtım, Referans ve Sözlük)"
-baglam: "Monorepo Kök Dizini (turbo.json) / Görev Orkestrasyonu ve Önbellekleme"
-durum: "Tamamlandı"
-etiketler: [turborepo, monorepo, build-system, caching, pipeline, lexical-database, referans]
+title: >-
+  Turborepo: Yüksek Performanslı Monorepo Derleme Sistemi (Tanıtım, Referans ve
+  Sözlük)
+description: >-
+  Turborepo, JavaScript ve TypeScript monorepo projeleri için Rust diliyle
+  geliştirilmiş; paketler arası bağımlılık grafiğini analiz ederek görevleri
+  (der...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - turborepo
+  - monorepo
+  - build-system
+  - caching
+  - pipeline
+  - lexical-database
+  - referans
 ---
 
 # Turborepo

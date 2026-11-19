@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-15
-saat: 18:39
-konu: "Modüler Nginx Mimarisi: Snippets ve Esnek Reverse Proxy Yapılandırması"
-baglam: "apps/docs (VitePress Rehberi) / Sunucu ve Konteyner Ağ Mimarisi"
-durum: "Tamamlandı"
-etiketler: [vitepress, nginx, docker, reverse-proxy, srp, clean-code, nip-io]
+title: 'Modüler Nginx Mimarisi: Snippets ve Esnek Reverse Proxy Yapılandırması'
+description: >-
+  Bu doküman, projedeki ters vekil sunucu (Reverse Proxy) katmanının Tek
+  Sorumluluk İlkesi (SRP) ve DRY (Kendini Tekrar Etme) prensiplerine uygun
+  olarak n...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - vitepress
+  - nginx
+  - docker
+  - reverse-proxy
+  - srp
+  - clean-code
+  - nip-io
 ---
 
 # Modüler Nginx Mimarisi (Snippets & SRP)

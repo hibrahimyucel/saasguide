@@ -1,10 +1,20 @@
 ---
-tarih: 2026-11-12
-saat: 01:17
-konu: "Nginx Hibrit Reverse Proxy ve Multi-Tenant Routing Mimarisi"
-baglam: "apps/docs (VitePress Rehberi) / Altyapı ve Ağ Standartları"
-durum: "Tamamlandı"
-etiketler: [nginx, docker, reverse-proxy, multi-tenant, vitepress, devops]
+title: Nginx Hibrit Reverse Proxy ve Multi-Tenant Routing Mimarisi
+description: >-
+  Bu doküman, monorepo altyapımızda geliştirme ortamı (dev.localhost) ile
+  sürekli çalışan canlı build ve multi-tenant SaaS yapısını (*.localhost)
+  birbirin...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - nginx
+  - docker
+  - reverse-proxy
+  - multi-tenant
+  - vitepress
+  - devops
 ---
 
 # 🌐 Nginx Hibrit Reverse Proxy ve Gateway Mimarisi

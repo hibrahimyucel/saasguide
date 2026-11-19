@@ -1,3 +1,17 @@
+---
+title: File Analyzer
+description: >-
+  Bu doküman, @repo/file-analyzer (apps/file-info) uygulamasının mimari
+  katmanlarını, reaktif dosya eşleşme algoritmalarını, bileşen hiyerarşisini ve
+  test...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - dev
+---
 # File Analyzer
 
 Bu doküman, `@repo/file-analyzer` (`apps/file-info`) uygulamasının mimari katmanlarını, reaktif dosya eşleşme algoritmalarını, bileşen hiyerarşisini ve test adımlarını standartlaştırmak üzere oluşturulmuştur.

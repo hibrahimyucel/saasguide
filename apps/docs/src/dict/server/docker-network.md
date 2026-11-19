@@ -1,10 +1,22 @@
 ---
-tarih: 2026-11-15
-saat: 20:44
-konu: "Docker Ağ Mimarisi, Port Güvenliği ve Dağıtım Senaryoları"
-baglam: "apps/docs (VitePress Rehberi) / Konteyner ve Sunucu Ağ Topolojisi"
-durum: "Tamamlandı"
-etiketler: [vitepress, docker, network, ports, expose, reverse-proxy, güvenlik, mimari]
+title: 'Docker Ağ Mimarisi, Port Güvenliği ve Dağıtım Senaryoları'
+description: >-
+  Docker ağlarını (bridge, custom bridge, external) ve Tailscale Mesh VPN
+  yapısını kurgulamadan önce, uluslararası internet standartlarının yerel ağlar
+  ve...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - vitepress
+  - docker
+  - network
+  - ports
+  - expose
+  - reverse-proxy
+  - güvenlik
+  - mimari
 ---
 
 # Docker Ağı

@@ -1,3 +1,17 @@
+---
+title: File Analyzer - Render
+description: >-
+  Bu rehber, projemizin Anayasa v4 standartları çerçevesinde, üst bar
+  (AppHeader) üzerinden tetiklenen görünüm değişikliklerinde, alt panellerin
+  durum (st...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - dev
+---
 # File Analyzer - Render
 
 ### State Korumalı Koşullu Render ve Görünüm Yönetimi

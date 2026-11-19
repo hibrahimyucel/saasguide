@@ -1,10 +1,20 @@
 ---
-tarih: 2026-11-12
-saat: 17:38
-konu: "Docker İmaj Taşıma, Dağıtım (Deployment) ve Bakım İpuçları"
-baglam: "apps/docs / Docker Operasyonları ve Sunucu Dağıtım Stratejileri"
-durum: "Tamamlandı"
-etiketler: [docker, deployment, save-load, export-import, vps, operasyon, ipuclari]
+title: 'Docker İmaj Taşıma, Dağıtım (Deployment) ve Bakım İpuçları'
+description: >-
+  Bu doküman; Docker imajlarının harici bir kayıt defterine (Docker Hub, GHCR
+  vb.) ihtiyaç duymadan yerel makineden uzak sunucuya (VPS) taşınması, kritik...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - docker
+  - deployment
+  - save-load
+  - export-import
+  - vps
+  - operasyon
+  - ipuclari
 ---
 
 # 🚀 Docker İmaj Taşıma, Dağıtım (Deployment) ve Bakım İpuçları

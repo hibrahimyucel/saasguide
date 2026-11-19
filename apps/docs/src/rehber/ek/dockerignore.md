@@ -1,3 +1,14 @@
+---
+title: .dockerignore
+description: .git
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - ek
+---
 
 # .dockerignore
 

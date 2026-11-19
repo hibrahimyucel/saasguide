@@ -1,10 +1,20 @@
 ---
-tarih: 2026-11-14
-saat: 23:06
-konu: "Docker İmaj Export / Import ve Konteyner Bağlama Hızlı Rehberi"
-baglam: "apps/docs / Dağıtım ve Taşıma Operasyonları"
-durum: "Tamamlandı"
-etiketler: [docker, docker-save, docker-load, deployment, vitepress, rehber]
+title: Docker İmaj Export / Import ve Konteyner Bağlama Hızlı Rehberi
+description: >-
+  Bu doküman, pr2-docs:latest üretim imajının kaynak kodlara ihtiyaç duymadan
+  sıkıştırılmış arşiv (.tar.gz) olarak dışa aktarılması ve hedef ortamda
+  Gatew...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - docker
+  - docker-save
+  - docker-load
+  - deployment
+  - vitepress
+  - rehber
 ---
 
 # 📦 Docker İmaj Export ve Hedef Ortama Bağlama Rehberi

@@ -1,3 +1,18 @@
+---
+title: 6. Edge Router
+description: >-
+  Yerel geliştirme ortamımızda her servis ve proje için ayrı konteynır
+  oluşturarak servisleri Docker içinde çalıştırıp Nginx ile orkestrasyonu
+  sağlayacağız.
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - sistem
+  - servisler
+---
 
 # `6.` Edge Router
 

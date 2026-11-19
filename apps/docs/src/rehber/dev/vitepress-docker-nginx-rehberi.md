@@ -1,10 +1,22 @@
 ---
-tarih: 2026-11-12
-saat: 17:02
-konu: "VitePress Docker Geliştirme Ortamı ve Nginx Reverse Proxy Referans Kılavuzu"
-baglam: "apps/docs (VitePress) / Docker, Compose, Nginx ve Monorepo Altyapısı"
-durum: "Tamamlandı"
-etiketler: [docker, docker-compose, dockerignore, nginx, reverse-proxy, vitepress, monorepo, pnpm, referans-rehber]
+title: VitePress Docker Geliştirme Ortamı ve Nginx Reverse Proxy Referans Kılavuzu
+description: >-
+  Bu doküman; monorepo mimarisi içindeki VitePress dokümantasyon uygulamasının
+  (apps/docs) Docker konteyneri üzerinde nasıl yapılandırıldığını, Nginx Reve...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - docker
+  - docker-compose
+  - dockerignore
+  - nginx
+  - reverse-proxy
+  - vitepress
+  - monorepo
+  - pnpm
+  - referans-rehber
 ---
 
 # 🐳 VitePress Docker Geliştirme Ortamı ve Nginx Reverse Proxy Referans Kılavuzu

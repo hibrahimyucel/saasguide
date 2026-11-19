@@ -1,9 +1,17 @@
 ---
-title: "Software Development"
-description: "Döküman Ekleri"
-sidebarTitle: "Dosyalar"
+title: Software Development
+description: Döküman Ekleri
+outline:
+  - 2
+  - 3
+sidebarTitle: Dosyalar
 index: 999
 isContent: false
-collapsed: true
 hidden: true
+collapsed: true
+status: published
+tags:
+  - rehber
+  - ek
 ---
+

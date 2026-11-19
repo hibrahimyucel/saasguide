@@ -1,3 +1,16 @@
+---
+title: Proje Oluşturma
+description: >-
+  Monorepo yapımıza apps/ dizini altına bir VitePress dökümantasyon projesi
+  ekliyoruz.
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - dev
+---
 # Proje Oluşturma
 
 Monorepo yapımıza `apps/` dizini altına bir VitePress dökümantasyon projesi ekliyoruz.

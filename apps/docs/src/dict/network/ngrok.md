@@ -1,10 +1,23 @@
 ---
-tarih: 2026-11-17
-saat: 23:26
-konu: "ngrok: Güvenli Ters Tünel ve Geliştirme Ağ Geçidi (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Ağ ve Tünel Servisleri Referansı (Webhook & Geçici Dış Erişim)"
-durum: "Tamamlandı"
-etiketler: [ngrok, tunneling, reverse-tunnel, webhook, localhost, lexical-database, referans]
+title: >-
+  ngrok: Güvenli Ters Tünel ve Geliştirme Ağ Geçidi (Tanıtım, Referans ve
+  Sözlük)
+description: >-
+  ngrok, yerel bilgisayarda (localhost) veya kapalı bir özel ağ arkasında
+  çalışan web sunucularını ve API servislerini; güvenlik duvarı (firewall)
+  ayarı,...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - ngrok
+  - tunneling
+  - reverse-tunnel
+  - webhook
+  - localhost
+  - lexical-database
+  - referans
 ---
 
 # ngrok (Reverse Tunnel)

@@ -1,10 +1,27 @@
 ---
-tarih: 2026-11-16
-saat: 01:19
-konu: "Uçtan Uca SaaS Altyapı Mimarisi ve Servis Orkestrasyonu (Master Architecture Guide)"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Node, Docker, Git, Nginx, Tailscale, nip.io, Gitea, MinIO & VitePress)"
-durum: "Tamamlandı"
-etiketler: [master-guide, altyapi, mimari, nodejs, docker, git, nginx, tailscale, nip-io, gitea, minio, vitepress]
+title: >-
+  Uçtan Uca SaaS Altyapı Mimarisi ve Servis Orkestrasyonu (Master Architecture
+  Guide)
+description: >-
+  Bu doküman; SaaS Rehberi monorepo ekosisteminin temelini oluşturan 8 katmanlı
+  altyapı yığınının mimari sırasını, birbirleriyle olan etkileşimini ve Vite...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - master-guide
+  - altyapi
+  - mimari
+  - nodejs
+  - docker
+  - git
+  - nginx
+  - tailscale
+  - nip-io
+  - gitea
+  - minio
+  - vitepress
 ---
 
 # 🏗️ Master Architecture Guide: Uçtan Uca SaaS Altyapı Mimarisi

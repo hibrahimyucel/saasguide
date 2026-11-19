@@ -1,10 +1,21 @@
 ---
-title: "Session Management (Uçtan Uca Oturum ve Kimlik Yaşam Döngüsü)"
-description: "SaaS Rehberi mimarisinde Dex (OIDC), Gitea, MinIO, Yalın Frontend ve Bağımsız Backend API'ler arasındaki bütünleşik oturum yönetimi ve token yaşam döngüsü."
-date: 2026-11-18
-category: "architecture-security"
-tags: [session, sso, oidc, dex, token-lifecycle, pkce, jwks, architecture]
-status: "active-reference"
+title: Session Management (Uçtan Uca Oturum ve Kimlik Yaşam Döngüsü)
+description: >-
+  SaaS Rehberi mimarisinde Dex (OIDC), Gitea, MinIO, Yalın Frontend ve Bağımsız
+  Backend API'ler arasındaki bütünleşik oturum yönetimi ve token yaşam döngüsü.
+outline:
+  - 2
+  - 3
+status: active-reference
+tags:
+  - session
+  - sso
+  - oidc
+  - dex
+  - token-lifecycle
+  - pkce
+  - jwks
+  - architecture
 ---
 
 # Session Management

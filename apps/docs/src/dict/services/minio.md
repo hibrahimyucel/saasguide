@@ -1,10 +1,23 @@
 ---
-tarih: 2026-11-17
-saat: 23:16
-konu: "MinIO: S3 Uyumlu Yüksek Performanslı Nesne Depolama (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Katman 8: MinIO)"
-durum: "Tamamlandı"
-etiketler: [minio, object-storage, s3-compatible, storage, erasure-coding, lexical-database, referans, altyapi-katman-8]
+title: >-
+  MinIO: S3 Uyumlu Yüksek Performanslı Nesne Depolama (Tanıtım, Referans ve
+  Sözlük)
+description: >-
+  MinIO, bulut yerel (cloud-native) uygulamalar için Go diliyle geliştirilmiş;
+  Amazon S3 API protokolüyle %100 uyumlu, yüksek performanslı, dağıtık ve ken...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - minio
+  - object-storage
+  - s3-compatible
+  - storage
+  - erasure-coding
+  - lexical-database
+  - referans
+  - altyapi-katman-8
 ---
 
 # MinIO (S3 Object Storage)

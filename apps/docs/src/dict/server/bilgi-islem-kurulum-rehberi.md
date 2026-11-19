@@ -1,3 +1,18 @@
+---
+title: >-
+  Bilgi İşlem Merkezi Kurulum Kılavuzu: RHEL, Cloudflare, Nginx, Docker ve SSL
+  Yapılandırması
+description: >-
+  Bu kılavuz, RHEL (Red Hat Enterprise Linux) veya RHEL tabanlı (Rocky Linux,
+  AlmaLinux) bir VPS üzerinde, harici kontrol paneli kullanmadan, Cloudflare,...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - dict
+  - server
+---
 # Bilgi İşlem Merkezi Kurulum Kılavuzu: RHEL, Cloudflare, Nginx, Docker ve SSL Yapılandırması
 
 Bu kılavuz, **RHEL (Red Hat Enterprise Linux)** veya RHEL tabanlı (Rocky Linux, AlmaLinux) bir VPS üzerinde, harici kontrol paneli kullanmadan, **Cloudflare**, **Nginx (Reverse Proxy)**, **Docker** ve **Certbot (Let's Encrypt - Wildcard SSL)** kullanarak çoklu domain ve SaaS altyapısı destekleyen profesyonel bir bilgi işlem merkezi kurma adımlarını içerir.

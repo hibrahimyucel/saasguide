@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-12
-saat: 18:42
-konu: "Monorepo Docker Orkestrasyon, Önbellek (Cache) ve Standart Servis Şablonları"
-baglam: "Monorepo Altyapısı / Docker Compose, PNPM Workspace ve Servis Şablonları"
-durum: "Tamamlandı"
-etiketler: [docker, docker-compose, monorepo, pnpm, buildkit-cache, orkestrasyon, sablon]
+title: 'Monorepo Docker Orkestrasyon, Önbellek (Cache) ve Standart Servis Şablonları'
+description: >-
+  Bu doküman; monorepo mimarisi içindeki birden fazla uygulamanın (apps/docs,
+  apps/web, apps/backend-api vb.) Docker üzerinde nasıl yönetileceğini,
+  önbell...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - docker
+  - docker-compose
+  - monorepo
+  - pnpm
+  - buildkit-cache
+  - orkestrasyon
+  - sablon
 ---
 
 # 🏗️ Monorepo Docker Orkestrasyon, Önbellek ve Standart Servis Şablonları

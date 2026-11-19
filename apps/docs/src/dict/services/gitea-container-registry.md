@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-14
-saat: 23:32
-konu: "Gitea Container Registry Kurulum ve Kullanım Rehberi"
-baglam: "apps/docs (VitePress Rehber Dökümantasyonu) / infra/gitea & infra/gateway"
-durum: "Tamamlandı"
-etiketler: [gitea, container-registry, docker, nginx, ssl, mkcert, rehber]
+title: Gitea Container Registry Kurulum ve Kullanım Rehberi
+description: >-
+  Yerel Gitea sunucusunun (git.localhost) yerleşik paket kayıt defteri
+  (Container Registry) özelliğini aktif hale getirme, Nginx Gateway üzerinde
+  büyük ka...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - gitea
+  - container-registry
+  - docker
+  - nginx
+  - ssl
+  - mkcert
+  - rehber
 ---
 
 # Gitea Container Registry

@@ -1,10 +1,23 @@
 ---
-tarih: 2026-11-17
-saat: 23:20
-konu: "pnpm: İçerik Adreslemeli Node.js Paket Yöneticisi (Tanıtım, Referans ve Sözlük)"
-baglam: "Monorepo Kök Dizini / Bağımlılık ve Workspace Yönetimi"
-durum: "Tamamlandı"
-etiketler: [pnpm, package-manager, monorepo, workspaces, symlink, lexical-database, referans]
+title: >-
+  pnpm: İçerik Adreslemeli Node.js Paket Yöneticisi (Tanıtım, Referans ve
+  Sözlük)
+description: >-
+  pnpm ("Performant npm"), paketleri sistem genelinde içerik adreslemeli
+  (content-addressable) tek bir merkezi depoda saklayan ve projelere sabit
+  bağlantı...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - pnpm
+  - package-manager
+  - monorepo
+  - workspaces
+  - symlink
+  - lexical-database
+  - referans
 ---
 
 # pnpm

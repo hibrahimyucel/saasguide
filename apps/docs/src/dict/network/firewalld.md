@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-17
-saat: 23:44
-konu: "firewalld: Bölge Tabanlı Dinamik Güvenlik Duvarı (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Sunucu İşletim Sistemi Güvenliği (Ağ Paket Filtreleme Katmanı)"
-durum: "Tamamlandı"
-etiketler: [firewalld, firewall, nftables, security, network-zones, linux-security, lexical-database, referans]
+title: 'firewalld: Bölge Tabanlı Dinamik Güvenlik Duvarı (Tanıtım, Referans ve Sözlük)'
+description: >-
+  firewalld, Linux işletim sistemlerinde çekirdek düzeyindeki paket filtreleme
+  altyapısını (nftables / iptables) yöneten; ağ arayüzlerini farklı güven sev...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - firewalld
+  - firewall
+  - nftables
+  - security
+  - network-zones
+  - linux-security
+  - lexical-database
+  - referans
 ---
 
 # firewalld: Bölge Tabanlı Dinamik Güvenlik Duvarı

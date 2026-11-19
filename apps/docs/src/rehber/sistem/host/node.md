@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-13
-saat: 16:02
-konu: "Kurulum Rehberi 2. Adım: Node.js, pnpm ve Docker Kapsam (Scope) Ayrımı"
-baglam: "apps/docs (VitePress Rehber Dökümantasyonu) / Geliştirme Ortamı Kurulumu"
-durum: "Tamamlandı"
-etiketler: [nodejs, pnpm, docker, scope-ayrimi, monorepo, vitepress, kurulum-rehberi]
+title: 'Kurulum Rehberi 2. Adım: Node.js, pnpm ve Docker Kapsam (Scope) Ayrımı'
+description: >-
+  Versiyon kontrol altyapımızı güvence altına aldıktan sonraki ikinci temel
+  adım, projemizin hem arka uç (backend) servislerini hem de modern ön yüz
+  (fron...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - nodejs
+  - pnpm
+  - docker
+  - scope-ayrimi
+  - monorepo
+  - vitepress
+  - kurulum-rehberi
 ---
 
 # `2.` Node.js - <code>pnpm</code>

@@ -1,3 +1,17 @@
+---
+title: VitePress SEO Yapılandırma Rehberi <Badge type="warning" text="AI" />
+description: >-
+  VitePress, varsayılan olarak statik site üretimi (SSG) yaptığı için arama
+  motoru optimizasyonu (SEO) açısından oldukça avantajlı bir altyapıya
+  sahiptir....
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - dict
+  - software
+---
 
 # VitePress SEO Yapılandırma Rehberi <Badge type="warning" text="AI" />
 

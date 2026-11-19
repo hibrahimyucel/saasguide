@@ -1,3 +1,15 @@
+---
+title: 5. Monorepo
+description: 'Bu adımdaki dosyalara, monorepo branşı'
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - sistem
+  - host
+---
 
 # `5.` Monorepo
 

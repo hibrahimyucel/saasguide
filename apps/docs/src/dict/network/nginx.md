@@ -1,10 +1,20 @@
 ---
-tarih: 2026-11-17
-saat: 23:03
-konu: "Nginx: Ters Vekil ve Web Sunucusu (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Katman 4: Nginx)"
-durum: "Tamamlandı"
-etiketler: [nginx, reverse-proxy, web-server, load-balancer, lexical-database, referans, altyapi-katman-4]
+title: 'Nginx: Ters Vekil ve Web Sunucusu (Tanıtım, Referans ve Sözlük)'
+description: >-
+  Nginx, yüksek eşzamanlılık (concurrency), performans ve düşük bellek kullanımı
+  odaklı tasarlanmış; ters vekil (reverse proxy), yük dengeleyici (load bal...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - nginx
+  - reverse-proxy
+  - web-server
+  - load-balancer
+  - lexical-database
+  - referans
+  - altyapi-katman-4
 ---
 
 # Nginx (Reverse Proxy)

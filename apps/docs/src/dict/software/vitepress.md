@@ -1,10 +1,24 @@
 ---
-tarih: 2026-11-17
-saat: 23:20
-konu: "VitePress: Vue & Vite Tabanlı Statik Dokümantasyon Üreticisi (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Dokümantasyon ve Bilgi Yönetim Altyapısı"
-durum: "Tamamlandı"
-etiketler: [vitepress, ssg, vue, vite, markdown, documentation, lexical-database, referans]
+title: >-
+  VitePress: Vue & Vite Tabanlı Statik Dokümantasyon Üreticisi (Tanıtım,
+  Referans ve Sözlük)
+description: >-
+  VitePress, Vite ve Vue 3 üzerine inşa edilen; Markdown dosyalarını yüksek
+  performanslı, SEO uyumlu statik HTML sayfalarına dönüştüren ve sayfa
+  yüklendik...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - vitepress
+  - ssg
+  - vue
+  - vite
+  - markdown
+  - documentation
+  - lexical-database
+  - referans
 ---
 
 # VitePress: Statik Dokümantasyon Site Üreticisi (SSG)

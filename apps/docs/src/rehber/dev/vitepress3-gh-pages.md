@@ -1,3 +1,16 @@
+---
+title: GitHub Pages
+description: >-
+  VitePress projemizi GitHub Pages üzerinde ücretsiz ve otomatik (CI/CD) olarak
+  yayınlıyoruz.
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - dev
+---
 
 # GitHub Pages
 

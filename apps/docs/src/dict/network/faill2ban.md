@@ -1,10 +1,24 @@
 ---
-tarih: 2026-11-17
-saat: 23:44
-konu: "Fail2ban: Otomatik Kaba Kuvvet (Brute-Force) Saldırı Engelleme Sistemi (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Sunucu İşletim Sistemi Güvenliği (Log Analizi ve Dinamik Ban Katmanı)"
-durum: "Tamamlandı"
-etiketler: [fail2ban, intrusion-prevention, ips, brute-force, security, ssh-protection, lexical-database, referans]
+title: >-
+  Fail2ban: Otomatik Kaba Kuvvet (Brute-Force) Saldırı Engelleme Sistemi
+  (Tanıtım, Referans ve Sözlük)
+description: >-
+  Fail2ban, Python ile geliştirilmiş açık kaynaklı bir izinsiz giriş önleme
+  (IPS) yazılımıdır; sistem ve uygulama günlük dosyalarını (/var/log/auth.log,
+  N...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - fail2ban
+  - intrusion-prevention
+  - ips
+  - brute-force
+  - security
+  - ssh-protection
+  - lexical-database
+  - referans
 ---
 
 # Fail2ban

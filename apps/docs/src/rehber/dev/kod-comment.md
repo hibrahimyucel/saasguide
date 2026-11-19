@@ -1,3 +1,17 @@
+---
+title: SaaS Monorepo Mimari ve Yorum Satırı Standartları Kılavuzu
+description: >-
+  Bu kılavuz, Anayasa v3 temiz kod ilkeleri doğrultusunda, projenin backend
+  (kebab-case) ve frontend (PascalCase) katmanlarındaki kod kalitesini,
+  okunabil...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - dev
+---
 # SaaS Monorepo Mimari ve Yorum Satırı Standartları Kılavuzu
 
 Bu kılavuz, **Anayasa v3** temiz kod ilkeleri doğrultusunda, projenin backend (`kebab-case`) ve frontend (`PascalCase`) katmanlarındaki kod kalitesini, okunabilirliğini ve bakımını en üst seviyede tutmak için belirlenmiş kuralları içerir.

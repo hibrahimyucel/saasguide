@@ -1,3 +1,14 @@
+---
+title: Altyapı Özeti
+description: branşı üzerinden erişebilirsiniz.
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - sistem
+---
 # Altyapı Özeti
 
 - *pnpm* paket yöneticisi, *Turbo* monorepo aracı geliştirme ortamına eklendi.

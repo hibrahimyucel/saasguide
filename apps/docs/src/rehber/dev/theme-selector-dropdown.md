@@ -1,3 +1,17 @@
+---
+title: ThemeSelector -Dropdown
+description: >-
+  Bu rehber, projemizin Anayasa v4 standartları çerçevesinde kurgulanan,
+  Tailwind v4 native CSS değişkenleriyle beslenen ve kullanıcı deneyimini (UX)
+  opti...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - dev
+---
 # ThemeSelector -Dropdown
 
 Bu rehber, projemizin **Anayasa v4** standartları çerçevesinde kurgulanan, Tailwind v4 native CSS değişkenleriyle beslenen ve kullanıcı deneyimini (UX) optimize eden dropdown tabanlı tema seçici bileşenini belgeler.

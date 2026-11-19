@@ -1,10 +1,24 @@
 ---
-tarih: 2026-11-18
-saat: 00:27
-konu: "AlmaLinux 9: Kurumsal Sınıf RHEL Uyumlu Sunucu İşletim Sistemi (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Sunucu İşletim Sistemi ve Temel Altyapı Katmanı (Katman 0: Host OS)"
-durum: "Tamamlandı"
-etiketler: [almalinux, rhel, enterprise-linux, dnf, selinux, systemd, lexical-database, referans, altyapi-katman-0]
+title: >-
+  AlmaLinux 9: Kurumsal Sınıf RHEL Uyumlu Sunucu İşletim Sistemi (Tanıtım,
+  Referans ve Sözlük)
+description: >-
+  AlmaLinux 9, Red Hat Enterprise Linux (RHEL) 9 ile ikili düzeyde (ABI) uyumlu,
+  kar amacı gütmeyen AlmaLinux OS Foundation tarafından geliştirilen ve 10...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - almalinux
+  - rhel
+  - enterprise-linux
+  - dnf
+  - selinux
+  - systemd
+  - lexical-database
+  - referans
+  - altyapi-katman-0
 ---
 
 # AlmaLinux 9

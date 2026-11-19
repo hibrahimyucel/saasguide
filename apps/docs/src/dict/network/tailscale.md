@@ -1,10 +1,22 @@
 ---
-tarih: 2026-11-17
-saat: 23:08
-konu: "Tailscale: WireGuard Tabanlı Mesh VPN Ağı (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Katman 5: Tailscale)"
-durum: "Tamamlandı"
-etiketler: [tailscale, wireguard, mesh-vpn, zero-trust, cgnat, lexical-database, referans, altyapi-katman-5]
+title: 'Tailscale: WireGuard Tabanlı Mesh VPN Ağı (Tanıtım, Referans ve Sözlük)'
+description: >-
+  Tailscale, açık kaynaklı WireGuard protokolü üzerine inşa edilen; cihazlar
+  arasında merkezi bir ağ geçidine (gateway) ihtiyaç duymadan doğrudan uçtan
+  uc...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - tailscale
+  - wireguard
+  - mesh-vpn
+  - zero-trust
+  - cgnat
+  - lexical-database
+  - referans
+  - altyapi-katman-5
 ---
 
 # Tailscale - VPN

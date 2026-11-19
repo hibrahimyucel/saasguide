@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-16
-saat: 01:12
-konu: "Hotspot ve Hibrit Sunucu Mimarisi İçin Tailscale Mesh VPN Kurulumu"
-baglam: "apps/docs / Altyapı ve Ağ Yönetimi (AlmaLinux, PC, Mobil & VPS)"
-durum: "Tamamlandı"
-etiketler: [altyapi, almalinux, tailscale, mesh-vpn, network-manager, nip-io, docker]
+title: Hotspot ve Hibrit Sunucu Mimarisi İçin Tailscale Mesh VPN Kurulumu
+description: >-
+  Bu rehber; mobil erişim noktası (hotspot) üzerinden internete çıkan yerel
+  AlmaLinux sunucusu, geliştirme bilgisayarı (PC), mobil cihazlar
+  (Android/iOS)...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - altyapi
+  - almalinux
+  - tailscale
+  - mesh-vpn
+  - network-manager
+  - nip-io
+  - docker
 ---
 
 # 🌐 VPN Hibrit Geliştirme Ortamı İçin Tailscale Mesh VPN ve Ağ Yapılandırması

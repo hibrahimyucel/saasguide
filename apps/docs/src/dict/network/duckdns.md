@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-17
-saat: 23:24
-konu: "DuckDNS: Ücretsiz Dinamik DNS (DDNS) Servisi (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Alternatifleri ve DDNS Referansı (Katman 6 Alternatifi)"
-durum: "Tamamlandı"
-etiketler: [duckdns, ddns, dynamic-dns, dns, letsencrypt, lexical-database, referans]
+title: 'DuckDNS: Ücretsiz Dinamik DNS (DDNS) Servisi (Tanıtım, Referans ve Sözlük)'
+description: >-
+  DuckDNS, AWS (Amazon Web Services) altyapısı üzerinde barındırılan;
+  kullanıcılara .duckdns.org uzantılı ücretsiz alt alan adları tahsis eden ve
+  değişen...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - duckdns
+  - ddns
+  - dynamic-dns
+  - dns
+  - letsencrypt
+  - lexical-database
+  - referans
 ---
 
 # DuckDNS (DDNS)

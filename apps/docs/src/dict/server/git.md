@@ -1,10 +1,20 @@
 ---
-tarih: 2026-11-17
-saat: 22:47
-konu: "Git: Dağıtık Versiyon Kontrol Sistemi (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Katman 3: Git)"
-durum: "Tamamlandı"
-etiketler: [git, versiyon-kontrol, dvcs, lexical-database, referans, altyapi-katman-3]
+title: 'Git: Dağıtık Versiyon Kontrol Sistemi (Tanıtım, Referans ve Sözlük)'
+description: >-
+  Git, kaynak kod depolarındaki değişiklikleri zaman içinde izlemek ve birden
+  fazla geliştiricinin yerel durum izleme grafikleri (DAG) kullanarak
+  doğrusal...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - git
+  - versiyon-kontrol
+  - dvcs
+  - lexical-database
+  - referans
+  - altyapi-katman-3
 ---
 
 # Git

@@ -1,11 +1,18 @@
 ---
-title: "Nginx Reverse Proxy ve Wildcard TLS Yapılandırması"
-description: "DuckDNS ve Certbot DNS-01 ile üretilen Wildcard SSL sertifikalarının Nginx üzerinde sonlandırılması."
-sidebarTitle: "Nginx & Wildcard TLS"
+title: Nginx Reverse Proxy ve Wildcard TLS Yapılandırması
+description: >-
+  DuckDNS ve Certbot DNS-01 ile üretilen Wildcard SSL sertifikalarının Nginx
+  üzerinde sonlandırılması.
+outline:
+  - 2
+  - 3
+sidebarTitle: Nginx & Wildcard TLS
 index: 20
-outline: [2, 3]
-status: "published"
-tags: ["nginx", "tls", "duckdns"]
+status: published
+tags:
+  - nginx
+  - tls
+  - duckdns
 ---
 
 # Electron - Desktop Wrapper

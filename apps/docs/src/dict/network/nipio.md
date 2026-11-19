@@ -1,10 +1,20 @@
 ---
-tarih: 2026-11-17
-saat: 23:11
-konu: "nip.io: Sıfır Yapılandırmalı Dinamik DNS Servisi (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Katman 6: nip.io)"
-durum: "Tamamlandı"
-etiketler: [nip-io, sslip-io, wildcard-dns, dynamic-dns, lexical-database, referans, altyapi-katman-6]
+title: 'nip.io: Sıfır Yapılandırmalı Dinamik DNS Servisi (Tanıtım, Referans ve Sözlük)'
+description: >-
+  nip.io - sslip.io, içerisine IP adresi gömülmüş bir alan adı veya alt alan adı
+  sorgulandığında, hiçbir veritabanı kaydına veya manuel DNS ayarına ihtiya...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - nip-io
+  - sslip-io
+  - wildcard-dns
+  - dynamic-dns
+  - lexical-database
+  - referans
+  - altyapi-katman-6
 ---
 
 # nip.io (ve sslip.io) DNS

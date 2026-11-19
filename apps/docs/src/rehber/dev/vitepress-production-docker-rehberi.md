@@ -1,10 +1,20 @@
 ---
-tarih: 2026-11-12
-saat: 17:23
-konu: "VitePress Production (Canlı) Ortam Dağıtım ve Multi-Stage Docker Kılavuzu"
-baglam: "apps/docs (VitePress) / Production Build, Multi-Stage Dockerfile ve Statik Nginx"
-durum: "Tamamlandı"
-etiketler: [docker, multi-stage-build, nginx, vitepress, production, monorepo, static-hosting]
+title: VitePress Production (Canlı) Ortam Dağıtım ve Multi-Stage Docker Kılavuzu
+description: >-
+  Bu doküman; monorepo mimarisi içindeki VitePress dokümantasyon uygulamasının
+  (apps/docs) canlı (production) sunucu ortamına nasıl derleneceğini, Multi-S...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - docker
+  - multi-stage-build
+  - nginx
+  - vitepress
+  - production
+  - monorepo
+  - static-hosting
 ---
 
 # 🚀 VitePress Production (Canlı) Ortam ve Multi-Stage Docker Kılavuzu

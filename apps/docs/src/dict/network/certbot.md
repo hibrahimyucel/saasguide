@@ -1,10 +1,24 @@
 ---
-tarih: 2026-11-17
-saat: 23:44
-konu: "Certbot: Otomatik TLS Sertifika Yönetimi ve ACME İstemcisi (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Güvenlik ve Sertifika Yönetimi (DuckDNS & Nginx Wildcard TLS)"
-durum: "Tamamlandı"
-etiketler: [certbot, letsencrypt, acme, tls, ssl, wildcard-certificate, duckdns, lexical-database, referans]
+title: >-
+  Certbot: Otomatik TLS Sertifika Yönetimi ve ACME İstemcisi (Tanıtım, Referans
+  ve Sözlük)
+description: >-
+  Certbot, Electronic Frontier Foundation (EFF) tarafından geliştirilen; Let's
+  Encrypt gibi ACME uyumlu sertifika otoritelerinden ücretsiz X.509 SSL/TLS s...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - certbot
+  - letsencrypt
+  - acme
+  - tls
+  - ssl
+  - wildcard-certificate
+  - duckdns
+  - lexical-database
+  - referans
 ---
 
 # Certbot - TLS

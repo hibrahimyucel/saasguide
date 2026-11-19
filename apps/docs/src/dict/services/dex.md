@@ -1,10 +1,23 @@
 ---
-tarih: 2026-11-17
-saat: 23:44
-konu: "Dex: OpenID Connect (OIDC) ve Merkezi SSO Kimlik Sağlayıcısı (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Kimlik Doğrulama ve Erişim Yönetimi (SSO / OIDC Provider)"
-durum: "Tamamlandı"
-etiketler: [dex, sso, oidc, oauth2, identity-provider, authentication, lexical-database, referans]
+title: >-
+  Dex: OpenID Connect (OIDC) ve Merkezi SSO Kimlik Sağlayıcısı (Tanıtım,
+  Referans ve Sözlük)
+description: >-
+  Dex, Go diliyle geliştirilmiş açık kaynaklı bir OpenID Connect (OIDC) kimlik
+  sağlayıcısıdır.
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - dex
+  - sso
+  - oidc
+  - oauth2
+  - identity-provider
+  - authentication
+  - lexical-database
+  - referans
 ---
 
 # Dex (OIDC - SSO)

@@ -1,10 +1,23 @@
 ---
-tarih: 2026-11-17
-saat: 23:16
-konu: "Gitea: Self-Hosted Git ve DevOps Platformu (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Katman 7: Gitea)"
-durum: "Tamamlandı"
-etiketler: [gitea, git-server, self-hosted, ci-cd, gitea-actions, container-registry, lexical-database, referans, altyapi-katman-7]
+title: 'Gitea: Self-Hosted Git ve DevOps Platformu (Tanıtım, Referans ve Sözlük)'
+description: >-
+  Gitea, Go (Golang) programlama diliyle geliştirilmiş; minimum donanım
+  kaynağıyla (düşük RAM ve CPU) çalışabilen, kendi sunucunuzda
+  barındırabileceğiniz...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - gitea
+  - git-server
+  - self-hosted
+  - ci-cd
+  - gitea-actions
+  - container-registry
+  - lexical-database
+  - referans
+  - altyapi-katman-7
 ---
 
 # Gitea (Git - DevOps)

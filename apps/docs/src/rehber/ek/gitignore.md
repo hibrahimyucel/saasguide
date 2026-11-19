@@ -1,3 +1,14 @@
+---
+title: .gitignore
+description: node_modules/
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - ek
+---
 
 # .gitignore
 

@@ -1,10 +1,23 @@
 ---
-tarih: 2026-11-17
-saat: 23:20
-konu: "TLS: Taşıma Katmanı Güvenliği Protokolü (Kavramsal Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Ağ ve İletişim Güvenliği (Katman 4: Nginx HTTPS & Sertifika Yönetimi)"
-durum: "Tamamlandı"
-etiketler: [tls, ssl, https, cryptography, certificates, x509, lexical-database, referans]
+title: >-
+  TLS: Taşıma Katmanı Güvenliği Protokolü (Kavramsal Tanıtım, Referans ve
+  Sözlük)
+description: >-
+  TLS (Transport Layer Security), eski SSL (Secure Sockets Layer) protokolünün
+  yerini alan; bilgisayar ağları üzerinden gerçekleşen iletişimlerde gizlilik...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - tls
+  - ssl
+  - https
+  - cryptography
+  - certificates
+  - x509
+  - lexical-database
+  - referans
 ---
 
 # TLS (Transport Layer Security)

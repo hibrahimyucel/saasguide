@@ -1,10 +1,27 @@
 ---
-tarih: 2026-11-17
-saat: 18:07
-konu: "DuckDNS ve Let's Encrypt (DNS-01) ile Sıfır İstemci Kurulumlu Wildcard HTTPS Rehberi"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Tailscale, DuckDNS, Certbot, Docker & Nginx)"
-durum: "Tamamlandı"
-etiketler: [altyapi, ssl, https, duckdns, lets-encrypt, certbot, tailscale, nginx, docker, almalinux, selinux]
+title: >-
+  DuckDNS ve Let's Encrypt (DNS-01) ile Sıfır İstemci Kurulumlu Wildcard HTTPS
+  Rehberi
+description: >-
+  Bu doküman; Tailscale özel VPN ağı (100.x.y.z) üzerinde çalışan
+  servislerimize, istemci cihazlara (telefon, tablet, bilgisayar) herhangi bir
+  kök sertifi...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - altyapi
+  - ssl
+  - https
+  - duckdns
+  - lets-encrypt
+  - certbot
+  - tailscale
+  - nginx
+  - docker
+  - almalinux
+  - selinux
 ---
 
 # 🔒 DuckDNS ve Certbot ile Wildcard HTTPS Kurulumu

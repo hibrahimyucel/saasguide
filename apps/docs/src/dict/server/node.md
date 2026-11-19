@@ -1,10 +1,23 @@
 ---
-tarih: 2026-11-17
-saat: 22:53
-konu: "Node.js: Sunucu Taraflı JavaScript Çalışma Zamanı (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Katman 1: Node.js)"
-durum: "Tamamlandı"
-etiketler: [nodejs, runtime, v8, event-loop, lexical-database, referans, altyapi-katman-1]
+title: >-
+  Node.js: Sunucu Taraflı JavaScript Çalışma Zamanı (Tanıtım, Referans ve
+  Sözlük)
+description: >-
+  Node.js, Chrome'un V8 motoru üzerine inşa edilen ve olay güdümlü
+  (event-driven), bloklamayan G/Ç (non-blocking I/O) mimarisini kullanarak
+  JavaScript kod...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - nodejs
+  - runtime
+  - v8
+  - event-loop
+  - lexical-database
+  - referans
+  - altyapi-katman-1
 ---
 
 # Node.js

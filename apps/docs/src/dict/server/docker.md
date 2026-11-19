@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-17
-saat: 22:56
-konu: "Docker: Konteynerleştirme ve İzolasyon Platformu (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Referans Kılavuzu (Katman 2: Docker)"
-durum: "Tamamlandı"
-etiketler: [docker, container, virtualization, devops, lexical-database, referans, altyapi-katman-2]
+title: 'Docker: Konteynerleştirme ve İzolasyon Platformu (Tanıtım, Referans ve Sözlük)'
+description: >-
+  Docker, uygulamaları ve çalışma zamanı bağımlılıklarını, standart ve izole
+  birimler halinde paketleyerek uygulamaların dağıtımını, ölçeklendirilmesini
+  v...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - docker
+  - container
+  - virtualization
+  - devops
+  - lexical-database
+  - referans
+  - altyapi-katman-2
 ---
 
 # Docker

@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-13
-saat: 17:46
-konu: "Kurulum Rehberi 3. Adım: Docker ve İzole Altyapı Mimarisi"
-baglam: "apps/docs (VitePress Rehber Dökümantasyonu) / Geliştirme Ortamı Kurulumu"
-durum: "Tamamlandı"
-etiketler: [docker, konteyner, izolasyon, altyapi, gitea, vitepress, kurulum-rehberi]
+title: 'Kurulum Rehberi 3. Adım: Docker ve İzole Altyapı Mimarisi'
+description: >-
+  Versiyon kontrolü (Git) ve uygulama geliştirme katmanını (Node.js & pnpm)
+  yerel ortamımızda hazır hale getirdikten sonraki adım, projemizin ihtiyaç
+  duyd...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - docker
+  - konteyner
+  - izolasyon
+  - altyapi
+  - gitea
+  - vitepress
+  - kurulum-rehberi
 ---
 
 # `3.` Docker 

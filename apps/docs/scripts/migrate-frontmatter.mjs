@@ -22,11 +22,12 @@ function extractDescription(content, fallbackTitle) {
     .filter(
       (l) =>
         l &&
+!l.startsWith("* ") &&
         !l.startsWith("#") &&
         !l.startsWith(":::") &&
         !l.startsWith("-") &&
         !l.startsWith("|") &&
-        !l.startsWith("```")
+        !l.startsWith("```"),
     );
 
   if (lines.length === 0) {
@@ -85,7 +86,8 @@ function migrate() {
     const isIndexFile = path.basename(filePath).toLowerCase() === "index.md";
 
     const fallbackName = path.parse(filePath).name;
-    const resolvedTitle = existing.title || extractH1Title(content, fallbackName);
+    const resolvedTitle =
+      existing.title || extractH1Title(content, fallbackName);
     const resolvedDesc =
       existing.description || extractDescription(content, resolvedTitle);
 
@@ -94,10 +96,13 @@ function migrate() {
 
     // Standartlaştırılmış Yeni Front Matter Şeması
     const standardizedMeta = {
-      title: resolvedTitle,
+      title:
+        existing.title ||
+        existing.konu ||
+        extractH1Title(content, fallbackName),
       description: resolvedDesc,
       ...(existing.keywords ? { keywords: existing.keywords } : {}),
-      outline: existing.outline ??,
+      outline: existing.outline ?? [2, 3] ,
       ...(existing.sidebarTitle ? { sidebarTitle: existing.sidebarTitle } : {}),
       ...(typeof existing.index === "number" ? { index: existing.index } : {}),
       ...(isIndexFile
@@ -110,11 +115,15 @@ function migrate() {
       ...(typeof existing.collapsed === "boolean"
         ? { collapsed: existing.collapsed }
         : {}),
-      status: existing.status || "published",
+
+      status: existing.status === "Tamamlandı" ? "published" : (existing.status || "published"),
+
       tags:
-        Array.isArray(existing.tags) && existing.tags.length > 0
-          ? existing.tags
-          : extractFolderTags(relativePath),
+        Array.isArray(existing.etiketler) && existing.etiketler.length > 0
+          ? existing.etiketler
+          : Array.isArray(existing.tags) && existing.tags.length > 0
+            ? existing.tags
+            : extractFolderTags(relativePath),
     };
 
     const updatedFileContent = matter.stringify(content, standardizedMeta);
@@ -133,7 +142,7 @@ function migrate() {
   console.log(
     `\n🎉 İşlem tamamlandı! ${
       IS_DRY_RUN ? "Güncellenecek" : "Güncellenen"
-    } dosya sayısı: ${updatedCount} / ${mdFiles.length}`
+    } dosya sayısı: ${updatedCount} / ${mdFiles.length}`,
   );
 }
 

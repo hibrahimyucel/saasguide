@@ -1,3 +1,14 @@
+---
+title: Projeyi Tamamlama
+description: Önceki adımda oluşturduğumuz projeyi geliştirip tamamlıyoruz.
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - dev
+---
 
 # Projeyi Tamamlama
 

@@ -1,3 +1,17 @@
+---
+title: File Analyzer - Sort
+description: >-
+  Bu rehber, dinamik veri kümeleri (DescPattern[]) üzerinde yapılan ekleme,
+  silme ve güncelleme işlemleri sonrasında listenin otomatik olarak belirli
+  bir...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - rehber
+  - dev
+---
 # File Analyzer - Sort
 
 ### State Değişikliklerinde Otomatik Sıralama ve Optimizasyon

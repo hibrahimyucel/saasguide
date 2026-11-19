@@ -1,10 +1,21 @@
 ---
-tarih: 2026-11-17
-saat: 23:24
-konu: "No-IP: Yönetilen Dinamik DNS (DDNS) Platformu (Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Altyapı Alternatifleri ve DDNS Referansı (Katman 6 Alternatifi)"
-durum: "Tamamlandı"
-etiketler: [no-ip, ddns, dynamic-dns, duc, networking, lexical-database, referans]
+title: 'No-IP: Yönetilen Dinamik DNS (DDNS) Platformu (Tanıtım, Referans ve Sözlük)'
+description: >-
+  No-IP, dinamik IP adresine sahip ev sunucularına, ağ cihazlarına ve
+  yönlendiricilere (router) sabit bir alan adı (örneğin .ddns.net, .hopto.org)
+  üzerind...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - no-ip
+  - ddns
+  - dynamic-dns
+  - duc
+  - networking
+  - lexical-database
+  - referans
 ---
 
 # No-IP  (DDNS)

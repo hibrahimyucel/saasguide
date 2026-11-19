@@ -1,10 +1,19 @@
 ---
-tarih: 2026-11-17
-saat: 23:10
-konu: "DNS: Alan Adı Sistemi (Kavramsal Tanıtım, Referans ve Sözlük)"
-baglam: "apps/docs / Ağ ve İsim Çözümleme Temelleri (Katman 6: nip.io Altyapı Kavramı)"
-durum: "Tamamlandı"
-etiketler: [dns, domain-name-system, resolution, records, lexical-database, referans]
+title: 'DNS: Alan Adı Sistemi (Kavramsal Tanıtım, Referans ve Sözlük)'
+description: >-
+  DNS (Domain Name System), insanların okuyabileceği alan adlarını (example.com)
+  bilgisayarların ve ağ cihazlarının birbirini bulmak için kullandığı sayıs...
+outline:
+  - 2
+  - 3
+status: published
+tags:
+  - dns
+  - domain-name-system
+  - resolution
+  - records
+  - lexical-database
+  - referans
 ---
 
 # DNS
