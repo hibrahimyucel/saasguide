@@ -7,7 +7,7 @@ const hiddenUrls = new Set<string>();
 const siteURL = "https://pr2cloud.duckdns.org/docs/";
 
 export default defineConfig({
-  base: "/docs/",
+  base: process.env.VITE_BASE_PATH || "/docs/",
 
   markdown: {
     languageAlias: {
