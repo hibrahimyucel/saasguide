@@ -41,7 +41,6 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build Documentation
-            - name: Build Documentation
         env:
           VITE_BASE_PATH: /saasguide/
         run: pnpm --filter docs build
