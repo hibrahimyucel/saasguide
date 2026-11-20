@@ -47,8 +47,8 @@ export default defineConfig({
     ],
   },
 
-  title: "SaaS-VPS Rehberi",
-  description: "SaaS Rehberi VitePress Sitesi",
+  title: "πr² Cloud",
+  description: "πr² Cloud Döküman Sitesi",
 
   head: [
     [
@@ -111,10 +111,10 @@ export default defineConfig({
     const canonicalUrl = siteURL;
 
     const pageTitle =
-      pageData.frontmatter.title || pageData.title || "SaaS-VPS Rehberi";
+      pageData.frontmatter.title || pageData.title || "πr² Cloud";
     const pageDesc =
       pageData.frontmatter.description ||
-      "Self-hosted SaaS altyapısı ve monorepo geliştirme rehberi.";
+      "PaaS - SaaS & Yazılım Geliştirme Rehberi";
 
     pageData.frontmatter.head ??= [];
     pageData.frontmatter.head.push(
@@ -192,7 +192,6 @@ export default defineConfig({
     nav: [
       { text: "Sözlük", link: "/dict/", activeMatch: "/dict/" },
       { text: "Rehber", link: "/rehber/", activeMatch: "/rehber/" },
-      { text: "tümü", link: "/", activeMatch: "/" },
     ],
 
     sidebar: {
