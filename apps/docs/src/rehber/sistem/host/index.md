@@ -1,14 +1,11 @@
 ---
-title: 1. Geliştirme Ortamı
-description: 1. Geliştirme Ortamı - Teknik dokümantasyon ve uygulama rehberi.
-outline:
-  - 2
-  - 3
+title: "SaaS Geliştirme Rehberi"
+description: "pr2cloud Self-Hosted PaaS altyapı kurulumu, VitePress ile yazılım geliştirmeye giriş, deployment seçenekleri, PaaS otomasyonu ve platform ölçekleme yol haritası."
+outline: [2, 3]
+sidebarTitle: "Host Kurulumu"
+index: 1
 isContent: false
-status: published
-tags:
-  - rehber
-  - sistem
-  - host
+hidden: false
+status: "published"
+tags: ["pr2cloud", "saas-rehberi", "mimari", "kurulum", "vitepress", "deployment", "otomasyon"]
 ---
-# `1.` Geliştirme Ortamı

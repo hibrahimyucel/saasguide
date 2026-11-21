@@ -1,11 +1,15 @@
 ---
-tarih: 2026-11-20
-saat: 02:24
-konu: "AI System Reference: pr2cloud Uçtan Uca Özel Bulut ve Monorepo Mimarisi"
-baglam: "AI Workspace / Single Source of Truth (System Prompt & Context Reference)"
-durum: "Aktif Referans"
-etiketler: [ai-reference, pr2cloud, architecture, monorepo, self-hosted-paas, security, sso, devops, mail-server]
+title: "πr² Cloud - Workspace"
+description: "AI Workspace / pr2cloud Single Source of Truth (System Prompt & Context Reference)"
+outline: [2, 3]
+sidebarTitle: "Proje Tanımı"
+index: 1
+isContent: false
+hidden: false
+status: "published" # draft | review | published
+tags: [ai-reference, pr2cloud, architecture, monorepo, self-hosted-paas, security, sso, devops, mail-server]
 ---
+    
 
 # AI System Reference: pr2cloud Altyapı ve Mimari Standartları
 Bu doküman; **pr2cloud** (*Pr2 PaaS Environment & Software Development Guide - PaaS Ortamı ve Yazılım Geliştirme Rehberi*) projesinin tüm teknik kararlarını, altyapı yığınını, çalışma dizini hiyerarşisini, çift ağ izolasyon sınırlarını, servis yönlendirme matrisini ve dokümantasyon kurallarını tek bir bağlam (Context) kaynağında toplar.
@@ -14,14 +18,14 @@ Bu doküman; **pr2cloud** (*Pr2 PaaS Environment & Software Development Guide - 
 
 ## 1. Mimari Kararlar ve Sistem Özeti
 * **Hedef Mimari:** Bulut sağlayıcılarına bağımlı olmayan, düşük kaynak tüketimli, tamamen kendi VPS ve yerel sunucularımızda barındırılan (Self-Hosted PaaS) hibrit SaaS altyapısı.
-* **DNS & TLS Kararı:** Canlı VPS ortamında özel alan adımız (`pr2.com.tr`) ve alt alan adları, yerel/hibrit ağlarda **DuckDNS** (`*.projeadi.duckdns.org`) kullanılır. Tüm servisler için **Certbot (DNS-01 Challenge)** ile üretilen **Wildcard TLS** sertifikaları esastır (`nip.io` yalnızca kavramsal test referansıdır).
-* **Ağ ve Güvenlik Sınırı:** Yönetim arayüzleri ve iç servisler genel internete kapatılır (e-posta sunucusunun zorunlu SMTP/IMAP portları hariç). Sunucuya yönetim erişimi **Tailscale** (`tailscale0`) üzerinden sağlanır; işletim sistemi seviyesinde **firewalld** ve **Fail2ban** ile korunur.
+* **DNS & TLS Kararı:** Canlı VPS ortamında özel alan adı (`example.com`) ve alt alan adları, yerel/hibrit ağlarda **DuckDNS** (`*.projeadi.duckdns.org`) kullanılır. Tüm servisler için **Certbot (DNS-01 Challenge)** ile üretilen **Wildcard TLS** sertifikaları esastır.
+* **Ağ ve Güvenlik Sınırı:** Yönetim arayüzleri ve iç servisler e-posta sunucusunun zorunlu `SMTP/IMAP` portları hariç genel internete kapatılır . Sunucuya yönetim erişimi **Tailscale** (`tailscale0`) üzerinden sağlanır; işletim sistemi seviyesinde **firewalld** ve **Fail2ban** ile korunur.
 * **Kimlik Doğrulama (SSO):** Tüm altyapı servisleri ve web uygulamaları merkezi **Dex (OIDC Identity Provider — SQLite backend)** üzerinden tek oturum açma (SSO) ile kimlik doğrular.
 * **E-Posta Altyapısı:** Kurumsal e-posta sunucusu olarak Rust tabanlı **Stalwart Mail Server**, webmail arayüzü olarak ise hafif **SnappyMail** ayrı konteynerler halinde konumlandırılır.
 
 ### Çift Ağ (Dual-NIC) İzolasyon Topolojisi
 Servis ve API katmanı iki ayrı Docker sanal ağına (iki ağ arayüzü mantığıyla) bölünür:
-* **`pr2_edge_net` (Kenar Ağı):** Nginx Ters Vekil ve API Gateway/API servislerinin dış iletişim arayüzünü barındırır.
+* **`pr2_edge_net` (Kenar Ağı):** Nginx (reverse proxy) ve API Gateway/API servislerinin dış iletişim arayüzünü barındırır.
 * **`pr2_internal_net` (İç Servis Ağı - `internal: true`):** Dex (SQLite), MinIO, Gitea, Stalwart iç servisleri ve veritabanlarını barındırır; dış internete kapalıdır.
 * **API Katmanı Köprüsü:** API servisleri hem `pr2_edge_net` hem de `pr2_internal_net` ağlarına atanarak iki ağ arasında kontrollü veri geçişi sağlar.
 
@@ -33,7 +37,7 @@ Sistem; kaynak kodların, canlı (VPS) yapılandırmalarının ve çalışma zam
 ```text
 pr2cloud/
 ├── source/                     # [Git Repo] Ana Monorepo (Kaynak Kodlar & Dev Ortamı)
-│   ├── apps/                   # Web uygulamaları ve VitePress dokümantasyon portalı
+│   ├── apps/                   # Yazılım Projeleri ve VitePress dokümantasyon portalı
 │   ├── packages/               # Paylaşılan kütüphaneler, UI bileşenleri, config paketleri
 │   ├── infra/                  # Geliştirme ortamı altyapı servisleri ve yapılandırmaları
 │   │   ├── certbot/            # Yerel/test TLS sertifika betikleri ve yapılandırmaları
@@ -44,7 +48,7 @@ pr2cloud/
 │   │   └── .env                # Geliştirme ortamı parametreleri (Git denetiminde)
 │   └── turbo.json              # Monorepo görev ve önbellek orkestrasyonu
 │
-├── prod/                       # [Git Repo] VPS Üretim Yapılandırma Deposu
+├── prod/                       # [Git Repo] VPS (Production) Yapılandırma Deposu
 │   ├── nginx/                  # Ters vekil (Reverse Proxy) sanal sunucu yapılandırmaları
 │   ├── dex/                    # Merkezi OIDC yapılandırması (config.yaml)
 │   ├── stalwart/               # Stalwart Mail Server statik yapılandırma dosyaları
@@ -113,14 +117,30 @@ Alan adı şablonu: `*.alanadi.com` (Canlı VPS) veya `*.projeadi.duckdns.org` (
 * **React Dışı Tüm Dosyalar:** Backend servisleri, yapılandırma dosyaları, betikler ve dokümanlar kesinlikle `kebab-case` (`auth-service.ts`, `docker-compose.yml`, `services.conf`).
 
 ### B. Yaşam Döngüsü (3 Aşamalı İş Akışı)
-1. **Ar-Ge ve Teknik Tespit:** Mimari gereksinimlerin, port/ağ sınırlarının ve bağımlılıkların belirlenmesi.
+1. **Ar-Ge ve Teknik Tespit:** Mimari gereksinimlerin, iş akışı, altyapı ve yazılım bağımlılıklarının belirlenmesi.
 2. **Temiz Kod Uygulama ve Test:** Geliştirme standartları referansına uygun modüler kodlama ve doğrulama.
-3. **VitePress Rehber Dokümantasyonu:** Sürecin kalıcı bilgi tabanına aktarılması.
+3. **VitePress Rehber Dokümantasyonu:** Sürecin kalıcı bilgi havuzuna aktarılması.
 
 ### C. Dokümantasyon Formatı ve Şablonu
-* **YAML Front Matter:** Tüm teknik doküman ve kritik özetlerin başında standart `--- ... ---` üst veri bloğu bulunur.
-* **Tanıtım / Sözlük Maddeleri:** Üretici ve resmi web sitesi bilgisiyle başlar. `::: info CONCEPT MATRICES` bloğu **İngilizce**; **Resmi Tanım**, **Sözlük Veritabanı (Lexical Database)** ve **Cheatsheet** bölümleri **Türkçe Markdown** formatındadır.
-* **Uygulama (Development) Maddeleri:** Pratik kurulum adımları, yapılandırma dosyaları, terminal komutları ve doğrulama kontrollerini içerir.
+
+*   **YAML Front Matter Şablonu (Zorunlu Standart):** Tüm VitePress dokümanlarının en üstünde aşağıdaki standart şablon yer alır. `keywords` alanı kullanılmaz; tüm anahtar kelimeler `kebab-case` formatında `tags` altında birleştirilir. (`lastUpdated`, `editLink`, `prev`, `next` ayarları global `config.mts` üzerinden yönetilir, gerekmedikçe sayfa bazlı yazılmaz.)
+    ```yaml
+    ---
+    title: "Sayfa Başlığı"
+    description: "SEO ve sayfa özeti açıklaması."
+    outline: [2, 3]
+    sidebarTitle: "Kısa Menü Başlığı"
+    index: 10
+    isContent: false
+    hidden: false
+    status: "published" # draft | review | published
+    tags: ["kategori", "alt-konu", "teknoloji-adi"]
+    ---
+    ```
+*   **Tanıtım / Sözlük Maddeleri:** Üretici ve resmi web sitesi bilgisiyle başlar. `::: info CONCEPT MATRICES` bloğu **İngilizce**; **Resmi Tanım**, **Sözlük Veritabanı (Lexical Database)** ve **Cheatsheet** bölümleri **Türkçe Markdown** formatındadır.
+*   **Uygulama (Development) Maddeleri:** Pratik kurulum adımları, yapılandırma dosyaları, terminal komutları ve doğrulama kontrollerini içerir.
+
+
 
 ### D. AI Çıktı Kuralı
 * Kod güncellemelerinde tüm dosyayı baştan yazmak yerine yalnızca değişen fonksiyon, blok veya bileşenler modüler ve nokta atışı olarak sunulur.

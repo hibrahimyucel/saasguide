@@ -1,14 +1,16 @@
 ---
 title: Altyapı Özeti
-description: branşı üzerinden erişebilirsiniz.
+description: Vitepress markdown içinde Vue bileşeni kullanma örneği.
 outline:
   - 2
   - 3
-status: published
+status: draft
+index: 99
 tags:
   - rehber
-  - sistem
+  - vue
 ---
+
 # Altyapı Özeti
 
 - *pnpm* paket yöneticisi, *Turbo* monorepo aracı geliştirme ortamına eklendi.

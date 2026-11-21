@@ -9,6 +9,8 @@ description: >-
 outline:
   - 2
   - 3
+sidebarTitle: "HTTPS Kurulumu"
+index: 5
 status: published
 tags:
   - altyapi
@@ -51,6 +53,14 @@ Bu darboğazı aşmak için **DNS-01 Doğrulama (Challenge)** yöntemi kullanıl
 ---
 
 ## 3. Sertifika Dizinleri ve Güvenlik Ayarları
+
+Sertifika özel anahtarlarının (`privkey.pem`) ve DuckDNS token dosyasının Git deposuna gönderilmemesi için kök `.gitignore` dosyanıza şu satırları ekleyin:
+
+```gitignore
+# SSL Sertifikaları ve DNS Gizli Anahtarları
+infra/certbot/conf/
+infra/certbot/secrets/
+```
 
 Proje kök dizininde sertifikaların ve API anahtarının saklanacağı klasör yapısını oluşturun. *(Not: Certbot'un isim çakışması yaşayıp `-0001` uzantılı klasör açmaması için `live/<domain>` alt klasörü önceden oluşturulmamalıdır.)*
 
@@ -96,115 +106,8 @@ docker run --rm \
 
 İşlem tamamlandığında sertifikalarınız `infra/certbot/conf/live/pr2cloud.duckdns.org/` dizini altında oluşturulur.
 
----
 
-## 5. Docker Compose ve Nginx Ters Vekil Entegrasyonu
-
-### A. `gateway/docker-compose.yml` Volume Bağlantısı
-`gateway` ve `infra` kardeş klasörler olduğu için üst dizine (`..`) çıkarak sertifika dizinini SELinux uyumlu (`:ro,z`) şekilde konteynere bağlayın:
-
-```yaml
-services:
-  pr2_dev_proxy:
-    volumes:
-      - ../infra/certbot/conf:/etc/letsencrypt:ro,z
-```
-
-### B. Nginx Yapılandırması (`default.conf` / `services.conf`)
-Alt alan adlarını otomatik olarak HTTPS'e yönlendirirken, kök alan adını (`pr2cloud.duckdns.org`) yönlendirici ana sayfa olarak sunar:
-
-```nginx
-# Dinamik Alt Alan Adı (Subdomain) Tespit Tablosu
-map $http_host $subdomain_name {
-    ~^docs\.       "Documentation Project Server (Dökümantasyon)";
-    ~^dashboardq\. "Admin Dashboard Server (Yönetim Paneli)";
-    ~^git\.        "Gitea & Container Registry Server";
-    ~^dev\.        "Development Preview Server (Geliştirme)";
-    default        "Default Root Gateway (Ana Dizin)";
-}
-
-# 1. HTTP (Port 80) - Alt Alan Adlarını HTTPS'e Yönlendir, Kök Alan Adını Karşıla
-server {
-    listen 80;
-    server_name *.pr2cloud.duckdns.org;
-    return 301 https://$host$request_uri;
-}
-
-server {
-    listen 80;
-    server_name pr2cloud.duckdns.org;
-
-    location / {
-        root /var/www/html/default-gateway;
-        index index.html;
-        try_files $uri $uri/ =404;
-    }
-}
-
-# 2. HTTPS Ana Sunucu (Port 443)
-server {
-    listen 443 ssl;
-    server_name *.pr2cloud.duckdns.org pr2cloud.duckdns.org;
-
-    include /etc/nginx/snippets/ssl-params.conf;
-    ssi on;
-
-    # Alt Klasör Test Bağlantısı (/events)
-    location /events {
-        default_type "text/plain; charset=utf-8";
-        return 200 "🎉 Nginx /events alt klasor testi başarılı.\n\nErişilen Sunucu: $subdomain_name\nKonum: Alt Klasor (/events)\nSSL Baglantısı: Güvenli (OK)\n";
-    }
-
-    # Statik VitePress Fallback (/docs)
-    location = /docs {
-        return 301 https://$host/docs/;
-    }
-
-    location /docs/ {
-        alias /var/www/html/docs/;
-        index index.html;
-        try_files $uri $uri/ $uri.html =503;
-        error_page 503 /docs-pending.html;
-    }
-
-    location = /docs-pending.html {
-        root /var/www/html/default-gateway;
-        internal;
-    }
-
-    # Ana Dizin / Kök Bağlantı (/)
-    location / {
-        root /var/www/html/default-gateway;
-        index index.html;
-        try_files $uri $uri/ =404;
-    }
-}
-```
-
----
-
-## 6. Güvenlik (`.gitignore`) ve Doğrulama
-
-Sertifika özel anahtarlarının (`privkey.pem`) ve DuckDNS token dosyasının Git deposuna gönderilmemesi için kök `.gitignore` dosyanıza şu satırları ekleyin:
-
-```gitignore
-# SSL Sertifikaları ve DNS Gizli Anahtarları
-infra/certbot/conf/
-infra/certbot/secrets/
-```
-
-Tailscale ağına bağlı herhangi bir cihazdan aşağıdaki adreslere giderek bağlantıyı doğrulayın:
-
-| Servis / Kapı | Erişim Adresi | Açıklama / Hedef |
-| :--- | :--- | :--- |
-| **Ana Gateway** | `http://pr2cloud.duckdns.org` | Tüm servislere yönlendiren HTTP karşılama sayfası |
-| **VitePress Docs** | `https://docs.pr2cloud.duckdns.org` | SSL onaylı dokümantasyon sunucusu |
-| **Gitea** | `https://git.pr2cloud.duckdns.org` | SSL onaylı Git ve Container Registry sunucusu |
-| **Yönetim Paneli** | `https://dashboardq.pr2cloud.duckdns.org` | SSL onaylı yönetim arayüzü |
-
----
-
-## 7. Otomatik Sertifika Yenileme ve Test (Cron & İzole Betik)
+## 5. Otomatik Sertifika Yenileme ve Test (Cron & İzole Betik)
 
 Arka planda sürekli çalışan bir Certbot konteyneri tutmak yerine, sistem kaynaklarını temiz tutmak için tek seferlik (`--rm`) çalışan bir yenileme betiği ve zamanlanmış görev (Cron) kullanılır.
 

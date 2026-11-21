@@ -1,10 +1,13 @@
 ---
-tarih: 2026-11-20
-saat: 02:24
-konu: "AI Development Standards: Katmanlı Mimari, Modülerlik ve Temiz Kod İlkeleri"
-baglam: "AI Workspace / Coding & Software Engineering Standards"
-durum: "Aktif Referans"
-etiketler: [coding-standards, pr2cloud, clean-code, layered-architecture, solid, naming-conventions, comments]
+title: "πr² Cloud - Development"
+description: "AI Development / pr2cloud Single Source of Truth (System Prompt & Context Reference)"
+outline: [2, 3]
+sidebarTitle: "Tasarım ve Kodlama Standartları"
+index: 2
+isContent: false
+hidden: false
+status: "published" # draft | review | published
+tags: [ai-reference, pr2cloud, architecture, monorepo, self-hosted-paas, security, coding-standards, clean-code, layered-architecture, solid, naming-conventions, comments]
 ---
 
 # AI Development Standards: Yazılım Geliştirme ve Kodlama Standartları
@@ -55,7 +58,7 @@ Her uygulama ve servis, sorumlulukların birbirine karışmasını önlemek içi
 ---
 
 ## 5. Yorum Satırı Standartları (Comments & Documentation)
-* **"Neden" İlkesi:** Kod **NE** yapıldığını açıkça anlatmalı; yorum satırları yalnızca mimari **NEDENİ** ve kısıtlamaları açıklamalıdır.
+* **"Neden" İlkesi:** Kod, **NE** yapıldığını açıkça anlatmalı; yorum satırları, yalnızca mimari **NEDENİ** ve kısıtlamaları açıklamalıdır.
 * **Görsel İşaretçiler (Visual Anchors):** Uzun servis, controller veya provider dosyalarında dikey taramayı hızlandırmak için standart bölüm ayraçları kullanılır:
   ```typescript
   // --- 🚀 1. CORE SERVICE LOGIC ---

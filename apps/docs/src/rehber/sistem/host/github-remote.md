@@ -1,29 +1,19 @@
 ---
 title: 'Kurulum Rehberi Giriş: Neden Git ve Neden İlk Adım?'
 description: sudo dnf install -y git curl
-outline:
-  - 2
-  - 3
-status: published
+outline: [2, 3]
+sidebarTitle: "Github Remote Origin"
+index: 3
+isContent: true
+hidden: false
+status: "published"
 tags:
   - git
-  - versiyon-kontrol
-  - mimari
-  - vitepress
-  - kurulum-rehberi
+  - github cli
+  - remote origin
 ---
 
-# `1.` Git & GitHub CLI
-
-
-
-## Git & GitHub CLI
-
- - git ve curl araçlarını kuruyoruz.
-
-```bash 
-   sudo dnf install -y git curl
-```
+# GitHub CLI
 
  - GitHub CLI (gh) reposunu ekle ve kur 
 
@@ -32,11 +22,22 @@ tags:
    sudo dnf install -y gh
 ```
 
+ ## Remote (Github) Origin
+
+[Github](https://github.com/) üzerinde boş bir repo oluşturup yerel klasörümüze bağlıyoruz.
+
+> Yeni `repository` oluşturduğunuzda sayfanın en altında çalıştırmanız gereken komutları görebilirsiniz.
  
+```bash
+   git remote add origin https://github.com/<kullanıcı adı>/<repo adı>.git
+   git push origin
+```
+
+
+
 ## GitHub Üzerinde Token Üretme
 
 GitHub CLI (`gh`) aracına kişisel erişim jetonunuz (Personal Access Token) ile giriş yapmak için aşağıdaki adımları sırasıyla takip edebilirsiniz.
-
 
 GitHub şifrenizi terminalde doğrudan kullanamazsınız. Bu yüzden şifre yerine geçecek özel bir anahtar (Token) üretmeniz gerekir.
 

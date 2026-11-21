@@ -5,6 +5,7 @@ outline:
   - 2
   - 3
 isContent: true
+hidden: false
 status: published
 tags:
   - rehber
