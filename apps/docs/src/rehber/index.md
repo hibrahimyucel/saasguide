@@ -4,23 +4,9 @@ description: SaaS Geliştirme Rehberi - Teknik dokümantasyon ve uygulama rehber
 outline:
   - 2
   - 3
-isContent: true
+isContent: false
 hidden: false
 status: published
 tags:
   - rehber
 ---
-
-# SaaS Geliştirme Rehberi
-
----
-  
-- Nodejs
-
-- Docker
-
-- Nginx
-
-- Vitepres-Vue
-
-

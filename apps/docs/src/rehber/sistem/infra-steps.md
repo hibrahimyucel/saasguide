@@ -20,15 +20,16 @@ Bu rehber; **pr2cloud** ekosistemi üzerinde altyapı kurulumundan başlayarak *
 
 Kod geliştirme ve monorepo orkestrasyonunun yürütüldüğü yerel çalışma ortamı hazırlığıdır.
 
-* [ ] **Özel Ağ İstemcisi (Tailscale):** 
-* [ ] **Çalışma Zamanı ve Paket Yöneticisi:** 
-* [ ] **Docker :** 
-* [ ] **git :** 
+* [ ] **Tailscale VPN** 
+* [ ] **Node** 
+* [ ] **pnpm** 
+* [ ] **git - GitHub CLI** 
+* [ ] **Docker** 
 
-* [ ] **Monorepo Orkestrasyonu:** 
-* [ ] **Github:** 
+* [ ] **Monorepo Orkestrasyonu** 
+* [ ] **Github**
 
-* [ ] ****DuckDNS**
+* [ ] **DuckDNS**
 
 ### Servisler
 * [ ] **Docker ve Çift Ağ (Dual-NIC):** Docker Engine kurulumunu tamamla; `pr2_edge_net` ve dış internete kapalı `pr2_internal_net` (`internal: true`) ağlarını yapılandır.

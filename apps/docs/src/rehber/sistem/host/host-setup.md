@@ -12,7 +12,9 @@ tags: ["pr2cloud", "host-setup", "monorepo", "pnpm", "turborepo", "tailscale"]
 
 # Host Kurulumu
 
-Bu rehber, **pr2cloud** ekosisteminde kod geliştirme ve monorepo orkestrasyonunun yürütüleceği yerel geliştirici makinesinin (Host) hazırlanmasını kapsar.
+::: info
+Bu rehber, **pr2cloud** ekosisteminde kod geliştirme ve monorepo orkestrasyonunun yürütüleceği yerel geliştirici makinesinin (Host) ve ek olarak geliştirme sunucusunun hazırlanmasını kapsar.
+:::
 
 ## Tailscale VPN
 

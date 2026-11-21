@@ -4,25 +4,22 @@ description: >-
   Yerel geliştirme ortamımızda her servis ve proje için ayrı konteynır
   oluşturarak servisleri Docker içinde çalıştırıp Nginx ile orkestrasyonu
   sağlayacağız.
-outline:
-  - 2
-  - 3
-status: published
+outline: [2, 3]
+sidebarTitle: "Nginx"
+index: 1
+isContent: true
+hidden: false
+status: "published"
 tags:
   - rehber
   - sistem
   - servisler
 ---
 
-# `6.` Edge Router
+# NGINX Reverse Proxy
 
- 
- Yerel geliştirme ortamımızda her servis ve proje için ayrı konteynır oluşturarak servisleri Docker içinde çalıştırıp Nginx ile orkestrasyonu sağlayacağız.
-
-Bunun için monorepo ekosistemindeki tüm mikroservislere ve ön yüz (frontend) uygulamalarına gelen istekleri tek bir merkezden karşılayan, yönlendiren ve güvenliğini sağlayan **NGINX API Gateway / Ters Proxy (Reverse Proxy)** yapılandırmasını hazırlıyoruz.
-
- Subdomain ve `http-only` çerezler için HTTPS protokolünü kullanmamız gerekir. Ayrıca tarayıcıda sürekli güvenlik uyarısı görmek istemeyiz.
-
+::: info Sistemdeki tüm mikroservislere ve ön yüz (frontend) uygulamalarına gelen istekleri tek bir merkezden karşılayan, yönlendiren ve güvenliğini sağlayan **NGINX API Gateway / Ters Proxy (Reverse Proxy)** yapılandırmasını hazırlıyoruz.
+:::
 
 ### Temel İşlevleri
 
@@ -33,179 +30,443 @@ Bunun için monorepo ekosistemindeki tüm mikroservislere ve ön yüz (frontend)
   
 ## Docker - Ortak Ağ
 
-::: warning Docker, `compose` dosyalarında tanımlı ağları konteynır özelinde otomatik oluşturmaya çalışır. Farklı `docker-compose` dosyalarındaki konteynerlerin birbiriyle ve Nginx ile konuşabilmesi için ortak bir harici (`external`) ağ oluşturuyoruz. 
+Docker, `compose` dosyalarında tanımlı ağları konteynır özelinde otomatik oluşturmaya çalışır. Farklı `docker-compose` dosyalarındaki konteynerlerin birbiriyle ve Nginx ile konuşabilmesi için ortak harici (`external`) ağları oluşturuyoruz. 
 
+ `pr2_internal_net` ağı `internal: true` parametresiyle dış internete tamamen kapalıdır. Nginx ters vekili yalnızca `pr2_edge_net` üzerinde çalışırken, Dex, MinIO, Gitea ve veritabanları iç ağda izole edilir; API katmanı her iki ağa bağlanarak kontrollü köprü görevi görür.
+
+::: tip Docker ağları 
 ```bash
-  docker network create pr2_dev_network
+docker network create pr2_edge_net
+docker network create --internal pr2_internal_net
 ```
 :::
  
   
-## Gateway (NGINX)
-  
-  
-::: info Monorepo dizininde Nginx yapılandırması ve sertifikalar için kullanacağımız klasörleri oluşturuyoruz.
+## Dosyalar
+
+- Yapılandırma dosyaları için klasör oluşturuyoruz.
 
 ```bash
-  mkdir -p infra/gateway/nginx/certs
+  mkdir -p data/wwwroot
+  mkdir -p source/infra/gateway/nginx/{conf.d,snippets}
 ```
-:::
+
+```text  
+infra/gateway/nginx/
+├── conf.d/
+│   ├── 00-default.conf       # HTTP -> HTTPS yönlendirmesi ve ana giriş (Gateway)
+│   ├── docs.conf             # VitePress dokümantasyon sunucusu (docs.*)
+│   ├── dev.conf              # Geliştirme ortamı önizleme sunucusu (dev.*)
+│   └── git.conf              # Gitea ve Container Registry sunucusu (git.*)
+└── snippets/
+    ├── ssl-params.conf       # Ortak SSL sertifika yolları ve TLS ayarları
+    └── proxy-headers.conf    # Ortak Reverse Proxy ve WebSocket başlıkları  
+
+```
 
 ---
 
-::: details Nginx konteyner yapılandırması `infra/gateway/docker-compose.yml`. 
+- **Ortak Standartların İzolasyonu (`snippets/`):** SSL sertifika yolları veya proxy başlıkları gibi her serviste aynı olan ayarlar tekrar yazılmaz. Ortam değişikliğinde (örneğin yerelden canlı sunucuya geçişte) yalnızca ilgili snippet dosyasının güncellenmesi yeterlidir.
 
-```yaml
-name: pr2_dev_proxy
-services:
-  nginx_proxy:
-    image: nginx:alpine
-    container_name: pr2_dev_proxy
-    ports:
-      - "80:80"
-      - "443:443"
+- **Servis Bazlı Esneklik (`conf.d/`):** Bir servise özel güvenlik veya performans kuralları genel şablonlara dahil edilmez. Örneğin Gitea'nın büyük Docker katmanlarını kabul etmesi için gereken `client_max_body_size 0;` ayarı yalnızca `git.conf` içinde tanımlanır.
 
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/certs:/etc/nginx/certs:ro
-      - ../../../wwwroot:/var/www/html:ro
-    
-    networks:
-      - pr2_dev_network
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'        # Maksimum kullanabileceği CPU çekirdek sayısı
-          memory: 512M       # Maksimum kullanabileceği RAM miktarı
+- **Dinamik DNS Çözümlemesi:** Docker konteynerleri yeniden başlatıldığında IP adresleri değişebileceğinden, `upstream` adresleri doğrudan `proxy_pass` içine yazılmak yerine değişken (`set $upstream ...`) olarak tanımlanır ve Docker dahili DNS sunucusu (`127.0.0.11`) ile çözümlenir.
 
-networks:
-  pr2_dev_network:
-    external: true
-```
-:::
 
----
+### TLS Snippets
 
-::: details Docker dahili DNS çözümlemesi; çalışmayan veya aktif olmayan servisler sebebiyle  Nginx'in çökmesini engellemek için   `infra/gateway/nginx/conf.d/00-resolver.conf`
+- `infra/gateway/nginx/snippets/ssl-params.conf`; `pr2cloud.duckdns.org` kendi alan adınızla değiştirin. Yapılandırma dosyaları sunucunun tek alan adı ile çalışacağı varsayımına göre hazırlanmıştır.
+
 ```nginx
-# Docker dahili DNS sunucusunu aktif eder ve IP önbelleğini 5 saniyede bir tazeler
+# SSL Sertifika Yolları
+ssl_certificate     /etc/letsencrypt/live/pr2cloud.duckdns.org/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/pr2cloud.duckdns.org/privkey.pem;
+
+# Kök domain (pr2cloud.duckdns.org) ve alt alan adları (*.pr2cloud.duckdns.org) dışındaki istekleri kes
+# if ($host !~* ^(.*\.)?pr2cloud\.duckdns\.org$) {
+#    return 444;
+# }
+
+# Modern TLS Protokol ve Şifreleme Standartları
+ssl_protocols       TLSv1.2 TLSv1.3;
+ssl_ciphers         HIGH:!aNULL:!MD5;
+ssl_prefer_server_ciphers on;
+ssl_session_cache   shared:SSL:10m;
+ssl_session_timeout 1d;
+
+```
+
+### Proxy Headers
+
+- `infra/gateway/nginx/snippets/proxy-headers.conf`
+
+```nginx
+proxy_http_version 1.1;
+
+# İstemci ve Protokol Bilgileri
+proxy_set_header Host              $host;
+proxy_set_header X-Real-IP         $remote_addr;
+proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;
+
+# WebSocket ve Canlı Yenileme (HMR) Desteği
+proxy_set_header Upgrade           $http_upgrade;
+proxy_set_header Connection        "upgrade";
+
+```
+
+### Docker DNS Resolver
+
+Docker dahili DNS çözümlemesi; çalışmayan veya aktif olmayan servisler sebebiyle  Nginx'in çökmesini engellemek için `infra/gateway/nginx/conf.d/00-resolver.conf` 
+ 
+
+```nginx
+#Docker dahili DNS sunucusunu aktif eder ve IP önbelleğini 5 saniyede bir tazeler
+
 resolver 127.0.0.11 valid=5s ipv6=off;
 ```
-:::
 
+### HTTPS Yönlendirmesi - Subdomains
 
-::: details Nginx (test) konfigürasyon dosyası `infra/gateway/nginx/conf.d/test.conf`
+- Tüm HTTP isteklerini HTTPS'e yönlendir `infra/gateway/nginx/conf.d/01-default.conf`.
 
 ```nginx
+# 1. Tüm geçerli HTTP isteklerini HTTPS'e yönlendir
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
 
-    # =========================================================================
-    # Dinamik Alt Alan Adı (Subdomain) Tespit Tablosu
-    # =========================================================================
-    map $http_host $subdomain_name {
-        "docs.localhost"      "Documentation Project Server (Dökümantasyon)";
-        "dashboardq.localhost" "Admin Dashboard Server (Yönetim Paneli)";
-        default               "Default Localhost Root Gateway (Ana Dizin)";
+    return 301 https://$host$request_uri;
+}
+
+# 2. Özel bir .conf dosyası olmayan tüm *.pr2cloud.duckdns.org isteklerini karşıla
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+    http2 on;
+    server_name _;
+
+    include /etc/nginx/snippets/ssl-params.conf;
+
+    # Tailscale VPN erişim kısıtlaması
+    # allow 100.64.0.0/10;
+    # deny all;
+
+    add_header X-Resolved-Host $host always;
+
+    root /var/www/wwwroot;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
     }
+}
+```
+### `main.pr2cloud.duckdns.org` yönlendirmesi
 
-    # =========================================================================
-    # 1. HTTP -> HTTPS Zorunlu Yönlendirme
-    # =========================================================================
-    server {
-        listen 80;
-        server_name localhost *.localhost;
-        
-        return 301 https://$host$request_uri;
-    }
+Kök alan adına gelen istekler main'e yönlendirilir, `infra/gateway/nginx/conf.d/02-main.conf`.
 
-    # =========================================================================
-    # 2. HTTPS Ana Sunucu (SSL & Yanıt Yönetimi)
-    # =========================================================================
-    server {
-        listen 443 ssl;
-        server_name localhost *.localhost;
+```nginx
+# Kök alan adına (pr2cloud.duckdns.org) gelen istekleri main. alt alan adına yönlendir
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name pr2cloud.duckdns.org;
 
-        # mkcert Yerel Sertifika Yolları
-        ssl_certificate     /etc/nginx/certs/localhost.crt;
-        ssl_certificate_key /etc/nginx/certs/localhost.key;
-        
-        # SSL Güvenlik Ayarları
-        ssl_protocols       TLSv1.2 TLSv1.3;
-        ssl_ciphers         HIGH:!aNULL:!MD5;
-        
-        # SSI Desteği (HTML içinde Nginx değişkenlerini göstermek için)
-        ssi on;
-        
-        # Genel Çıktı Türü
-        # default_type        text/plain;
+    include /etc/nginx/snippets/ssl-params.conf;
 
-        # Alt Klasör Test Bağlantısı (/events)
-        location /events {
-            default_type "text/plain; charset=utf-8";
-            return 200 "🎉 Nginx /events alt klasor testi başarılı.\n\nErişilen Sunucu: $subdomain_name\nKonum: Alt Klasor (/events)\nSSL Baglantısı: Güvenli (OK)\n";
-        }
+    return 301 https://main.pr2cloud.duckdns.org$request_uri;
+}
 
-        # Ana Dizin / Kök Bağlantı (/)
-        location / {
-            root   /var/www/html/default-gateway;
-            index  index.html;
-            try_files $uri $uri/ =404;
-        }    
-        }
 
 ```
 :::
 
 ---
 
+### index.html 
 
-`docs.localhost dev.localhost localhost` adresleri için `infra/gateway/nginx/certs/` klasöründe sertifikaları üretin.  Wildcard Subdomain için `"*.localhost"` adresini ekleyebilirsiniz fakat yerel sertifika ile çalışmaz.
+Gelen alt alan adını (*.) otomatik çözümleyen, aktif protokolü/yolu gösteren ve ekosistemdeki temel servislere (main., docs., dev., git.) hızlı geçiş kartları sunan tek dosyalık, harici bağımlılığı olmayan `pr2cloud/data/wwwroot/index.html` dosyası.
 
-```bash
-   mkdir -p infra/gateway/nginx/certs
-   cd infra/gateway/nginx/certs
-   mkcert -cert-file localhost.crt -key-file localhost.key docs.localhost dev.localhost localhost 127.0.0.1 ::1
-```
-
----
-
-Çalışma alanımız içinde (`workspace-pr2`), monorepo (`source`) klasörümüzün yanına `wwwroot/default-gateway` klasörünü ve Nginx giriş sayfasını oluşturuyoruz.
-/home/iyucel/workspace-pr2/wwwroot/default-gateway
-
-```bash
-   mkdir -p wwwroot/default-gateway
-```
-::: details `wwwroot/default-gateway/index.html`
 ```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>pr2 Dev Proxy - Merkezi Test Gateway</title>
-    <style>
-        body { font-family: system-ui, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
-        .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1.5rem; max-width: 550px; }
-        .badge { background: #238636; color: #fff; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
-        a { color: #58a6ff; text-decoration: none; display: block; margin: 0.5rem 0; }
-        a:hover { text-decoration: underline; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pr2cloud — Gateway & Alt Alan Adı Çözümleyici</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --success: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .info-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .info-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .info-value {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.95rem;
+      color: var(--accent);
+      word-break: break-all;
+    }
+
+    .notice {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 1.75rem;
+      padding: 0.85rem 1rem;
+      background: rgba(56, 189, 248, 0.08);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .service-link {
+      display: block;
+      text-decoration: none;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      color: var(--text);
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .service-link:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .service-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .service-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: monospace;
+    }
+  </style>
 </head>
 <body>
-    <div class="card">
-        <h2>🚀 Merkezi wwwroot Bağlantı Testi</h2>
-        <p><strong>Aktif Sunucu:</strong> <span class="badge"><!--# echo var="subdomain_name" default="Tanımsız" --></span></p>
-        <p><strong>İstenen Host:</strong> <!--# echo var="http_host" --></p>
-        <hr style="border-color: #30363d; margin: 1rem 0;">
-        <p>Test Uç Noktaları:</p>
-        <a href="https://localhost/events">➔ /events Alt Klasör Testi</a>
-        <a href="https://docs.localhost">➔ docs.localhost (Subdomain Testi)</a>
-        <a href="https://dashboard.localhost">➔ dashboard.localhost (Subdomain Testi)</a>
-    </div>
+  <main class="container">
+    <header class="header">
+      <div class="brand">πr² <span>cloud</span> Gateway</div>
+      <div class="badge"><span class="dot"></span> TLS & Proxy Aktif</div>
+    </header>
+
+    <section class="info-grid">
+      <div class="info-box">
+        <div class="info-label">Çözümlenen Host</div>
+        <div class="info-value" id="resolved-host">-</div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Alt Alan Adı (Subdomain)</div>
+        <div class="info-value" id="resolved-sub">-</div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Protokol & Yol</div>
+        <div class="info-value" id="resolved-path">-</div>
+      </div>
+    </section>
+
+    <p class="notice" id="status-message">
+      İstek Nginx Reverse Proxy tarafından başarıyla karşılandı.
+    </p>
+
+    <div class="section-title">Platform Servisleri</div>
+    <nav class="links-grid" id="service-links"></nav>
+  </main>
+
+  <script>
+    (function () {
+      const host = window.location.hostname;
+      const protocol = window.location.protocol.replace(":", "").toUpperCase();
+      const path = window.location.pathname + window.location.search;
+
+      // Alan adını parçalayarak subdomain ve kök domaini bul
+      const parts = host.split(".");
+      const isDuckDns = host.endsWith(".duckdns.org");
+      const rootPartsCount = isDuckDns ? 3 : 2;
+      const subdomain = parts.length > rootPartsCount
+        ? parts.slice(0, parts.length - rootPartsCount).join(".")
+        : "(kök alan adı)";
+      const rootDomain = parts.slice(-rootPartsCount).join(".");
+
+      document.getElementById("resolved-host").textContent = host;
+      document.getElementById("resolved-sub").textContent = subdomain;
+      document.getElementById("resolved-path").textContent = `${protocol} ${path}`;
+
+      const statusEl = document.getElementById("status-message");
+      if (subdomain === "main") {
+        statusEl.textContent = "Ana Gateway (main.) giriş noktasındasınız. Tüm altyapı servislerine aşağıdan erişebilirsiniz.";
+      } else {
+        statusEl.textContent = `"${subdomain}" alt alan adı için özel bir servis tanımlı değil; istek varsayılan Wildcard Gateway tarafından çözümlendi.`;
+      }
+
+      // Kök domaini dinamik kullanarak servis bağlantılarını oluştur
+      const services = [
+        { name: "Ana Portal", sub: "main" },
+        { name: "Dokümantasyon", sub: "docs" },
+        { name: "Dev Önizleme", sub: "dev" },
+        { name: "Git & Registry", sub: "git" }
+      ];
+
+      const nav = document.getElementById("service-links");
+      services.forEach((svc) => {
+        const a = document.createElement("a");
+        a.className = "service-link";
+        a.href = `https://${svc.sub}.${rootDomain}`;
+        a.innerHTML = `
+          <div class="service-name">${svc.name}</div>
+          <div class="service-sub">${svc.sub}.*</div>
+        `;
+        nav.appendChild(a);
+      });
+    })();
+  </script>
 </body>
 </html>
+```
 
+### Docker compose 
 
+Nginx konteyner yapılandırması `infra/gateway/docker-compose.yml`. 
 
-::: 
+```yaml
+name: pr2_gateway
+services:
+  nginx-gateway:
+    image: nginx:1.27-alpine
+    container_name: pr2-gateway
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      - ../certbot/conf:/etc/letsencrypt:ro,z
+      - ../../../data/wwwroot:/var/www/wwwroot:ro
+    networks:
+      - pr2_edge_net
+
+networks:
+  pr2_edge_net:
+    external: true
+```
+
+---
 
 ## Test
 ::: info `infra/gateway/` klasöründe Docker Nginx servisini çalıştırıp test ediyoruz.
@@ -214,32 +475,25 @@ resolver 127.0.0.11 valid=5s ipv6=off;
    cd infra/gateway
    docker compose up
 ```
- - [https://localhost](https://localhost/) 
- - [https://docs.localhost/](https://docs.localhost/) 
- - [https://docs.localhost/events](https://docs.localhost/events) 
- - Servisi durdurmak için
-```bash
- 
-   docker compose down
 
+ - Servisi durdurmak için
+
+```bash
+   docker compose down
 ```
  
 ::: 
 
 ## Yedekleme
 
-::: tip Testler başarılı ise proje kök dizinine gelip kodlarımızı yedekliyoruz. 
+::: tip Testler başarılı ise kodlarımızı yedekliyoruz. 
 
 ```bash
    git add .
    git commit -m "Docker, Nginx-SSL Testi tamamlandı."
-   git push origin
 ```
 :::
 
-
-
----
 
 
 

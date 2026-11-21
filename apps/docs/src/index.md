@@ -24,7 +24,7 @@ hero:
   actions:
     - theme: brand
       text: Başla
-      link: /master-architecture-guide/
+      link: /rehber/master-architecture-guide
     - theme: alt
       text: GitHub Pages
       link: https://hibrahimyucel.github.io/saasguide/

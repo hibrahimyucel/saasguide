@@ -45,7 +45,7 @@ Bu darboğazı aşmak için **DNS-01 Doğrulama (Challenge)** yöntemi kullanıl
 
 ## 2. DuckDNS Yapılandırması
 
-1. DuckDNS platformuna (`https://duckdns.org`) giriş yapın.
+1. DuckDNS platformuna https://duckdns.org giriş yapın.
 2. **Domains** bölümünden projenize özel alt alan adını oluşturun (`pr2cloud.duckdns.org`).
 3. **Current IP** kutusuna sunucunuzun kalıcı Tailscale IP adresini yazın ve **update ip** butonuna tıklayın.
 4. Sayfanın üst kısmında yer alan **Token** değerini kopyalayın.
@@ -146,8 +146,27 @@ Cron görevini aktif etmeden önce mevcut canlı sertifikalarınıza dokunmadan 
 ```
 
 ### C. Zamanlanmış Görev (Cron) Tanımlama
+
 `crontab -e` komutu ile aşağıdaki görevi sisteme ekleyerek her ayın 1'i ve 15'inde gece 03:00'te otomatik kontrol yapılmasını sağlayın:
 
-```cron
+```bash
+
+sudo crontab -e
+
+```
+
+• `i ` tuşu ile ekleme moduna geç.
+• görev satırnı ekleyin.
+
+```
 0 3 1,15 * * /proje/tam/yolu/infra/scripts/renew-ssl.sh >> /var/log/pr2-ssl-renew.log 2>&1
 ```
+
+• `Esc `, `:wq ` yaz ve `Enter` tuşu ile kapat.
+
+• görev listesini kontrol et.
+
+```bash
+sudo crontab -l
+```
+

@@ -1,16 +1,16 @@
 ---
-title: "πr² Cloud - Development"
+title: "Tasarım Standartları"
 description: "AI Development / pr2cloud Single Source of Truth (System Prompt & Context Reference)"
 outline: [2, 3]
 sidebarTitle: "Tasarım ve Kodlama Standartları"
 index: 2
-isContent: false
+isContent: true
 hidden: false
 status: "published" # draft | review | published
 tags: [ai-reference, pr2cloud, architecture, monorepo, self-hosted-paas, security, coding-standards, clean-code, layered-architecture, solid, naming-conventions, comments]
 ---
 
-# AI Development Standards: Yazılım Geliştirme ve Kodlama Standartları
+# Yazılım Geliştirme ve Kodlama Standartları
 Bu doküman; **pr2cloud** (*Pr2 PaaS Environment & Software Development Guide*) monorepo ekosistemindeki tüm ön yüz (Frontend), arka yüz (Backend) ve paylaşılan paketlerde uygulanması zorunlu yazılım mühendisliği ilkelerini tanımlar.
 
 ---

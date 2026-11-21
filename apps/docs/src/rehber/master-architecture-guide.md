@@ -1,19 +1,19 @@
 ---
-title: "πr² Cloud - Workspace"
+title: "Tanıtım"
 description: "AI Workspace / pr2cloud Single Source of Truth (System Prompt & Context Reference)"
 outline: [2, 3]
 sidebarTitle: "Proje Tanımı"
 index: 1
-isContent: false
+isContent: true
 hidden: false
 status: "published" # draft | review | published
 tags: [ai-reference, pr2cloud, architecture, monorepo, self-hosted-paas, security, sso, devops, mail-server]
 ---
     
 
-# AI System Reference: pr2cloud Altyapı ve Mimari Standartları
-Bu doküman; **pr2cloud** (*Pr2 PaaS Environment & Software Development Guide - PaaS Ortamı ve Yazılım Geliştirme Rehberi*) projesinin tüm teknik kararlarını, altyapı yığınını, çalışma dizini hiyerarşisini, çift ağ izolasyon sınırlarını, servis yönlendirme matrisini ve dokümantasyon kurallarını tek bir bağlam (Context) kaynağında toplar.
-
+# πr² Cloud Altyapı Standartları
+::: info Bu doküman; **pr2cloud** (*Pr2 PaaS Environment & Software Development Guide - PaaS Ortamı ve Yazılım Geliştirme Rehberi*) projesinin tüm teknik kararlarını, altyapı yığınını, çalışma dizini hiyerarşisini, çift ağ izolasyon sınırlarını, servis yönlendirme matrisini ve dokümantasyon kurallarını tek bir bağlam (Context) kaynağında toplar.
+:::
 ---
 
 ## 1. Mimari Kararlar ve Sistem Özeti
@@ -31,7 +31,7 @@ Servis ve API katmanı iki ayrı Docker sanal ağına (iki ağ arayüzü mantı�
 
 ---
 
-## 2. Çalışma Dizini ve Klasör Mimarisi (`pr2cloud`)
+## 2. Çalışma Dizini ve Klasör Mimarisi
 Sistem; kaynak kodların, canlı (VPS) yapılandırmalarının ve çalışma zamanı kalıcı verilerinin birbirinden kesin olarak ayrıldığı **`pr2cloud`** kök çalışma alanı üzerine kuruludur:
 
 ```text
@@ -102,7 +102,7 @@ Alan adı şablonu: `*.alanadi.com` (Canlı VPS) veya `*.projeadi.duckdns.org` (
 | :--- | :--- | :--- | :--- |
 | **VitePress Docs** | `docs.<domain>` | `:4173` / Statik | Tailscale / Yetkili Erişim |
 | **Dex (SSO / OIDC)** | `auth.<domain>` | `:5556` | Merkezi OIDC Uç Noktası (HTTPS) |
-| **Gitea (Git & Registry)** | `gitea.<domain>` | `:3000` (HTTP) / `:2222` (SSH) | Tailscale + Dex SSO |
+| **Gitea (Git & Registry)** | `gitea.<domain>` | `:3000` (HTTP) / `:2222` (SSH **disable**) | Tailscale + Dex SSO |
 | **MinIO Web Konsol** | `minio.<domain>` | `:9001` | Tailscale + Dex SSO (WebSocket açık) |
 | **MinIO S3 API** | `s3.<domain>` | `:9000` | Uygulama SDK Bağlantı Noktası |
 | **Stalwart Mail Server** | `mail.<domain>` | `25, 465, 587` (SMTP) / `993` (IMAPS) / `:8080` (Admin) | Mail portları genel ağa açık; Yönetim arayüzü Tailscale + Nginx arkasında |
@@ -110,7 +110,7 @@ Alan adı şablonu: `*.alanadi.com` (Canlı VPS) veya `*.projeadi.duckdns.org` (
 
 ---
 
-## 5. Mimari Tasarım ve Dokümantasyon Standartları (Anayasa)
+## 5. Mimari Tasarım ve Dökümantasyon Standartları
 
 ### A. Dosya Adlandırma Kuralları
 * **React / UI Bileşenleri:** `PascalCase` (`EditableCell.tsx`, `Navbar.tsx`).
@@ -126,15 +126,15 @@ Alan adı şablonu: `*.alanadi.com` (Canlı VPS) veya `*.projeadi.duckdns.org` (
 *   **YAML Front Matter Şablonu (Zorunlu Standart):** Tüm VitePress dokümanlarının en üstünde aşağıdaki standart şablon yer alır. `keywords` alanı kullanılmaz; tüm anahtar kelimeler `kebab-case` formatında `tags` altında birleştirilir. (`lastUpdated`, `editLink`, `prev`, `next` ayarları global `config.mts` üzerinden yönetilir, gerekmedikçe sayfa bazlı yazılmaz.)
     ```yaml
     ---
-    title: "Sayfa Başlığı"
-    description: "SEO ve sayfa özeti açıklaması."
-    outline: [2, 3]
-    sidebarTitle: "Kısa Menü Başlığı"
-    index: 10
-    isContent: false
-    hidden: false
-    status: "published" # draft | review | published
-    tags: ["kategori", "alt-konu", "teknoloji-adi"]
+    title: "Sayfa Başlığı"                             # Tarayıcı başlığında görünecek etiket
+    description: "SEO ve sayfa özeti açıklaması."      # SEO, AI, Developper için açıklama 
+    outline: [2, 3]                                    # sağ panel derinliği Table of Contents - h3 gösterilir
+    sidebarTitle: "Kısa Menü Başlığı"                  # sol panel döküman ağacında görünecek başlık
+    index: 10                                          # döküman veya başlığın grup içi sırası
+    isContent: false                                   # index.md dosyasını atlayıp ilk belgeye bağlantı kur
+    hidden: false                                      # klasör(index.md) veya dosyayı gizle 
+    status: "published"                                # draft | review | published   
+    tags: ["kategori", "alt-konu", "teknoloji-adi"]    # belge konuları
     ---
     ```
 *   **Tanıtım / Sözlük Maddeleri:** Üretici ve resmi web sitesi bilgisiyle başlar. `::: info CONCEPT MATRICES` bloğu **İngilizce**; **Resmi Tanım**, **Sözlük Veritabanı (Lexical Database)** ve **Cheatsheet** bölümleri **Türkçe Markdown** formatındadır.

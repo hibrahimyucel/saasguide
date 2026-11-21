@@ -107,7 +107,7 @@ EOF
 ```bash
 cat << 'EOF' > turbo.json
 {
-  "\$schema": "https://turbo.build",
+  "$schema": "https://turbo.build",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

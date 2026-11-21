@@ -3,7 +3,7 @@ title: "SaaS Geliştirme Rehberi"
 description: "pr2cloud Self-Hosted PaaS altyapı kurulumu, VitePress ile yazılım geliştirmeye giriş, deployment seçenekleri, PaaS otomasyonu ve platform ölçekleme yol haritası."
 outline: [2, 3]
 sidebarTitle: "Sistem Kurulumu"
-index: 1
+index: 3
 isContent: false
 hidden: false
 status: "published"
