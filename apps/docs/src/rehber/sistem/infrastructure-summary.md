@@ -4,6 +4,7 @@ description: Vitepress markdown içinde Vue bileşeni kullanma örneği.
 outline:
   - 2
   - 3
+hidden: true
 status: draft
 index: 99
 tags:

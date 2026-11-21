@@ -191,7 +191,11 @@ export default defineConfig({
 
     nav: [
       { text: "Sözlük", link: "/dict/", activeMatch: "/dict/" },
-      { text: "Rehber", link: "/rehber/", activeMatch: "/rehber/" },
+      {
+        text: "Rehber",
+        link: "/rehber/master-architecture-guide",
+        activeMatch: "/rehber/",
+      },
     ],
 
     sidebar: {
