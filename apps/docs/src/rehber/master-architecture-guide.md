@@ -51,6 +51,7 @@ pr2cloud/
 ├── prod/                       # [Git Repo] VPS (Production) Yapılandırma Deposu
 │   ├── nginx/                  # Ters vekil (Reverse Proxy) sanal sunucu yapılandırmaları
 │   ├── dex/                    # Merkezi OIDC yapılandırması (config.yaml)
+│   ├── mariadb/                # MariaDB özel yapılandırma dosyaları (my.cnf)
 │   ├── stalwart/               # Stalwart Mail Server statik yapılandırma dosyaları
 │   ├── snappymail/             # SnappyMail yapılandırma şablonları
 │   ├── docker-compose.yml      # Canlı ortam servis orkestrasyonu (Dual-NIC tanımlı)
@@ -59,11 +60,13 @@ pr2cloud/
 └── data/                       # [Git Dışı / Volume] Çalışma Zamanı & Kalıcı Veriler (Runtime)
     ├── dex/                    # dex.db (SQLite veritabanı)
     ├── gitea/                  # Git depoları ve konteyner kayıt defteri verileri
-    ├── minio/                  # S3 nesne depolama kovaları (buckets)
+    ├── minio/                  # S3 nesne depolama kovaları (buckets) - PGSTY SILO uyumlu
+    ├── mariadb/                # İlişkisel veritabanı veri dosyaları
     ├── stalwart/               # E-posta kutuları, kuyruklar, DKIM anahtarları ve veritabanı
     ├── snappymail/             # Webmail oturum ve kullanıcı ayar verileri
     └── certs/                  # Certbot Wildcard SSL/TLS sertifikaları
 ```
+
 
 ### Klasör Yönetimi İlkeleri
 * **`source/` ve `prod/` İzolasyonu:** Uygulama geliştirme süreçleri ve yerel geliştirme servisleri (`source/infra/`) ana monorepo deposunda yürütülürken, VPS üzerindeki altyapı orkestrasyonu bağımsız bir Git deposu olan `prod/` üzerinden yönetilir.
@@ -88,10 +91,12 @@ pr2cloud/
 | **TLS Sertifikasyonu** | **Certbot** | DNS-01 doğrulaması ile otomatik 90 günlük Let's Encrypt Wildcard SSL/TLS üretimi. |
 | **Merkezi Kimlik (SSO)** | **Dex (SQLite)** | OAuth 2.0 / OIDC tabanlı, hafif SQLite depolamalı merkezi kimlik sağlayıcısı. |
 | **Kod Deposu & CI/CD** | **Gitea** | Self-hosted Git sunucusu, Gitea Actions ve dahili OCI Docker Container Registry. |
-| **Nesne Depolama (S3)** | **MinIO** | S3 API uyumlu medya, dokümantasyon varlıkları (`docs-assets`) ve yedek deposu. |
 | **E-Posta Sunucusu (MTA/IMAP)** | **Stalwart Mail Server** | Modern, tek ikili (Rust) tabanlı, SPF/DKIM/DMARC ve JMAP/IMAP/SMTP destekli mail sunucusu. |
 | **Webmail İstemcisi** | **SnappyMail** | Düşük kaynak tüketimli, modern ve güvenli web tabanlı e-posta arayüzü. |
 | **Sunucu Güvenliği** | **firewalld + Fail2ban** | Arayüz bazlı (`eth0` vs `tailscale0`) bölge filtrelemesi ve dinamik IP engelleme. |
+| **Nesne Depolama (S3)** | **MinIO (PGSTY SILO)** | Üretici desteği sonlanan MinIO yerine `pgsty/silo` imajı ile S3 API uyumlu medya, dokümantasyon varlıkları (`docs-assets`) ve yedek deposu. |
+| **İlişkisel Veritabanı** | **MariaDB** | Uygulamalar için düşük kaynak tüketimli, yüksek performanslı ilişkisel veritabanı sunucusu. |
+| **Veritabanı Yönetimi** | **phpMyAdmin** | MariaDB veritabanı şemalarını, tablolarını ve sorgularını yönetmek için web tabanlı yönetim arayüzü. |
 
 ---
 
@@ -103,10 +108,12 @@ Alan adı şablonu: `*.alanadi.com` (Canlı VPS) veya `*.projeadi.duckdns.org` (
 | **VitePress Docs** | `docs.<domain>` | `:4173` / Statik | Tailscale / Yetkili Erişim |
 | **Dex (SSO / OIDC)** | `auth.<domain>` | `:5556` | Merkezi OIDC Uç Noktası (HTTPS) |
 | **Gitea (Git & Registry)** | `gitea.<domain>` | `:3000` (HTTP) / `:2222` (SSH **disable**) | Tailscale + Dex SSO |
-| **MinIO Web Konsol** | `minio.<domain>` | `:9001` | Tailscale + Dex SSO (WebSocket açık) |
-| **MinIO S3 API** | `s3.<domain>` | `:9000` | Uygulama SDK Bağlantı Noktası |
 | **Stalwart Mail Server** | `mail.<domain>` | `25, 465, 587` (SMTP) / `993` (IMAPS) / `:8080` (Admin) | Mail portları genel ağa açık; Yönetim arayüzü Tailscale + Nginx arkasında |
 | **SnappyMail Webmail** | `webmail.<domain>` | `:8888` (İç HTTP) | Nginx HTTPS + Dex SSO / İstemci Erişimi |
+| **MinIO Web Konsol (SILO)** | `minio.<domain>` | `:9001` | Tailscale + Dex SSO (WebSocket açık) |
+| **MinIO S3 API (SILO)** | `s3.<domain>` | `:9000` | Uygulama SDK Bağlantı Noktası |
+| **phpMyAdmin** | `db.<domain>` | `:80` (İç HTTP) | Tailscale + Dex SSO |
+| **MariaDB** | *(Subdomain yok)* | `:3306` (İç TCP) | Yalnızca `pr2_internal_net` (API Katmanı & phpMyAdmin Erişimi) |
 
 ---
 
@@ -144,3 +151,14 @@ Alan adı şablonu: `*.alanadi.com` (Canlı VPS) veya `*.projeadi.duckdns.org` (
 
 ### D. AI Çıktı Kuralı
 * Kod güncellemelerinde tüm dosyayı baştan yazmak yerine yalnızca değişen fonksiyon, blok veya bileşenler modüler ve nokta atışı olarak sunulur.
+
+
+
+### Çift Ağ (Dual-NIC) İzolasyon Topolojisi
+Servis ve API katmanı iki ayrı Docker sanal ağına (iki ağ arayüzü mantığıyla) bölünür:
+* **`pr2_edge_net` (Kenar Ağı):** Nginx (reverse proxy) ve API Gateway/API servislerinin dış iletişim arayüzünü barındırır.
+* **`pr2_internal_net` (İç Servis Ağı - `internal: true`):** Dex (SQLite), MinIO (PGSTY SILO), MariaDB, Gitea, Stalwart iç servisleri ve veritabanlarını barındırır; dış internete kapalıdır.
+* **API Katmanı Köprüsü:** API servisleri hem `pr2_edge_net` hem de `pr2_internal_net` ağlarına atanarak iki ağ arasında kontrollü veri geçişi sağlar.
+
+---
+
