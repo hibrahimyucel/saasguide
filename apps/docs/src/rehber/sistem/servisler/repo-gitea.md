@@ -17,144 +17,52 @@ tags:
   - monorepo
 ---
 
-# `7.` Gitea - Dual Remote Yapılandırması
+# Gitea - Dual Remote Yapılandırması
 
-Monorepo altyapısında kodları yalnızca bulutta (GitHub) tutmak yerine yerel ağda çalışan bir **Gitea** sunucusu kuruyoruz.
+## Tek Remote Origin ve Gitea Push Mirror (Sunucu Taraflı Senkronizasyon)
 
-Gitea Runner servisleri derleme (build) ve Docker imajı paketleme işlemlerini otomatik olarak yapar. Güncel sürümler Gitea Container Registry üzerinden ilgili ortama otomatik olarak aktarılır.
+Yerel geliştirme ortamında çift push hedefi yönetmek yerine yalnızca yerel Gitea'yı tek `origin` olarak kullanıp, GitHub yedeklemesini Gitea'nın yerleşik **Push Mirror** özelliğine devredebilirsiniz.
 
-Geliştirme süreci `fetch` işlemleri doğrudan yerel `git.localhost` üzerinde çalışacağı için ağ gecikmesi yaşanmaz. `push` işlemi hem gitea hem github reposunu günceller, ancak github adresini listeden çıkararak manuel güncelleme de yapabilirsiniz.
+### 1. Yerel Projeyi Tek `origin` (Gitea) Yapısına Alma
 
-Gitea minimum RAM/CPU tüketir. SSH portu (`DISABLE_SSH=true`) kapatılarak tüm trafik mevcut `mkcert` SSL sertifikalı Nginx Gateway (`443`) üzerinde tek noktadan yönetilir.
-
-
-
-## 1. Klasörler ve Veri İzolasyonu
-
-Kalıcı Git depoları ve SQLite veritabanı dosyaları, kaynak kod (`source`) ve Docker imaj bağlamından tamamen izole edilerek tıpkı `wwwroot` gibi bir üst dizinde konumlandırılmıştır:
-
-```text
-workspace-pr2/
-├── wwwroot/               # Statik web dosyaları
-├── gitea-data/            # Gitea SQLite veritabanı ve Git repoları (İzole)
-└── source/                # Monorepo kök dizini
-    └── infra/
-        ├── gateway/       # Nginx Reverse Proxy (pr2_dev_proxy)
-        │   └── nginx/
-        │       └── conf.d/
-        │           ├── default-gateway.conf
-        │           └── git-localhost.conf
-        └── gitea/         # Gitea Servis Tanımı (pr2_dev_gitea)
-            └── docker-compose.yml
-```
-
-> **Güvenlik Notu:** Olası yedekleme veya kopyalama işlemlerinde veri sızıntısını önlemek için kök dizindeki `.gitignore` ve `.dockerignore` dosyalarına `gitea-data/` kuralı eklenmiştir.
-
----
-
-## 2. Gitea Docker Yapılandırması
-
-Gitea servisini `pr2_dev_network` ağına dahil ediyoruz, `../../../gitea-data:/data` klasörünü bağlıyoruz.
-
-::: details `infra/gitea/docker-compose.yml`
-
-```yaml
-name: pr2_dev_gitea
-services:
-  gitea:
-    image: gitea/gitea:latest
-    container_name: pr2_dev_gitea
-    restart: unless-stopped
-    environment:
-      - USER_UID=1000
-      - USER_GID=1000
-      - GITEA__database__DB_TYPE=sqlite3
-      - GITEA__server__DOMAIN=git.localhost
-      - GITEA__server__SSH_DOMAIN=git.localhost
-      - GITEA__server__ROOT_URL=https://git.localhost
-      - GITEA__server__DISABLE_SSH=true
-    volumes:
-      - ../../../gitea-data:/data
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-
-    networks:
-      - pr2_dev_network
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
-
-networks:
-  pr2_dev_network:
-    external: true
-```
-:::
----
-
-## 3. Nginx Entegrasyonu
-
-
-::: details `infra/gateway/nginx/conf.d/git-localhost.conf`
-
-```nginx
-server {
-    listen 443 ssl;
-    server_name git.localhost;
-
-    # mkcert Yerel SSL Sertifikaları
-    ssl_certificate     /etc/nginx/certs/localhost.crt;
-    ssl_certificate_key /etc/nginx/certs/localhost.key;
-    ssl_protocols       TLSv1.2 TLSv1.3;
-    ssl_ciphers         HIGH:!aNULL:!MD5;
-
-    # Büyük monorepo push işlemleri için gövde boyutu limiti
-    client_max_body_size 512M;
-
-    location / {
-        # Docker dahili DNS (127.0.0.11) ile dinamik upstream çözümleme
-        set $gitea_upstream http://pr2_dev_gitea:3000;
-        proxy_pass $gitea_upstream;
-
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        # WebSocket Desteği
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-    }
-}
-```
-:::
-
-### Sertifikaları güncelleme
-`nginx/certs` klasörü içinde aşağıdaki komutu çalıştırıp `git.localhost` adresini sertifikaya ekliyoruz.
+Proje kök dizininde (`source/`) mevcut çift push hedeflerini temizleyip yalnızca yerel Gitea adresini tanımlayın:
 
 ```bash
-mkcert -cert-file localhost.crt -key-file localhost.key docs.localhost dev.localhost git.localhost localhost 127.0.0.1 ::1
+# Mevcut origin yapılandırmasını sıfırlayıp tek Gitea adresi atama
+git remote remove origin
+git remote add origin https://git.localhost<kullanıcıadınız>/pr2.git
+
+# Doğrulama (Yalnızca 1 fetch ve 1 push satırı görünmelidir)
+git remote -v
 ```
 
+### 2. GitHub Kişisel Erişim Anahtarı (PAT) Oluşturma
 
-## Servisleri Ayağa Kaldırma
+Gitea'nın GitHub deposuna arka planda kod yazabilmesi için bir erişim anahtarı (Token) gerekir:
+
+1. **GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens** (veya *Tokens (classic)*) bölümüne gidin.
+2. Yalnızca ilgili depo (`pr2`) için **Contents: Read and write** yetkisine sahip bir token oluşturun ve kopyalayın.
+
+### 3. Gitea Üzerinde Push Mirror Tanımlama
+
+1. `https://git.localhost<kullanıcıadınız>/pr2` deposunu açın ve üst menüden **Settings (Ayarlar)** sekmesine girin.
+2. Sol menüden **Mirror Settings (Yansıtma Ayarları)** (bazı sürümlerde *Repository* altında) bölümünü açın.
+3. **Add Push Mirror (Push Yansıtması Ekle)** alanını doldurun:
+   * **Git Remote Repository URL:** `https://github.com<kullanıcıadınız>/pr2.git`
+   * **Authorization (Yetkilendirme):**
+     * **Username:** GitHub kullanıcı adınız
+     * **Password / Access Token:** Oluşturduğunuz GitHub PAT değeri
+   * **Sync when commits are pushed:** İşaretli *(Her `git push` sonrası anında GitHub'a gönderir)*
+   * **Mirror Interval:** `8h0m0s` *(Periyodik kontrol aralığı)*
+4. **Add Push Mirror** butonuna basarak kaydedin.
+
+### 4. Doğrulama ve Manuel Tetikleme
+
+* Ayar sayfasındaki **Push Mirrors** tablosunda eklenen kaydın yanındaki **Sync Now (Şimdi Eşitle)** butonuna tıklayın ve **Last Update** sütununda hata olmadan tarih güncellendiğini doğrulayın.
+* Artık yerel terminalinizde standart `git push origin main` komutunu çalıştırdığınızda kod önce milisaniyeler içinde yerel Gitea'ya yazılır, ardından Gitea arka planda GitHub deposunu otomatik günceller.
 
 
-```bash
-# 1. Gitea konteynerini başlatın
-cd infra/gitea && docker compose up -d
-
-# 2. Nginx yapılandırmasını yeniden yükleyin
-cd ../gateway && docker compose restart nginx_proxy
-```
-
-Kurulum sonrasında `https://git.localhost` adresinden ilk yönetici hesabını ve Github'da kullandığınız isimle boş bir repository oluşturun.
-
----
-
-## 4. Yerel Öncelikli Dual Remote Origin Yapılandırması
+## Yerel Öncelikli Dual Remote Origin Yapılandırması
 
 Bu yapılandırmada `git pull` ve `git fetch` işlemleri doğrudan yerel Gitea sunucusundan yapılırken, `git push` komutları tek seferde hem yerel Gitea'ya hem de GitHub'a yazılır.
 
