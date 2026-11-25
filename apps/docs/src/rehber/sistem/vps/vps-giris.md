@@ -1,13 +1,13 @@
 ---
-title: "AlmaLinux 9 VPS Referans, Yetki Politikası ve Cheatsheet"
-description: "pr2cloud canlı sunucu (prod) için AlmaLinux 9 mimari özeti, katmanlı yetki politikası, dosya izin standartları ve sistem/ağ/güvenlik komutları cheatsheet rehberi."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "VPS Referans & Cheatsheet"
-index: 301
+sidebarTitle: "VPS - Giriş"
+index: 10
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "prod", "almalinux-9", "vps", "linux", "security", "permissions", "cheatsheet"]
+tags: ["Paas","Saas"]
 ---
 
 # AlmaLinux 9 VPS Referans, Yetki Politikası ve Cheatsheet

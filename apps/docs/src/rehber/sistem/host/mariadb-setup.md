@@ -1,13 +1,13 @@
 ---
-title: "MariaDB Kurulumu"
-description: "pr2cloud canlı ortamında (VPS) MariaDB ilişkisel veritabanı sunucusunun pr2_internal_net üzerinde izole kurulum ve yapılandırma rehberi."
-outline:
-sidebarTitle: "MariaDB Kurulumu"
-index: 18
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
+outline: [2, 3]
+sidebarTitle: "MariaDB Veritabanı"
+index: 90
 isContent: true
 hidden: false
 status: "published"
-tags: ["database", "mariadb", "sql", "docker-compose", "internal-net", "security"]
+tags: ["Paas","Saas"]
 ---
 
 # MariaDB Kurulum ve Yapılandırma Rehberi

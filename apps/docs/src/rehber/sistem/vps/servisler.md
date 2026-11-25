@@ -1,14 +1,15 @@
 ---
-title: "Çekirdek PaaS Servisleri: Nginx, MariaDB, phpMyAdmin ve MinIO (SILO)"
-description: "pr2cloud canlı sunucu (prod) için bellek limitli Docker Compose orkestrasyonu, MariaDB bellek optimizasyonu, MinIO S3 nesne depolama ve yerel Tailscale /etc/hosts yönlendirme rehberi."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "Çekirdek Servisler"
-index: 305
+sidebarTitle: "Servisler"
+index: 50
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "prod", "nginx", "mariadb", "phpmyadmin", "minio", "silo", "docker-compose"]
+tags: ["Paas","Saas"]
 ---
+
 
 # Çekirdek PaaS Servisleri: `Nginx`, `MariaDB`, `phpMyAdmin` ve `MinIO (SILO)`
 

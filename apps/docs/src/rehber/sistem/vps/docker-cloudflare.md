@@ -1,13 +1,13 @@
 ---
-title: "Docker Engine, Çift Ağ (Dual-NIC) ve Tüm DNS Kayıtları"
-description: "pr2cloud canlı sunucu (prod) için Docker CE kurulumu, pr2_edge_net ve pr2_internal_net izolasyonu, /opt/pr2cloud dizin izinleri, önceden DKIM üretimi ve tek seferde Cloudflare DNS Zone kurulumu."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "Docker, Ağ & Cloudflare DNS"
-index: 303
+sidebarTitle: "Docker"
+index: 30
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "prod", "docker", "dual-nic", "cloudflare", "dns", "dkim", "spf", "dmarc"]
+tags: ["Paas","Saas"]
 ---
 
 # Docker Engine, Çift Ağ (Dual-NIC) ve Tüm DNS Kayıtları

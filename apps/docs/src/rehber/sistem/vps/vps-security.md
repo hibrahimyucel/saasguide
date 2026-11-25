@@ -1,13 +1,13 @@
 ---
-title: "AlmaLinux 9 VPS Kurulum ve Güvenlik Sıkılaştırma Rehberi"
-description: "pr2cloud canlı sunucu (prod) için sıfırdan yönetici oluşturma, SSH anahtar kurulumu, Tailscale VPN, firewalld, Fail2ban ve Swap yapılandırma adımları."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "VPS Kurulum & Sıkılaştırma"
-index: 302
+sidebarTitle: "VPS Güvenlik"
+index: 20
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "prod", "almalinux-9", "security", "ssh", "tailscale", "firewalld", "fail2ban", "swap"]
+tags: ["Paas","Saas"]
 ---
 
 # AlmaLinux 9 VPS Kurulum ve Güvenlik Sıkılaştırma Rehberi

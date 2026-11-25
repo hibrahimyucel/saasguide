@@ -1,14 +1,15 @@
 ---
-title: "MinIO S3 Blob Entegrasyonu ve Otomatik Yedekleme"
-description: "pr2cloud canlı sunucu (prod) için Stalwart e-posta gövde/eklerinin MinIO (SILO) S3 kovasına taşınması ve root cron ile günlük otomatik yedekleme otomasyonu."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "S3 Blob & Otomatik Yedekleme"
-index: 308
+sidebarTitle: "VPS Yedekleme"
+index: 90
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "prod", "minio", "s3", "stalwart", "backup", "cron", "almalinux"]
+tags: ["Paas","Saas"]
 ---
+
 
 # Otomatik Yedekleme
 

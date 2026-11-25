@@ -1,14 +1,15 @@
 ---
-title: "MinIO S3 Kurulum ve Dex SSO Bağlantı Rehberi"
-description: "pr2cloud geliştirme ortamı için MinIO S3 nesne depolama kurulumu ve mevcut Dex OIDC sunucusuna (auth.<domain>) SSO entegrasyonu."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "SILO S3 & Dex SSO"
-index: 40
+sidebarTitle: "SILO - S3 Nesne Depolama"
+index: 60
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "minio", "s3", "oidc", "sso", "nginx", "docker", "storage"]
+tags: ["Paas","Saas"]
 ---
+
 
 # pgsty/silo S3 Kurulum ve Dex SSO Bağlantı Rehberi
 

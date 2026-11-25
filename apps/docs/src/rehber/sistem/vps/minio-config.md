@@ -1,14 +1,16 @@
 ---
-title: "MinIO S3 Blob Entegrasyonu ve Otomatik Yedekleme"
-description: "pr2cloud canlı sunucu (prod) için Stalwart e-posta gövde/eklerinin MinIO (SILO) S3 kovasına taşınması ve root cron ile günlük otomatik yedekleme otomasyonu."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "S3 Blob & Stalwart"
-index: 307
+sidebarTitle: "S3 Mail"
+index: 70
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "prod", "minio", "s3", "stalwart", "backup", "cron", "almalinux"]
+tags: ["Paas","Saas"]
 ---
+
+
 ## Adım 1: Stalwart E-Posta Gövde ve Eklerini MinIO (SILO) S3 Kovasına Taşıma
 
 ### 1.1. Docker İç Ağ Takma Adı (`aliases`) Tanımlama

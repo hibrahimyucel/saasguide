@@ -1,17 +1,15 @@
 ---
-title: 'Kurulum Rehberi Giriş: Neden Git ve Neden İlk Adım?'
-description: sudo dnf install -y git curl
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "Github Remote Origin"
-index: 3
+sidebarTitle: "Github CLI"
+index: 30
 isContent: true
 hidden: false
 status: "published"
-tags:
-  - git
-  - github cli
-  - remote origin
+tags: ["Paas","Saas"]
 ---
+
 
 # GitHub CLI
 

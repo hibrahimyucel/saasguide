@@ -339,7 +339,7 @@ export const convertTreeToMarkdown = (
   }
 
   // 📝 Line generation logic
-  const description = node.description ? " # " + node.description : "";
+  const description = node.description ? " # " + node.description : " # ";
   const mainLineText = `${node.isDirectory ? "📁 " : "📄 "}${node.name}`;
 
   // Apply padding using the single-pass computed target width minus the current text indent layout

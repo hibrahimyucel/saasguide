@@ -1,13 +1,13 @@
 ---
-title: "Kurumsal E-Posta Altyapısı: Stalwart Mail v1.x ve SnappyMail"
-description: "pr2cloud canlı sunucu (prod) için Stalwart Mail v1.x kurulum sihirbazı, yorum satırlı kurtarma/bootstrap parametreleri, TLS, önceden üretilmiş DKIM anahtarları ve SnappyMail Webmail yapılandırması."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "E-Posta (Stalwart & SnappyMail)"
-index: 306
+sidebarTitle: "Mail"
+index: 60
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "prod", "stalwart", "snappymail", "email", "dkim", "tls", "webmail"]
+tags: ["Paas","Saas"]
 ---
 
 # Kurumsal E-Posta Altyapısı: `Stalwart Mail v1.x` ve `SnappyMail`

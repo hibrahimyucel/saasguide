@@ -1,14 +1,15 @@
 ---
-title: "Gitea - OCI Registry"
-description: "pr2cloud altyapısında SSH kapalı, SQLite tabanlı Gitea Git sunucusu, dahili OCI Container Registry ve Dex OIDC entegrasyon rehberi."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "Gitea & OCI Registry"
-index: 30
+sidebarTitle: "Gitea - Versiyon Kontrol Servisi"
+index: 70
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "gitea", "oci-registry", "cicd", "sso", "oidc", "dex", "docker"]
+tags: ["Paas","Saas"]
 ---
+
 
 # Gitea, OCI Registry ve Dex SSO Kurulumu
 

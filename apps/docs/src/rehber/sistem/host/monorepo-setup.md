@@ -1,22 +1,22 @@
 ---
-title: "Monorepo Başlangıç ve Yapılandırma Rehberi"
-description: "pr2cloud source/ dizini altında pnpm-workspace, Turborepo, TypeScript ve .gitignore yapılandırma adımları."
-outline:
-  - 2
-  - 3
+title: "Monorepo Yapılandırması"
+description: "πr² Cloud projesi için pnpm workspace, Turborepo ve TypeScript tabanlı monorepo iskeleti kurulum adımları."
+outline: [2, 3]
 sidebarTitle: "Monorepo Yapılandırması"
-index: 2
+index: 20
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "monorepo", "pnpm", "turborepo", "typescript", "gitignore"]
+tags: ["paas", "saas", "monorepo", "pnpm", "turborepo"]
 ---
+
+
 
 # Monorepo Yapılandırması
 
 ## Çalışma Dizini ve Git Deposu
 
-Kaynak kodların(`source/`), üretim yapılandırmalarının (`prod/`) ve kalıcı verilerin (`data/`) birbirinden kesin olarak izole edilmesi amacıyla kök çalışma alanı (`pr2cloud/`)oluşturulur. Projenin durumuna göre mevcut depo klonlanır veya sıfırdan yeni bir Git deposu başlatılır.
+Kaynak kodların (`source/`), üretim yapılandırmalarının (`prod/`) ve kalıcı verilerin (`data/`) birbirinden kesin olarak izole edilmesi amacıyla kök çalışma alanı (`pr2cloud/`) oluşturulur. Projenin durumuna göre mevcut depo klonlanır veya sıfırdan yeni bir Git deposu başlatılır.
 
 
 ## A. Mevcut Monorepoyu Klonlama
@@ -29,10 +29,13 @@ mkdir -p ~/pr2cloud && cd ~/pr2cloud
 
  - Ana monorepo deposunu source/ dizinine klonla
 
+<DynamicSnippet title="Monorepo Adresi">
+
 ```bash
-git clone <MONOREPO_GIT_URL> source
+git clone <-MONOREPO_URL-> source
 cd source
 ```
+</DynamicSnippet>
 
 ## B. Yeni Monorepo oluşturma
 
@@ -107,7 +110,7 @@ EOF
 ```bash
 cat << 'EOF' > turbo.json
 {
-  "$schema": "https://turbo.build",
+  "$schema": "./node_modules/turbo/schema.json",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

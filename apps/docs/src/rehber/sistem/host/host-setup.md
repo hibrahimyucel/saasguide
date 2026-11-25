@@ -1,19 +1,19 @@
 ---
 title: "Host (Geliştirici Makinesi) Kurulumu"
-description: "pr2cloud monorepo geliştirme ortamı, Node.js, pnpm, Turborepo ve Tailscale VPN istemcisi kurulum rehberi."
+description: "πr² Cloud geliştirici makinesi (Host) için Tailscale VPN, Node.js, pnpm, GitHub CLI ve Docker kurulum adımları."
 outline: [2, 3]
-sidebarTitle: "Host Kurulumu"
-index: 1
+sidebarTitle: "Gerekli Programlar"
+index: 10
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "host-setup", "monorepo", "pnpm", "turborepo", "tailscale"]
+tags: ["tailscale","nodejs","pnpm","docker"]
 ---
 
 # Host Kurulumu
 
-::: info
-Bu rehber, **pr2cloud** ekosisteminde kod geliştirme ve monorepo orkestrasyonunun yürütüleceği yerel geliştirici makinesinin (Host) ve ek olarak geliştirme sunucusunun hazırlanmasını kapsar.
+::: info Geliştirici Ortamı Hazırlığı
+Bu rehber, **πr² Cloud** ekosisteminde kod geliştirme ve monorepo orkestrasyonunun yürütüleceği yerel geliştirici makinesinin (Host) ve ek olarak geliştirme sunucusunun hazırlanmasını kapsar.
 :::
 
 ## Tailscale VPN
@@ -22,11 +22,11 @@ VPN ile bağlı olduğunuz fiziksel ağdan ve makine yapılandırmasından bağ�
 
 Test ve  izleme amaçlı sisteme bağlanacak kişi ve cihazlar için Tailscale VPN kurulumu yeterlidir. İnternet bağlantısı (Tailscale Sunucu Erişimi) olan heryerden, CGNAT ve dinamik IP değişimlerinden etkilenmeden sisteme erişebilirler.
 
-[https://tailscale.com/] adresinde hesap açıp ağ oluşturabilir ve yönetebilirsiniz.
+[tailscale.com](https://tailscale.com) adresinde hesap açıp ağ oluşturabilir ve yönetebilirsiniz.
 
 ```bash
 # Linux (AlmaLinux / Fedora / Ubuntu) için Tailscale kurulumu
-curl -fsSL https://tailscale.com | sh
+curl -fsSL https://tailscale.com/install.sh | sh
 
 # Tailscale servisini başlat ve ağa bağlanVPN 
 sudo tailscale up

@@ -1,16 +1,12 @@
 ---
-title: Software Development
-description: vitepress
-outline:
-  - 2
-  - 3
-sidebarTitle: Yazılım
-index: 10
+title: "SaaS Geliştirme Rehberi"
+description: SaaS Geliştirme - Teknik dokümantasyon ve uygulama rehberi.
+outline: [2, 3]
+sidebarTitle: "Yazılım"
+index: 40
 isContent: false
-collapsed: false
-status: published
-tags:
-  - rehber
-  - dev
+hidden: false
+collapsed: true
+status: "published"
+tags: ["PaaS", "SaaS"]
 ---
-

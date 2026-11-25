@@ -1,14 +1,15 @@
 ---
-title: "Certbot Wildcard SSL ve Nginx Ters Proxy Yapılandırması"
-description: "pr2cloud canlı sunucu (prod) için Cloudflare DNS-01 Wildcard TLS sertifikası üretimi, otomatik yenileme kancası ve Nginx ters vekil yapılandırması."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "Wildcard SSL & Nginx Proxy"
-index: 304
+sidebarTitle: "Certbot"
+index: 40
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "prod", "certbot", "wildcard-ssl", "tls", "nginx", "reverse-proxy"]
+tags: ["Paas","Saas"]
 ---
+
 
 # Certbot Wildcard SSL ve Nginx Ters Proxy Yapılandırması
 

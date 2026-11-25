@@ -1,8 +1,8 @@
 import { defineConfig } from "vitepress";
 import { generateDynamicSidebar } from "./sidebar";
 import fs from "node:fs";
+import { type HeadConfig } from "vitepress";
 
-// config.ts en üstüne bir Set ekleyin:
 const hiddenUrls = new Set<string>();
 const siteURL = "https://pr2cloud.duckdns.org/docs/";
 
@@ -108,7 +108,8 @@ export default defineConfig({
     const relativeCleanPath = pageData.relativePath
       .replace(/index\.md$/, "")
       .replace(/\.md$/, "");
-    const canonicalUrl = siteURL;
+
+    const canonicalUrl = `${siteURL}${relativeCleanPath}`;
 
     const pageTitle =
       pageData.frontmatter.title || pageData.title || "πr² Cloud";
@@ -129,11 +130,25 @@ export default defineConfig({
       ["meta", { name: "twitter:description", content: pageDesc }],
     );
 
-    if (Array.isArray(pageData.frontmatter.keywords)) {
-      pageData.frontmatter.head.push([
+    // Global keywords meta etiketini ezerek sayfa bazlı tags değerlerini atar
+    // 131-145. satırlar düzeltmesi (Tip güvenli tags -> keywords dönüşümü)
+    if (Array.isArray(pageData.frontmatter.tags)) {
+      const existingKeywordsIndex = pageData.frontmatter.head.findIndex(
+        (item: HeadConfig) =>
+          item[0] === "meta" &&
+          typeof item[1] === "object" &&
+          item[1]?.name === "keywords",
+      );
+      const keywordsMeta: [string, Record<string, string>] = [
         "meta",
-        { name: "keywords", content: pageData.frontmatter.keywords.join(", ") },
-      ]);
+        { name: "keywords", content: pageData.frontmatter.tags.join(", ") },
+      ];
+
+      if (existingKeywordsIndex !== -1) {
+        pageData.frontmatter.head[existingKeywordsIndex] = keywordsMeta;
+      } else {
+        pageData.frontmatter.head.push(keywordsMeta);
+      }
     }
 
     if (pageData.frontmatter.hidden === true) {
@@ -147,11 +162,11 @@ export default defineConfig({
 
   themeConfig: {
     logo: {
-      light: "/logo.svg",
-      dark: "/logod.svg",
+      light: "/logo-light.svg",
+      dark: "/logo-dark.svg",
       alt: "Proje Logosu",
     },
-    siteTitle: "SaaS-VPS Rehberi",
+    siteTitle: "πr² Cloud",
 
     socialLinks: [
       { icon: "github", link: "https://github.com/hibrahimyucel/saasguide" },
@@ -190,12 +205,12 @@ export default defineConfig({
     },
 
     nav: [
-      { text: "Sözlük", link: "/dict/", activeMatch: "/dict/" },
       {
         text: "Rehber",
-        link: "/rehber/master-architecture-guide",
+        link: "/rehber/",
         activeMatch: "/rehber/",
       },
+      { text: "Sözlük", link: "/dict/", activeMatch: "/dict/" },
     ],
 
     sidebar: {

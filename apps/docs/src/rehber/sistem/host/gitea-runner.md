@@ -1,14 +1,15 @@
 ---
-title: "Gitea, OCI Container Registry & Act Runner"
-description: "pr2cloud altyapısı için self-hosted Git sunucusu, dahili OCI Container Registry ve Gitea Actions CI/CD runner kurulum ve yapılandırma rehberi."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "Gitea, Registry & CI/CD"
-index: 243
+sidebarTitle: "Gitea Runner - İş Akışı"
+index: 80
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "gitea", "oci-registry", "act-runner", "ci-cd", "devops", "docker", "dex", "sso"]
+tags: ["Paas","Saas"]
 ---
+
 
 # Gitea, OCI Container Registry & Act Runner
 

@@ -1,14 +1,15 @@
 ---
-title: "Sistem Özeti, Ortam Değişkenleri ve Kimlik-Şifre Rehberi"
-description: "pr2cloud canlı sunucu (prod) için tüm servislerin mimari özeti, .env ortam değişkenleri matrisi, sistem/uygulama şifre konumları ve yedekleme-taşıma bağımsızlık rehberi."
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
 outline: [2, 3]
-sidebarTitle: "Ortam Değişkenleri & Şifreler"
-index: 306
+sidebarTitle: "VPS Özet"
+index: 90
 isContent: true
 hidden: false
 status: "published"
-tags: ["pr2cloud", "prod", "env", "credentials", "secrets", "architecture-summary", "disaster-recovery"]
+tags: ["Paas","Saas"]
 ---
+
 
 # Sistem Özeti, Ortam Değişkenleri ve Kimlik-Şifre Rehberi
 
@@ -23,12 +24,12 @@ Canlı üretim altyapısı; tek bir **AlmaLinux 9** VPS üzerinde, dış saldır
 | Katman / Servis | Konteyner Adı | İç Port / Dış Port | Ağ Konumu | Erişim Politikası ve Görevi |
 | :--- | :--- | :--- | :--- | :--- |
 | **Ters Vekil (Edge)** | `pr2_nginx` | `80, 443` (Host) | `pr2_edge_net` | Wildcard TLS sonlandırma ve alt alan adı yönlendirmesi |
-| **Merkezi SSO (OIDC)** | `pr2_dex` | `:5556` (İç) | `pr2_edge_net` | `https://auth.<DOMAIN>` — SQLite tabanlı OIDC kimlik sağlayıcısı |
-| **İlişkisel Veritabanı** | `pr2_mariadb` | `:3306` (İç) | `pr2_internal_net` | Dış dünyaya tamamen kapalı (`128M` InnoDB buffer) ana veritabanı |
-| **DB Yönetim Paneli** | `pr2_phpmyadmin` | `:80` (İç) | `edge` + `internal` | `https://db.<DOMAIN>` — Yalnızca Tailscale VPN (`100.64.0.0/10`) |
+| **Merkezi SSO (OIDC)** | `pr2_dex` | `:5556`  | `pr2_edge_net` | `https://auth.<DOMAIN>` — SQLite tabanlı OIDC kimlik sağlayıcısı |
+| **İlişkisel Veritabanı** | `pr2_mariadb` | `:3306`  | `pr2_internal_net` | Dış dünyaya tamamen kapalı (`128M` InnoDB buffer) ana veritabanı |
+| **DB Yönetim Paneli** | `pr2_phpmyadmin` | `:80`  | `edge` + `internal` | `https://db.<DOMAIN>` — Yalnızca Tailscale VPN (`100.64.0.0/10`) |
 | **Nesne Depolama (S3)** | `pr2_minio` | `:9000` / `:9001` | `edge` + `internal` | `s3.<DOMAIN>` (API) & `s3-console.<DOMAIN>` (Yalnızca Tailscale VPN) |
 | **Kurumsal E-Posta** | `pr2_stalwart` | `25, 465, 587, 993` | `edge` + `internal` | SMTP/IMAPS sunucusu; `:8080` Admin paneli yalnızca Tailscale VPN |
-| **Webmail İstemcisi** | `pr2_snappymail` | `:8888` (İç) | `edge` + `internal` | `https://webmail.<DOMAIN>` — İç ağdan `pr2_stalwart` ile haberleşir |
+| **Webmail İstemcisi** | `pr2_snappymail` | `:8888`  | `edge` + `internal` | `https://webmail.<DOMAIN>` — İç ağdan `pr2_stalwart` ile haberleşir |
 
 ---
 
@@ -63,18 +64,34 @@ AlmaLinux 9 işletim sistemi seviyesinde (`~/.bashrc` veya `/etc/environment`) h
 
 Sistemdeki tüm kullanıcı adları, ilk kurulum parolaları ve parola okuma/sıfırlama yöntemleri aşağıdaki tabloda özetlenmiştir:
 
-| Sistem / Servis | Giriş Adresi / Yöntemi | Kullanıcı Adı | Şifre / Anahtar Nerede Tutulur? | Okuma veya Değiştirme Yöntemi |
-| :--- | :--- | :--- | :--- | :--- |
-| **VPS Sunucu (SSH)** | `ssh -p <SSH_PORT> pr2admin@<TAILSCALE_IP>` | `pr2admin` | Yerel bilgisayarda `~/.ssh/id_ed25519` (Parola kapalı) | `sudo` işlemleri için `pr2admin` sistem parolası kullanılır (`passwd pr2admin` ile değişir). Acil VNC kurtarma için `root` parolası parola yöneticisinde saklanmalıdır. |
-| **MariaDB & phpMyAdmin** | `https://db.<DOMAIN>` *(Tailscale VPN)* | `root` veya `pr2_app` | `/opt/pr2cloud/prod/.env` (`MYSQL_ROOT_PASSWORD` / `MYSQL_PASSWORD`) | `grep MYSQL /opt/pr2cloud/prod/.env` komutuyla görüntülenir. |
-| **MinIO / SILO (S3)** | `https://s3-console.<DOMAIN>` *(Tailscale VPN)* | `pr2silo_admin` | `/opt/pr2cloud/prod/.env` (`MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD`) | `grep MINIO /opt/pr2cloud/prod/.env` komutuyla görüntülenir. |
-| **Dex OIDC (SSO)** | `https://auth.<DOMAIN>` | `admin@<DOMAIN>` | `/opt/pr2cloud/prod/dex/config.yaml` (`staticPasswords` bcrypt hash) | Yeni bcrypt hash üretmek için: `docker run --rm ghcr.io/dexidp/dex:latest dex hash` (veya `htpasswd -bnBC 10 "" YENI_SIFRE \| tr -d ':\n'`) çıktısı `config.yaml` içine yazılır. |
-| **Stalwart Mail (Admin)** | `https://mail.<DOMAIN>/admin` *(Tailscale VPN)* | `admin` | İlk açılışta konteyner loguna yazılır; kalıcı hali `data/stalwart` içindedir | İlk parolayı okumak için: `docker logs pr2_stalwart 2>&1 \| grep -i "password"` (Giriş sonrası panelden değiştirilmelidir). |
-| **E-Posta Hesapları** | `https://webmail.<DOMAIN>` | `admin@<DOMAIN>` vb. | Stalwart iç veritabanı (`data/stalwart`) | Stalwart Admin panelinde **Directory → Accounts** altından oluşturulur ve şifreleri güncellenir. |
-| **SnappyMail (Admin)** | `https://webmail.<DOMAIN>/?admin` | `admin` | `/opt/pr2cloud/data/snappymail/_data_/_default_/admin_password.txt` | Okumak için: `cat /opt/pr2cloud/data/snappymail/_data_/_default_/admin_password.txt` (Giriş sonrası panelden değiştirilebilir). |
-| **Cloudflare API Token** | Certbot Otomatik Yenileme | Zone DNS Edit Token | `/etc/letsencrypt/cloudflare.ini` | Sadece sertifika yenileme için host işletim sisteminde `600` izniyle saklanır. |
+> Tüm dosya yolları `/opt/pr2cloud/` kök dizinine göredir.
 
----
+| Servis / Katman | Saklama Konumu | Anahtar / Değişken |
+| :--- | :--- | :--- |
+| **SSH Erişimi** | `~/.ssh/id_ed25519` | `pr2admin` (Parola kapalı) |
+| **MariaDB** | `prod/.env` | `MYSQL_ROOT_PASSWORD`, `MYSQL_PASSWORD` |
+| **MinIO (SILO)** | `prod/.env` | `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD` |
+| **Dex SSO** | `prod/dex/config.yaml` | `staticPasswords` (`bcrypt` hash) |
+| **Stalwart İlk Giriş** | Konteyner Logu (`data/stalwart`) | İlk `admin` parolası |
+| **Stalwart Kullanıcılar** | `data/stalwart` (Veritabanı) | Admin Paneli (`Directory > Accounts`) |
+| **SnappyMail Admin** | `data/snappymail/_data_/_default_/ admin_password.txt` | Webmail yönetici parolası |
+| **Cloudflare DNS-01** | `/etc/letsencrypt/cloudflare.ini` | `dns_cloudflare_api_token` |
+
+::: details Parola Okuma ve Hash Üretme Komutları
+* **Dex yeni bcrypt hash üretimi:**
+  ```bash
+  docker run --rm ghcr.io/dexidp/dex:latest dex hash <<< "YENI_SIFRE"
+  ```
+* **Stalwart ilk admin parolasını okuma:**
+  ```bash
+  docker logs pr2_stalwart 2>&1 | grep -i "password"
+  ```
+* **SnappyMail admin parolasını okuma:**
+  ```bash
+  cat /opt/pr2cloud/data/snappymail/_data_/_default_/admin_password.txt
+  ```
+:::
+
 
 ## 4. Hızlı Güvenlik Kontrol Listesi (Parola ve Erişim Hijyeni)
 

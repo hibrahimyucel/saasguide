@@ -1,13 +1,13 @@
 ---
-title: "phpMyAdmin Kurulumu"
-description: "pr2cloud canlı ortamında MariaDB veritabanlarını yönetmek için phpMyAdmin arayüzünün Tailscale VPN ve Nginx arkasında kurulum rehberi."
-outline:
-sidebarTitle: "phpMyAdmin Kurulumu"
-index: 19
+title: "Host (Geliştirici Makinesi) Kurulumu"
+description: "SaaS Rehberi"
+outline: [2, 3]
+sidebarTitle: "phpmyadmin Veritabanı Arayüzü"
+index: 100
 isContent: true
 hidden: false
 status: "published"
-tags: ["database", "phpmyadmin", "mariadb", "nginx", "tailscale", "docker-compose"]
+tags: ["Paas","Saas"]
 ---
 
 # phpMyAdmin Kurulum ve Yapılandırma Rehberi

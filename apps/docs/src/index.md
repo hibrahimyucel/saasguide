@@ -1,16 +1,14 @@
 ---
 title: πr² Cloud
 description: πr² Cloud PaaS Environment & Software Development Guide - PaaS Ortamı ve Yazılım Geliştirme Rehberi
-outline:
-  - 2
-  - 3
+outline: [2, 3]
+sidebarTitle: "πr² Cloud"
+index: 1
 isContent: false
-status: published
-tags:
-  - pr2cloud
-  - paas
-  - architecture
-  - devops
+hidden: false
+status: "published"
+tags: [ai-reference, pr2cloud, almaLinux, monorepo, self-hosted-paas, docker, nginx, security, coding-standards, clean-code, layered-architecture, solid, naming-conventions, comments]
+
 
 layout: home
 
@@ -19,7 +17,8 @@ hero:
   text: "PaaS Environment & SaaS Development Guide"
   tagline: "PaaS Ortamı ve Yazılım Geliştirme Rehberi"
   image:
-    src: /logo.svg
+    light: /logo-dark.svg
+    dark: /logo-dark.svg
     alt: pr2cloud Logosu
   actions:
     - theme: brand
