@@ -59,7 +59,7 @@ export default defineConfig({
           "vitepress, dökümantasyon, markdown, seo, vue, nodejs, docker, monorepo, nestjs, turborepo, typescript",
       },
     ],
-    ["link", { rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    ["link", { rel: "icon", type: "image/x-icon", href: "docs/favicon.ico" }],
     [
       "link",
       {
@@ -77,7 +77,7 @@ export default defineConfig({
         href: "/apple-touch-icon.png",
       },
     ],
-    ["link", { rel: "manifest", href: "/site.webmanifest" }],
+    ["link", { rel: "manifest", href: "/docs/site.webmanifest" }],
     ["meta", { name: "theme-color", content: "#0f172a" }],
   ],
 
@@ -211,12 +211,14 @@ export default defineConfig({
         activeMatch: "/rehber/",
       },
       { text: "Sözlük", link: "/dict/", activeMatch: "/dict/" },
+      { text: "VPS", link: "/a/", activeMatch: "/a/" },
     ],
 
     sidebar: {
       "/": generateDynamicSidebar("src/", "/"),
       "/rehber/": generateDynamicSidebar("src/rehber", "/rehber/"),
       "/dict/": generateDynamicSidebar("src/dict", "/dict/"),
+      "/a/": generateDynamicSidebar("src/a", "/a/"),
     },
   },
 });

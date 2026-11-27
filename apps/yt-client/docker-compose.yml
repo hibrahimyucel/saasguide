@@ -1,8 +1,8 @@
 services:
   youtube_frontend:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: apps/yt-client/Dockerfile
     container_name: youtube_player_web
     # Nginx proxy katmanımız istekleri bu container üzerinden karşılayacak
     networks:

@@ -1,20 +1,27 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+import { useId } from "vue";
+import { STORAGE_KEY } from "./dynamic-snippet-defaults";
+
+// --- 🚀 1. CONSTANTS & REFS ---
+const snippetUid = useId();
 
 interface Props {
-  /** İsteğe bağlı: Input alanları için varsayılan değerler */
   defaults?: Record<string, string>;
-  /** İsteğe bağlı: Üst panel başlığı */
   title?: string;
+  /** İsteğe bağlı: Panel varsayılan olarak açık gelsin mi? (Varsayılan: false) */
+  defaultOpen?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   defaults: () => ({}),
   title: "Yapılandırma Parametreleri",
+  defaultOpen: false,
 });
 
+const isOpen = ref(props.defaultOpen);
+
 // --- 🚀 1. CONSTANTS & REFS ---
-const STORAGE_KEY = "pr2cloud_snippet_vars";
 const SYNC_EVENT = "pr2-snippet-sync";
 const TOKEN_REGEX = /<-([A-Z0-9_]+)->/g;
 
@@ -204,12 +211,28 @@ onUnmounted(() => {
 
 <template>
   <div class="pr2-snippet-box">
-    <!-- Üst Panel: Dinamik Input Alanları -->
+    <!-- Üst Panel: Açılır-Kapanır İnce Başlık Çubuğu -->
     <div v-if="placeholders.length > 0" class="pr2-snippet-controls">
-      <div class="pr2-snippet-header">
-        <span class="pr2-snippet-title">{{ title }}</span>
-        <div class="pr2-header-actions">
+      <div
+        class="pr2-snippet-header"
+        role="button"
+        tabindex="0"
+        :aria-expanded="isOpen"
+        @click="isOpen = !isOpen"
+        @keydown.enter.prevent="isOpen = !isOpen"
+        @keydown.space.prevent="isOpen = !isOpen"
+      >
+        <div class="pr2-header-left">
+          <span class="pr2-chevron" :class="{ 'is-open': isOpen }">▸</span>
+          <span class="pr2-snippet-title">{{ title }}</span>
+          <span class="pr2-param-count"
+            >{{ placeholders.length }} parametre</span
+          >
+        </div>
+
+        <div class="pr2-header-actions" @click.stop>
           <button
+            v-if="isOpen"
             type="button"
             class="pr2-reset-btn"
             title="Kaydedilen tüm parametreleri sıfırla"
@@ -217,17 +240,19 @@ onUnmounted(() => {
           >
             Sıfırla
           </button>
-          <span class="pr2-snippet-badge">Otomatik Kayıtlı</span>
+          <span class="pr2-snippet-badge">
+            {{ isOpen ? "Gizle" : "Düzenle" }}
+          </span>
         </div>
       </div>
 
-      <div class="pr2-input-grid">
+      <div v-show="isOpen" class="pr2-input-grid">
         <div v-for="key in placeholders" :key="key" class="pr2-input-row">
-          <label :for="`input-${key}`" class="pr2-label"
+          <label :for="`${snippetUid}-${key}`" class="pr2-label"
             >&lt;{{ key }}&gt;</label
           >
           <input
-            :id="`input-${key}`"
+            :id="`${snippetUid}-${key}`"
             :value="values[key]"
             type="text"
             :placeholder="`${key} değerini girin...`"
@@ -252,18 +277,6 @@ onUnmounted(() => {
   border-radius: 10px;
   background-color: var(--vp-c-bg-soft);
   overflow: hidden;
-}
-
-.pr2-snippet-controls {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--vp-c-divider);
-}
-
-.pr2-snippet-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
 }
 
 .pr2-snippet-title {
@@ -301,12 +314,6 @@ onUnmounted(() => {
   background-color: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
   font-weight: 500;
-}
-
-.pr2-input-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 }
 
 .pr2-input-row {
@@ -350,5 +357,50 @@ onUnmounted(() => {
     grid-template-columns: 1fr;
     gap: 0.25rem;
   }
+}
+
+.pr2-snippet-controls {
+  padding: 0.45rem 0.9rem;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.pr2-snippet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  min-height: 28px;
+}
+
+.pr2-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.pr2-chevron {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
+  transition: transform 0.18s ease;
+}
+
+.pr2-chevron.is-open {
+  transform: rotate(90deg);
+}
+
+.pr2-param-count {
+  font-size: 0.72rem;
+  color: var(--vp-c-text-3);
+}
+
+.pr2-input-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px dashed var(--vp-c-divider);
 }
 </style>

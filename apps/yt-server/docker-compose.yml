@@ -1,6 +1,9 @@
 services:
   backend_app:
-    # ... backend tanımları
+    build:
+      context: ../..
+      dockerfile: apps/yt-server/Dockerfile
+    container_name: youtube_backend
     volumes:
       # İndirilen videoların backend konteyneri silinse bile diskte kalması için volume bağı
       - video_storage:/usr/src/app/public/videos:z
@@ -11,3 +14,6 @@ volumes:
   video_storage:
     driver: local # AlmaLinux üzerinde yerel depolama birimi
 
+networks:
+  dev_network:
+    external: true

@@ -1,4 +1,6 @@
-// <reference types="vite/client" />
+declare module "*.css" {
+  export const styles: Record<string, string>;
+}
 
 declare module "*.css" {
   const content: Record<string, string>;
