@@ -210,7 +210,7 @@ tags:
     <nav class="links-grid" id="service-links"></nav>
   </main>
 
-  <script>
+    <script>
     (function () {
       const host = window.location.hostname;
       const protocol = window.location.protocol.replace(":", "").toUpperCase();
@@ -218,8 +218,10 @@ tags:
 
       // Alan adını parçalayarak subdomain ve kök domaini bul
       const parts = host.split(".");
-      const isDuckDns = host.endsWith(".duckdns.org");
-      const rootPartsCount = isDuckDns ? 3 : 2;
+      const multiPartTlds = [".duckdns.org", ".com.tr", ".org.tr", ".net.tr", ".gov.tr", ".edu.tr", ".co.uk"];
+      const isMultiPart = multiPartTlds.some((ext) => host.endsWith(ext));
+      const rootPartsCount = isMultiPart ? 3 : 2;
+
       const subdomain = parts.length > rootPartsCount
         ? parts.slice(0, parts.length - rootPartsCount).join(".")
         : "(kök alan adı)";
@@ -257,6 +259,7 @@ tags:
       });
     })();
   </script>
+
 </body>
 </html>
 ```

@@ -20,8 +20,14 @@ Kaynak kodlar (pr2source/) ile çalışma zamanı kalıcı verileri (pr2data/) b
 <DynamicSnippet title="Klasörleri Oluştur" default-open>
 
 ```bash
-mkdir -p <-DATA_DIR->/{certs,wwwroot,dex,gitea,silo,mariadb,stalwart,snappymail}
-mkdir -p <-SOURCE_DIR->
+sudo mkdir -p <-SOURCE_DIR->
+sudo mkdir -p <-DATA_DIR->/{certs,wwwroot,dex,gitea,silo,mariadb,stalwart,snappymail}
+# daha sonra sudo kullanmamak için dizin sahipliğini alıyoruz.
+sudo chown -R $USER:$USER /opt/pr2source /opt/pr2data
+
+ln -sfn <-SOURCE_DIR-> ~/src
+ln -sfn <-DATA_DIR-> ~/data
+
 ```
 
 </DynamicSnippet>
@@ -56,10 +62,14 @@ mkdir -p apps packages infra
 
 ### 1. `.gitignore` - `.dockerignore`
 
+::: warning Git/Docker takibinde olmayacak dosyaları belirtin.
 Monorepo yapısında derleme çıktıları, önbellek dizinleri ve yerel çalışma zamanı dosyalarının Git geçmişine girmesini ve gizli ortam değişkenlerinin kopyalanmasını engellemek için kök dizinde `.gitignore` dosyası zorunludur.
+:::
 
+> nano -> ctrl+shit+V ctrl+O .gitignore crtl+X 
  - [.gitignore](../ek/gitignore.md) şablonunu `<-SOURCE_DIR->/.gitignore` konumuna ekleyin
 
+> nano -> ctrl+shit+V ctrl+O .dockerignore crtl+X
  - [.dockerignore](../ek/dockerignore.md) şablonunu `<-SOURCE_DIR->/.dockerignore` konumuna ekleyin
 
 
@@ -163,6 +173,18 @@ EOF
 
 ## Bağımlılıkların Yüklenmesi ve İlk Commit
 
+
+* Git küresel kullanıcı kimliğini tanımlayın, daha sonra aynı komutla değiştirebilirsiniz *(ilk commit işlemi için zorunludur)*:
+<DynamicSnippet title="Git Kullanıcı Hesabı" :defaults='{ "USER_NAME":"user","EMAIL":"user@pr2cloud" }'' >
+
+```bash
+git config --global user.name "<-USER_NAME->"
+git config --global user.email "<-EMAIL->"
+```
+
+</DynamicSnippet>
+
+
 Yapılandırma dosyaları oluşturulduktan sonra bağımlılıklar yüklenir ve temel monorepo iskeleti Git deposuna kaydedilir.
 
 ```bash
@@ -175,6 +197,10 @@ pnpm turbo run build --dry-run
 # İlk monorepo iskeletini Git'e kaydet
 git add .
 git commit -m "chore: initialize monorepo structure with pnpm and turborepo"
+
+# Repo içinde takip edilen dosya listesi
+git ls-tree -r --name-only HEAD
+
 ```
 
 

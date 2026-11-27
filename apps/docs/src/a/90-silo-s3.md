@@ -53,31 +53,24 @@ tags: ["paas", "saas", "s3", "object-storage", "pgsty-silo", "silo", "nginx"]
 
 S3 nesnelerinin kalıcı olarak saklanacağı dizini hazırlayın ve merkezi `<-SOURCE_DIR->/infra/.env` dosyanıza SILO yönetici kimlik bilgilerini ekleyin:
 
-<DynamicSnippet title="Dizin Oluştur" >
-
-```bash
-# 1. Kalıcı S3 veri dizinini oluştur
-mkdir -p <-DATA_DIR->/silo
-
-# 2. Güçlü bir kök parola üret
-openssl rand -hex 24
-```
-
-</DynamicSnippet>
-
 <DynamicSnippet title="SILO Ortam ve Dizin Ayarları"  default-open>
 
 ```bash
-# 3. Merkezi infra/.env dosyasına SILO değişkenlerini ekle
-cat << 'EOF' >> <-SOURCE_DIR->/infra/.env
+mkdir -p <-DATA_DIR->/silo
+
+ENV_FILE="<-SOURCE_DIR->/infra/.env"
+touch "$ENV_FILE"
+
+if ! grep -q "^MINIO_ROOT_PASSWORD=" "$ENV_FILE"; then
+  cat << EOF >> "$ENV_FILE"
 
 # --- PGSTY SILO (S3 OBJECT STORAGE) ---
 MINIO_ROOT_USER=<-SILO_ROOT_USER->
-MINIO_ROOT_PASSWORD=<-SILO_ROOT_PASSWORD->
+MINIO_ROOT_PASSWORD=$(openssl rand -hex 24)
 MINIO_SERVER_URL=https://s3.<-DOMAIN->
 MINIO_BROWSER_REDIRECT_URL=https://s3-console.<-DOMAIN->
-
 EOF
+fi
 ```
 
 </DynamicSnippet>

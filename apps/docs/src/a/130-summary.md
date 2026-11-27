@@ -42,7 +42,6 @@ Altyapı; tek bir **AlmaLinux 9** sunucusu üzerinde **Çift Ağ (Dual-NIC)** ve
 | Değişken Adı | Kullanan Servis(ler) | Açıklama |
 | :--- | :--- | :--- |
 | **`DOMAIN`** | Gateway, Dex, Gitea, SILO, Mail | Canlı özel alan adı (ör. `alanadi.com`) |
-| **`DUCKDNS_DOMAIN`** | Gateway (Opsiyonel) | Test / kapalı VPN ağı için DuckDNS alan adı |
 | **`DATA_DIR`** | Tüm Compose Dosyaları, Yedekleme | Kalıcı veri kök dizini yolu (ör. `/opt/pr2data`) |
 | **`CERT_ROOT`** | Gateway, TLS Yenileme | Sertifika kök dizini (`${DATA_DIR}/certs`) |
 | **`DEX_GOOGLE_CLIENT_ID`** | `pr2-dex` | Google Cloud OAuth 2.0 istemci kimliği |
@@ -98,3 +97,77 @@ Tüm dosya yolları `<-SOURCE_DIR->` ve `<-DATA_DIR->` kök dizinlerine göredir
 1. **Dosya İzinleri:** `<-SOURCE_DIR->/infra/.env`, `<-DATA_DIR->/certs/secrets/*.ini` ve `<-DATA_DIR->/certs/archive/*/privkey*.pem` dosyalarının yetkisiz okumalara kapalı (`600` veya `640`) olduğunu doğrulayın.
 2. **Git Güvenliği:** `<-SOURCE_DIR->/infra/.env` dosyasının `.gitignore` içinde yer aldığından ve uzak Git deposuna asla gerçek parolaların gönderilmediğinden emin olun.
 3. **Çevrimdışı Parola Kasası:** `infra/.env` içeriğini, `rclone.conf` dosyasını ve Stalwart/SnappyMail yönetici parolalarını çevrimdışı bir parola yöneticisinde yedekleyin.
+
+## Kontrol
+
+<DynamicSnippet title="Sistem Kontrolü" >
+
+```bash
+bash -c '
+ENV_FILE="<-SOURCE_DIR->/infra/.env"
+[ -f "$ENV_FILE" ] && { set -a; source "$ENV_FILE"; set +a; }
+
+DOMAIN="${DOMAIN:-<-DOMAIN->}"
+DATA_DIR="${DATA_DIR:-<-DATA_DIR->}"
+OK="\e[32m[OK]\e[0m"; ERR="\e[31m[HATA]\e[0m"; WARN="\e[33m[UYARI]\e[0m"
+
+echo "=== πr² CLOUD SAĞLIK KONTROLÜ (${DOMAIN}) ==="
+
+# 1. Güvenlik, VPN ve Ağlar
+echo -e "\n--- 1. Sistem & Ağ İzolasyonu ---"
+systemctl is-active --quiet tailscaled && echo -e "$OK Tailscale VPN aktif ($(tailscale ip -4 2>/dev/null))" || echo -e "$ERR Tailscale pasif"
+systemctl is-active --quiet firewalld && echo -e "$OK firewalld aktif" || echo -e "$ERR firewalld pasif"
+[ "$(getenforce 2>/dev/null)" = "Enforcing" ] && echo -e "$OK SELinux Enforcing" || echo -e "$WARN SELinux: $(getenforce 2>/dev/null)"
+
+for net in pr2_edge_net pr2_internal_net; do
+  docker network inspect "$net" >/dev/null 2>&1 && echo -e "$OK Docker ağı mevcut: $net" || echo -e "$ERR Docker ağı eksik: $net"
+done
+
+# 2. Wildcard TLS Sertifikası
+echo -e "\n--- 2. TLS Sertifikası ---"
+CERT="${DATA_DIR}/certs/live/${DOMAIN}/fullchain.pem"
+if [ -f "$CERT" ]; then
+  EXP=$(openssl x509 -in "$CERT" -noout -enddate | cut -d= -f2)
+  echo -e "$OK Wildcard sertifika geçerli (Bitiş: $EXP)"
+else
+  echo -e "$ERR Sertifika bulunamadı: $CERT"
+fi
+
+# 3. 9 Çekirdek Konteyner Durumu
+echo -e "\n--- 3. Konteyner Durumları ---"
+CONTAINERS=(pr2-gateway pr2-dex pr2-gitea pr2-gitea-runner pr2-silo pr2-mariadb pr2-phpmyadmin pr2-stalwart pr2-snappymail)
+for c in "${CONTAINERS[@]}"; do
+  STATE=$(docker inspect -f "{{.State.Status}}" "$c" 2>/dev/null || echo "yok")
+  HEALTH=$(docker inspect -f "{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}" "$c" 2>/dev/null || echo "none")
+  if [ "$STATE" = "running" ] && { [ "$HEALTH" = "healthy" ] || [ "$HEALTH" = "none" ]; }; then
+    echo -e "$OK $c ($STATE / health:$HEALTH)"
+  else
+    echo -e "$ERR $c ($STATE / health:$HEALTH)"
+  fi
+done
+
+# 4. Uç Nokta & Güvenlik Sınırı Testleri
+echo -e "\n--- 4. HTTP/OIDC & VPN Kısıtlama Testleri ---"
+curl -skf "https://auth.${DOMAIN}/.well-known/openid-configuration" >/dev/null && echo -e "$OK Dex OIDC Discovery yanıt veriyor" || echo -e "$ERR Dex OIDC erişilemiyor"
+
+for sub in db s3-console mail; do
+  CODE=$(curl -sk -o /dev/null -w "%{http_code}" --resolve "${sub}.${DOMAIN}:443:127.0.0.1" "https://${sub}.${DOMAIN}" 2>/dev/null || echo "000")
+  [ "$CODE" = "403" ] && echo -e "$OK ${sub}.${DOMAIN} dış erişime kapalı (403 Forbidden)" || echo -e "$WARN ${sub}.${DOMAIN} beklenmeyen durum kodu: $CODE (403 beklenir)"
+done
+
+# 5. Kritik Dosya İzinleri
+echo -e "\n--- 5. Dosya İzinleri ---"
+PERM=$(stat -c "%a" "$ENV_FILE" 2>/dev/null || echo "yok")
+[ "$PERM" = "600" ] && echo -e "$OK infra/.env izni 600" || echo -e "$WARN infra/.env izni: $PERM (600 önerilir)"
+'
+```
+
+</DynamicSnippet>
+
+
+### Neleri Denetler?
+
+1. Sistem & Ağ: tailscaled, firewalld, SELinux durumunu ve pr2_edge_net / pr2_internal_net sanal ağlarının varlığını doğrular.
+2. Sertifika: <-DATA_DIR->/certs/live/<-DOMAIN->/fullchain.pem dosyasının varlığını ve son kullanma tarihini basar.
+3. Konteynerler: Tüm 9 konteynerin çalışır (running) ve varsa healthcheck durumlarının sağlıklı (healthy) olduğunu kontrol eder.
+4. Güvenlik Sınırları: auth OIDC uç noktasının yanıt verdiğini, yerel loopback (127.0.0.1) üzerinden istek atıldığında ise db, s3-console ve mail yönetim panellerinin dış IP'lere gerçekten 403 Forbidden döndürdüğünü doğrular.

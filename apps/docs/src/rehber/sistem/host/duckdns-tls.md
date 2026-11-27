@@ -86,16 +86,16 @@ docker run --rm \
   certonly \
   --non-interactive \
   --agree-tos \
-  --cert-name <-DUCKDNS_DOMAIN-> \
+  --cert-name <-DOMAIN-> \
   --authenticator dns-duckdns \
   --dns-duckdns-credentials /secrets/duckdns.ini \
   --dns-duckdns-propagation-seconds 120 \
-  -d "*.<-DUCKDNS_DOMAIN->" \
+  -d "*.<-DOMAIN->" \
 ```
 
 </DynamicSnippet>
 
-İşlem tamamlandığında sertifikalarınız `infra/certbot/conf/live/<-DUCKDNS_DOMAIN->/` dizini altında oluşturulur.
+İşlem tamamlandığında sertifikalarınız `infra/certbot/conf/live/<-DOMAIN->/` dizini altında oluşturulur.
 
 
 ## 5. Otomatik Sertifika Yenileme ve Test (Cron & İzole Betik)

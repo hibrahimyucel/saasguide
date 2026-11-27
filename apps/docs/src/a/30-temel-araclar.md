@@ -42,15 +42,32 @@ node -v
 
 ## pnpm
 
- **pnpm**, tüm paketleri bilgisayarınızda tek bir merkezi depoda (content-addressable store) saklar ve projelere sembolik bağlantılar (hard/symbolic links) aracılığıyla bağlar. Bu yaklaşım disk alanından yüksek oranda tasarruf sağlar, kurulum sürelerini hızlandırır ve paketler arası versiyon çakışmalarını önler.
+**Corepack**  
+Monorepo projelerinde ve CI/CD (Gitea Act Runner) süreçlerinde farklı geliştirici makineleri ile sunucuların birebir aynı paket yöneticisi sürümünü kullanması kritik öneme sahiptir. Doğrudan `npm install -g pnpm` ile yapılan kurulumlar sisteme sabit ve proje bağımsız bir sürüm yükleyerek zamanla `pnpm-lock.yaml` kilit dosyası uyumsuzluklarına yol açabilir. **Corepack**, kök `package.json` dosyasındaki `"packageManager"` alanını okuyarak proje için tanımlanan tam `pnpm` sürümünü otomatik olarak indirir, önbelleğe alır ve tüm ortamlarda sıfır yapılandırma ile sürüm tutarlılığını garanti eder.
+
+**pnpm**, tüm paketleri bilgisayarınızda tek bir merkezi depoda (content-addressable store) saklar ve projelere sembolik bağlantılar (hard/symbolic links) aracılığıyla bağlar. Bu yaklaşım disk alanından yüksek oranda tasarruf sağlar, kurulum sürelerini hızlandırır ve paketler arası versiyon çakışmalarını önler.
+
+* Varsa daha önce `npm` ile global kurulan pnpm sürümünü temizleyin:
+```bash
+npm uninstall -g pnpm
+```
+
+
+* Sistemde Corepack kurulu değilse yükleyin, ardından aktif edip pnpm'i hazırlayın:
 
 ```bash
-corepack enable
+# Corepack mevcut değilse global olarak kur
+command -v corepack >/dev/null 2>&1 || sudo npm install -g corepack
+
+# Corepack'i mevcut PATH ortamıyla aktif et ve pnpm'i hazırla
+sudo env "PATH=$PATH" corepack enable
 corepack prepare pnpm@latest --activate
 
 # pnpm kurulumunu doğrula
 pnpm -v
 ```
+
+
 
 ## git - GitHub CLI
 
@@ -67,6 +84,7 @@ Versiyon kontrol araçlarımız.
    sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
    sudo dnf install -y gh
 ```
+
 ## Docker
 
 Bir yazılım projesi, yalnızca uygulama kodlarından ibaret değildir; arka planda çalışan veritabanlarına, önbellek (cache) mekanizmalarına ve yerel versiyon kontrol sunucularına (**Gitea**) ihtiyaç duyar. Bu servisleri doğrudan işletim sistemine kurmak zamanla port çakışmalarına, sürüm uyumsuzluklarına ve gereksiz kaynak tüketimine yol açar. **Docker**, her bir altyapı bileşenini kendi izole **konteyneri (container)** içinde çalıştırarak ana işletim sistemini tamamen temiz tutar.

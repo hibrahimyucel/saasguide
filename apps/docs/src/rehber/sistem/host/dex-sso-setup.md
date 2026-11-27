@@ -31,7 +31,7 @@ Kullanıcıların Google hesaplarıyla oturum açabilmesi için Google Cloud üz
 
 <DynamicSnippet title="DuckDNS Alan Adınız" >
    ```text
-   https://auth.<-DUCKDNS_DOMAIN->/callback
+   https://auth.<-DOMAIN->/callback
    ```
 </DynamicSnippet>
 
@@ -65,7 +65,7 @@ openssl rand -hex 16
 
 ```env
 # --- DEX SSO & GOOGLE OAUTH ---
-DEX_ISSUER_URL=https://auth.<-DUCKDNS_DOMAIN->
+DEX_ISSUER_URL=https://auth.<-DOMAIN->
 DEX_GOOGLE_CLIENT_ID=google-client-id-buraya
 DEX_GOOGLE_CLIENT_SECRET=google-client-secret-buraya
 
@@ -83,7 +83,7 @@ DEX_MINIO_CLIENT_SECRET=guclu-rastgele-minio-secret
 <DynamicSnippet title="Dex SSO Yapılandırması" >
 
 ```yaml
-issuer: https://auth.<-DUCKDNS_DOMAIN->
+issuer: https://auth.<-DOMAIN->
 
 storage:
   type: sqlite3
@@ -100,7 +100,7 @@ connectors:
     config:
       clientID: $DEX_GOOGLE_CLIENT_ID
       clientSecret: $DEX_GOOGLE_CLIENT_SECRET
-      redirectURI: https://auth.<-DUCKDNS_DOMAIN->/callback
+      redirectURI: https://auth.<-DOMAIN->/callback
       # İsteğe bağlı: Sadece belirli bir Google Workspace alan adına izin vermek için aktif edin
       # hostedDomains:
       #   - alanadi.com
@@ -111,13 +111,13 @@ oauth2:
 staticClients:
   - id: gitea
     redirectURIs:
-      - 'https://gitea.<-DUCKDNS_DOMAIN->/user/oauth2/dex/callback'
+      - 'https://gitea.<-DOMAIN->/user/oauth2/dex/callback'
     name: 'Gitea'
     secret: DEX_GITEA_CLIENT_SECRET
 
   - id: minio
     redirectURIs:
-      - 'https://minio.<-DUCKDNS_DOMAIN->/oauth_callback'
+      - 'https://minio.<-DOMAIN->/oauth_callback'
     name: 'MinIO Console'
     secret: DEX_MINIO_CLIENT_SECRET
 ```

@@ -28,19 +28,20 @@ mkdir -p <-DATA_DIR->/mariadb
 sudo chown -R 999:999 <-DATA_DIR->/mariadb
 sudo chmod 750 <-DATA_DIR->/mariadb
 
-# 2. Root ve uygulama kullanıcısı için iki adet güçlü parola üret
-openssl rand -hex 20
-openssl rand -hex 20
+# 2. Merkezi infra/.env dosyasına MariaDB değişkenlerini mükerrer kontrolü ile ekle
+ENV_FILE="<-SOURCE_DIR->/infra/.env"
+touch "$ENV_FILE"
 
-# 3. Merkezi infra/.env dosyasına MariaDB değişkenlerini ekle
-cat << 'EOF' >> <-SOURCE_DIR->/infra/.env
+if ! grep -q "^MYSQL_ROOT_PASSWORD=" "$ENV_FILE"; then
+  cat << EOF >> "$ENV_FILE"
 
 # --- MARIADB DATABASE ---
-MYSQL_ROOT_PASSWORD=<-MYSQL_ROOT_PASSWORD->
+MYSQL_ROOT_PASSWORD=$(openssl rand -hex 20)
 MYSQL_DATABASE=pr2_core
 MYSQL_USER=pr2_app
-MYSQL_PASSWORD=<-MYSQL_APP_PASSWORD->
+MYSQL_PASSWORD=$(openssl rand -hex 20)
 EOF
+fi
 ```
 
 </DynamicSnippet>

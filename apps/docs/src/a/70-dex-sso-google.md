@@ -29,7 +29,6 @@ Kullanıcıların Google hesaplarıyla oturum açabilmesi için Google Cloud üz
 
 ```text
 https://auth.<-DOMAIN->/callback
-https://auth.<-DUCKDNS_DOMAIN->/callback
 ```
 
 </DynamicSnippet>
@@ -42,23 +41,27 @@ https://auth.<-DUCKDNS_DOMAIN->/callback
 
 Dex konteyneri varsayılan olarak root olmayan bir kullanıcıyla (`UID 1001`) çalışır. SQLite veritabanı (`dex.db`) yazma hatası almamak için veri dizininin sahipliğini tanımlayın ve merkezi `infra/.env` dosyanıza Dex değişkenlerini ekleyin:
 
-<DynamicSnippet title="Dex Ortam ve Dizin Ayarları" >
+
+<DynamicSnippet title="Dex Ortam Değişkenleri" default-open>
 
 ```bash
 # 1. SQLite veri dizini sahipliğini tanımla
 sudo chown -R 1001:1001 <-DATA_DIR->/dex
 
-# 2. Gitea OIDC istemcisi için 32 karakterlik gizli anahtar üret
-openssl rand -hex 16
+# 2. Merkezi infra/.env dosyasına Dex değişkenlerini mükerrer kontrolü ile ekle
+ENV_FILE="<-SOURCE_DIR->/infra/.env"
+touch "$ENV_FILE"
 
-# 3. Merkezi infra/.env dosyasına Dex değişkenlerini ekle
-cat << 'EOF' >> <-SOURCE_DIR->/infra/.env
+if ! grep -q "^DEX_GITEA_CLIENT_SECRET=" "$ENV_FILE"; then
+  cat << EOF >> "$ENV_FILE"
 
 # --- DEX SSO & GOOGLE OAUTH ---
 DEX_GOOGLE_CLIENT_ID=<-DEX_GOOGLE_CLIENT_ID->
 DEX_GOOGLE_CLIENT_SECRET=<-DEX_GOOGLE_CLIENT_SECRET->
-DEX_GITEA_CLIENT_SECRET=<-DEX_GITEA_CLIENT_SECRET->
+DEX_GITEA_CLIENT_SECRET=$(openssl rand -hex 16)
 EOF
+fi
+
 ```
 
 </DynamicSnippet>
@@ -67,7 +70,7 @@ EOF
 
 ## 3. Dex Yapılandırma Dosyası (`infra/dex-config.yaml`)
 
-Dex yapılandırması ortam değişkenlerini (`$DEX_GOOGLE_CLIENT_ID`, `$DEX_GITEA_CLIENT_SECRET`) doğrudan okur. Dosyayı `<-SOURCE_DIR->/infra/dex-config.yaml` konumuna kaydedin *(yerel test için DuckDNS kullanıyorsanız `issuer` ve `redirectURI` adreslerinde `${DUCKDNS_DOMAIN}`, canlı alan adı için `${DOMAIN}` kullanın)*:
+Dex yapılandırması ortam değişkenlerini (`$DEX_GOOGLE_CLIENT_ID`, `$DEX_GITEA_CLIENT_SECRET`) doğrudan okur. Dosyayı `<-SOURCE_DIR->/infra/dex-config.yaml` konumuna kaydedin *
 
 <DynamicSnippet title="Dex Yapılandırması" >
 

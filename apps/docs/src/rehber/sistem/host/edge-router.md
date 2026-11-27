@@ -82,8 +82,8 @@ docker network create --internal pr2_internal_net
 
 ```nginx
 # SSL Sertifika Yolları
-ssl_certificate     /etc/letsencrypt/live/<-DUCKDNS_DOMAIN->/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/<-DUCKDNS_DOMAIN->/privkey.pem;
+ssl_certificate     /etc/letsencrypt/live/<-DOMAIN->/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/<-DOMAIN->/privkey.pem;
 
 # Kök domain (pr2cloud.duckdns.org) ve alt alan adları (*.pr2cloud.duckdns.org) dışındaki istekleri kes
 # if ($host !~* ^(.*\.)?<-DUCKDNS_SUBDOMAIN->\.duckdns\.org$) {
@@ -179,11 +179,11 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     http2 on;
-    server_name <-DUCKDNS_DOMAIN->;
+    server_name <-DOMAIN->;
 
     include /etc/nginx/snippets/ssl-params.conf;
 
-    return 301 https://main.<-DUCKDNS_DOMAIN->$request_uri;
+    return 301 https://main.<-DOMAIN->$request_uri;
 }
 ```
 </DynamicSnippet>

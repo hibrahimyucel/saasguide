@@ -27,17 +27,19 @@ tags: ["paas", "saas", "gitea", "oci-registry", "act-runner", "ci-cd", "oidc", "
 mkdir -p <-DATA_DIR->/{gitea,gitea-runner}
 sudo chown -R 1000:1000 <-DATA_DIR->/{gitea,gitea-runner}
 
-# 2. GITEA_SECRET_KEY ve GITEA_INTERNAL_TOKEN için iki adet 64 karakterlik anahtar üret
-openssl rand -hex 32
-openssl rand -hex 32
+# 2. .env dosyası yoksa oluştur, GITEA_SECRET_KEY henüz eklenmemişse anahtarları üret ve yaz
+ENV_FILE="<-SOURCE_DIR->/infra/.env"
+touch "$ENV_FILE"
 
-# 3. Merkezi infra/.env dosyasına Gitea değişkenlerini ekle
-cat << 'EOF' >> <-SOURCE_DIR->/infra/.env
+if ! grep -q "^GITEA_SECRET_KEY=" "$ENV_FILE"; then
+  cat << EOF >> "$ENV_FILE"
 
 # --- GITEA & OCI REGISTRY ---
-GITEA_SECRET_KEY=<-GITEA_SECRET_KEY->
-GITEA_INTERNAL_TOKEN=<-GITEA_INTERNAL_TOKEN->
+GITEA_SECRET_KEY=$(openssl rand -hex 32)
+GITEA_INTERNAL_TOKEN=$(openssl rand -hex 32)
 EOF
+fi
+
 ```
 
 </DynamicSnippet>
@@ -194,25 +196,24 @@ docker exec -u 1000 pr2-gitea gitea admin auth add-oauth \
 ### A. Kayıt Belirteci Üretimi ve `.env` Güncellemesi
 Gitea sunucusundan tek seferlik kayıt belirtecini (Registration Token) üretip merkezi `<-SOURCE_DIR->/infra/.env` dosyasına ekleyin:
 
-
-```bash
-# 1. Gitea CLI üzerinden runner kayıt belirtecini üret
-docker exec -u 1000 pr2-gitea gitea actions generate-runner-token
-```
-
 <DynamicSnippet title="Act Runner Kayıt Parametreleri" >
 
 ```bash
-# 2. Üretilen belirteci merkezi infra/.env dosyasına ekle
-cat << 'EOF' >> <-SOURCE_DIR->/infra/.env
+ENV_FILE="<-SOURCE_DIR->/infra/.env"
+touch "$ENV_FILE"
+
+if ! grep -q "^GITEA_RUNNER_REGISTRATION_TOKEN=" "$ENV_FILE"; then
+  RUNNER_TOKEN=$(docker exec -u 1000 pr2-gitea gitea actions generate-runner-token)
+  cat << EOF >> "$ENV_FILE"
 
 # --- GITEA ACT RUNNER (CI/CD) ---
 GITEA_INSTANCE_URL=http://pr2-gitea:3000
-GITEA_RUNNER_REGISTRATION_TOKEN=<-GITEA_RUNNER_REGISTRATION_TOKEN->
+GITEA_RUNNER_REGISTRATION_TOKEN=${RUNNER_TOKEN}
 GITEA_RUNNER_NAME=pr2-runner
 GITEA_RUNNER_LABELS=ubuntu-latest:docker://node:22-bookworm,self-hosted:host
 GITEA_RUNNER_JOB_CONTAINER_NETWORK=pr2_internal_net
 EOF
+fi
 ```
 
 </DynamicSnippet>

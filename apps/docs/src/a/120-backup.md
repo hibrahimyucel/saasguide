@@ -73,54 +73,55 @@ set -euo pipefail
 
 SOURCE_DIR="<-SOURCE_DIR->"
 DATA_DIR="<-DATA_DIR->"
-BACKUP_DIR="\${DATA_DIR}/backups"
+BACKUP_DIR="${DATA_DIR}/backups"
 REMOTE_DEST="gdrive:pr2cloud-backups"
 RETENTION_DAYS=7
-TIMESTAMP=\$(date +"%Y%m%d_%H%M%S")
-TARGET_DIR="\({BACKUP_DIR}/\){TIMESTAMP}"
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+TARGET_DIR="${BACKUP_DIR}/${TIMESTAMP}"
 
-mkdir -p "\${TARGET_DIR}"
+mkdir -p "${TARGET_DIR}"
 
 # 1. Merkezi .env degiskenlerini yukle
 set -a
-source "\${SOURCE_DIR}/infra/.env"
+source "${SOURCE_DIR}/infra/.env"
 set +a
 
 # 2. MariaDB tutarli SQL dokumu
 docker exec pr2-mariadb mariadb-dump \
   -u root \
-  -p"\${MYSQL_ROOT_PASSWORD}" \
+  -p"${MYSQL_ROOT_PASSWORD}" \
   --single-transaction \
   --quick \
-  --all-databases > "\${TARGET_DIR}/mariadb_all.sql"
+  --all-databases > "${TARGET_DIR}/mariadb_all.sql"
 
 # 3. Dex SQLite veritabaninin kopyasi
-if [ -f "\${DATA_DIR}/dex/dex.db" ]; then
-  cp "\({DATA_DIR}/dex/dex.db" "\){TARGET_DIR}/dex.db"
+if [ -f "${DATA_DIR}/dex/dex.db" ]; then
+  cp "${DATA_DIR}/dex/dex.db" "${TARGET_DIR}/dex.db"
 fi
 
 # 4. Altyapi yapilandirmalari (.env dahil) ve kalici servis verilerinin arsivlenmesi
-tar -czf "\${TARGET_DIR}/pr2cloud_infra_and_data.tar.gz" \
-  -C "\${SOURCE_DIR}" infra \
-  -C "\${DATA_DIR}" certs wwwroot gitea silo stalwart snappymail
+tar -czf "${TARGET_DIR}/pr2cloud_infra_and_data.tar.gz" \
+  -C "${SOURCE_DIR}" infra \
+  -C "${DATA_DIR}" certs wwwroot gitea silo stalwart snappymail
 
 # 5. Yerel 7 gunden eski yedekleri temizle
-find "\${BACKUP_DIR}" -mindepth 1 -maxdepth 1 -type d -mtime +\${RETENTION_DAYS} -exec rm -rf {} +
+find "${BACKUP_DIR}" -mindepth 1 -maxdepth 1 -type d -mtime +${RETENTION_DAYS} -exec rm -rf {} +
 
 # 6. Google Drive (Off-Site) aktarimi ve bulut temizligi
 if command -v rclone >/dev/null 2>&1 && rclone listremotes | grep -q "^gdrive:"; then
-  rclone copy "\${TARGET_DIR}" "\({REMOTE_DEST}/\){TIMESTAMP}" --transfers 4 --checkers 8
-  rclone delete "\({REMOTE_DEST}" --min-age \){RETENTION_DAYS}d
-  rclone rmdirs "\${REMOTE_DEST}" --leave-root
-  echo "[\$(date -Iseconds)] Google Drive yedeklemesi tamamlandi: \({REMOTE_DEST}/\){TIMESTAMP}"
+  rclone copy "${TARGET_DIR}" "${REMOTE_DEST}/${TIMESTAMP}" --transfers 4 --checkers 8
+  rclone delete "${REMOTE_DEST}" --min-age ${RETENTION_DAYS}d
+  rclone rmdirs "${REMOTE_DEST}" --leave-root
+  echo "[$(date -Iseconds)] Google Drive yedeklemesi tamamlandi: ${REMOTE_DEST}/${TIMESTAMP}"
 else
-  echo "[\$(date -Iseconds)] UYARI: rclone 'gdrive' tanimli degil, yalnizca yerel yedek alindi."
+  echo "[$(date -Iseconds)] UYARI: rclone 'gdrive' tanimli degil, yalnizca yerel yedek alindi."
 fi
 
-echo "[\((date -Iseconds)] Yerel yedekleme basariyla tamamlandi:\){TARGET_DIR}"
+echo "[$(date -Iseconds)] Yerel yedekleme basariyla tamamlandi: ${TARGET_DIR}"
 EOF
 
 sudo chmod 750 <-SOURCE_DIR->/infra/scripts/backup-pr2cloud.sh
+
 ```
 
 </DynamicSnippet>
