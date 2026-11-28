@@ -249,6 +249,84 @@ docker restart pr2-gateway
     - **Management › Directory › Accounts** altından günlük kullanacağınız gerçek posta kutusunu oluşturun (ör. `admin@<-DOMAIN->` veya `iletisim@<-DOMAIN->`).
 
 
+## 6. DNS Çözümleyici ve Merkezi Giden E-Posta Şablonu (Sieve)
+
+Dış sunuculara (Gmail, Outlook vb.) yapılan teslimatlarda yerel DNS kaynaklı DNSSEC doğrulama hatalarını önlemek ve alan adından çıkan tüm e-postalara otomatik kurumsal altbilgi eklemek için aşağıdaki ayarlar uygulanır.
+
+### 6.1. Harici DNS Çözümleyici Ayarı
+
+Docker iç ağındaki DNS yönlendirmelerinin MX/DNSSEC sorgularını bloklamaması için Stalwart Admin Panelinde (**Network › DNS**) veya yapılandırma dosyasında harici DNS sunucuları tanımlanır:
+
+<DynamicSnippet>
+
+```toml
+[resolver]
+type = "dns"
+nameservers = ["1.1.1.1:53", "8.8.8.8:53"]
+dnssec = "disabled"
+```
+
+</DynamicSnippet>
+
+### 6.2. Merkezi Kurumsal HTML Şablonu (System Sieve Script)
+
+1. Stalwart Admin Panelinde **Sieve › System Scripts** menüsünden **`siteframe`** adında yeni bir betik oluşturun ve **Active** anahtarını açın:
+
+<DynamicSnippet>
+
+```sieve
+require ["variables", "mime", "foreverypart", "replace", "envelope"];
+
+if envelope :domain :is "from" "<-DOMAIN->" {
+    foreverypart {
+        if header :mime :type :is "Content-Disposition" "attachment" {
+            # Dosya eklerine müdahale etme
+        } elsif header :mime :contenttype "Content-Type" "text/plain" {
+            replace "\${part.text}\(\r\n\r\n--\r\nKurumsal\) İletişim | https://<-DOMAIN\(->\r\\)n";
+        } elsif header :mime :contenttype "Content-Type" "text/html" {
+            replace :mime text:
+Content-Type: text/html; charset=utf-8
+
+<div style="font-family: Arial, sans-serif; color: #1e293b; font-size: 14px; line-height: 1.6;">
+  \${part.text}
+  <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0 16px 0;" />
+  <table cellpadding="0" cellspacing="0" border="0" style="font-size: 12px; color: #64748b;">
+    <tr>
+      <td style="padding-right: 14px;">
+        <img src="https://s3.<-DOMAIN->/public-assets/logo.png" alt="Logo" width="48" style="display: block; border-radius: 6px;" />
+      </td>
+      <td>
+        <strong style="color: #0f172a; font-size: 13px;">Kurumsal İletişim</strong><br />
+        Web: <a href="https://<-DOMAIN->" style="color: #2563eb; text-decoration: none;"><-DOMAIN-></a>
+      </td>
+    </tr>
+  </table>
+</div>
+.
+;
+        }
+    }
+}
+```
+
+</DynamicSnippet>
+
+2. **MTA › Session › DATA Stage** ekranında **Run Script** bölümüne **`+ Add condition`** ile yalnızca oturum açmış giden postaları hedefleyen kuralı tanımlayın:
+   * **IF (Condition):** `!is_empty(authenticated_as)`
+   * **THEN:** `"siteframe"`
+   * **ELSE (Default value):** `""`
+
+3. Değişiklikleri uygulamak için konteyneri yeniden başlatın:
+
+<DynamicSnippet>
+
+```bash
+docker restart pr2-stalwart
+```
+
+</DynamicSnippet>
+
+
 ## 6. SnappyMail Webmail Yapılandırması
 
 1. **Admin Parolasını Görüntüleme:**

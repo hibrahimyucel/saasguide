@@ -103,63 +103,80 @@ Tüm dosya yolları `<-SOURCE_DIR->` ve `<-DATA_DIR->` kök dizinlerine göredir
 <DynamicSnippet title="Sistem Kontrolü" >
 
 ```bash
-bash -c '
-ENV_FILE="<-SOURCE_DIR->/infra/.env"
-[ -f "$ENV_FILE" ] && { set -a; source "$ENV_FILE"; set +a; }
+sudo tee /usr/local/bin/pr2-health > /dev/null << 'EOF'
+#!/usr/bin/env bash
+set -uo pipefail
 
-DOMAIN="${DOMAIN:-<-DOMAIN->}"
-DATA_DIR="${DATA_DIR:-<-DATA_DIR->}"
-OK="\e[32m[OK]\e[0m"; ERR="\e[31m[HATA]\e[0m"; WARN="\e[33m[UYARI]\e[0m"
+if [[ "${EUID}" -ne 0 ]]; then
+  echo "[HATA] Bu betik TLS sertifikalarını okuyabilmek için sudo ile çalıştırılmalıdır: sudo pr2-health"
+  exit 1
+fi
+
+ENV_FILE="<-SOURCE_DIR->/infra/.env"
+if [[ ! -f "$ENV_FILE" ]]; then
+  echo "[HATA] Yapılandırma dosyası bulunamadı: $ENV_FILE"
+  exit 1
+fi
+
+set -a
+source "$ENV_FILE"
+set +a
+DOMAIN="${1:-${DOMAIN:-}}"
 
 echo "=== πr² CLOUD SAĞLIK KONTROLÜ (${DOMAIN}) ==="
 
-# 1. Güvenlik, VPN ve Ağlar
 echo -e "\n--- 1. Sistem & Ağ İzolasyonu ---"
-systemctl is-active --quiet tailscaled && echo -e "$OK Tailscale VPN aktif ($(tailscale ip -4 2>/dev/null))" || echo -e "$ERR Tailscale pasif"
-systemctl is-active --quiet firewalld && echo -e "$OK firewalld aktif" || echo -e "$ERR firewalld pasif"
-[ "$(getenforce 2>/dev/null)" = "Enforcing" ] && echo -e "$OK SELinux Enforcing" || echo -e "$WARN SELinux: $(getenforce 2>/dev/null)"
+TS_IP=$(tailscale ip -4 2>/dev/null || true)
+[[ -n "$TS_IP" ]] && echo "[OK] Tailscale VPN aktif ($TS_IP)" || echo "[HATA] Tailscale VPN kapalı"
+systemctl is-active --quiet firewalld && echo "[OK] firewalld aktif" || echo "[HATA] firewalld pasif"
 
-for net in pr2_edge_net pr2_internal_net; do
-  docker network inspect "$net" >/dev/null 2>&1 && echo -e "$OK Docker ağı mevcut: $net" || echo -e "$ERR Docker ağı eksik: $net"
-done
-
-# 2. Wildcard TLS Sertifikası
-echo -e "\n--- 2. TLS Sertifikası ---"
-CERT="${DATA_DIR}/certs/live/${DOMAIN}/fullchain.pem"
-if [ -f "$CERT" ]; then
-  EXP=$(openssl x509 -in "$CERT" -noout -enddate | cut -d= -f2)
-  echo -e "$OK Wildcard sertifika geçerli (Bitiş: $EXP)"
+SELINUX_MODE=$(getenforce 2>/dev/null || echo "Yok")
+if [[ "$SELINUX_MODE" == "Enforcing" ]]; then
+  echo "[OK] SELinux: Enforcing"
 else
-  echo -e "$ERR Sertifika bulunamadı: $CERT"
+  echo "[UYARI] SELinux: $SELINUX_MODE (Kurulum sonrası Enforcing önerilir)"
 fi
 
-# 3. 9 Çekirdek Konteyner Durumu
+for net in pr2_edge_net pr2_internal_net; do
+  docker network inspect "$net" >/dev/null 2>&1 && echo "[OK] Docker ağı mevcut: $net" || echo "[HATA] Docker ağı eksik: $net"
+done
+
+echo -e "\n--- 2. TLS Sertifikası ---"
+CERT_PATH="<-DATA_DIR->/certs/live/${DOMAIN}/fullchain.pem"
+if [[ -f "$CERT_PATH" ]]; then
+  EXPIRY=$(openssl x509 -enddate -noout -in "$CERT_PATH" | cut -d= -f2)
+  echo "[OK] Sertifika geçerli (Bitiş: $EXPIRY)"
+else
+  echo "[HATA] Sertifika bulunamadı: $CERT_PATH"
+fi
+
 echo -e "\n--- 3. Konteyner Durumları ---"
 CONTAINERS=(pr2-gateway pr2-dex pr2-gitea pr2-gitea-runner pr2-silo pr2-mariadb pr2-phpmyadmin pr2-stalwart pr2-snappymail)
 for c in "${CONTAINERS[@]}"; do
-  STATE=$(docker inspect -f "{{.State.Status}}" "$c" 2>/dev/null || echo "yok")
-  HEALTH=$(docker inspect -f "{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}" "$c" 2>/dev/null || echo "none")
-  if [ "$STATE" = "running" ] && { [ "$HEALTH" = "healthy" ] || [ "$HEALTH" = "none" ]; }; then
-    echo -e "$OK $c ($STATE / health:$HEALTH)"
+  STATE=$(docker inspect -f '{{.State.Status}}' "$c" 2>/dev/null || echo "yok")
+  HEALTH=$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$c" 2>/dev/null || echo "none")
+  if [[ "$STATE" == "running" ]] && [[ "$HEALTH" == "healthy" || "$HEALTH" == "none" ]]; then
+    echo "[OK] $c ($STATE / health:$HEALTH)"
   else
-    echo -e "$ERR $c ($STATE / health:$HEALTH)"
+    echo "[HATA] $c ($STATE / health:$HEALTH)"
   fi
 done
 
-# 4. Uç Nokta & Güvenlik Sınırı Testleri
 echo -e "\n--- 4. HTTP/OIDC & VPN Kısıtlama Testleri ---"
-curl -skf "https://auth.${DOMAIN}/.well-known/openid-configuration" >/dev/null && echo -e "$OK Dex OIDC Discovery yanıt veriyor" || echo -e "$ERR Dex OIDC erişilemiyor"
+curl -sIf --resolve "auth.${DOMAIN}:443:127.0.0.1" "https://auth.${DOMAIN}/.well-known/openid-configuration" >/dev/null && \
+  echo "[OK] Dex OIDC Discovery yanıt veriyor" || echo "[HATA] Dex OIDC Discovery erişilemiyor"
 
 for sub in db s3-console mail; do
   CODE=$(curl -sk -o /dev/null -w "%{http_code}" --resolve "${sub}.${DOMAIN}:443:127.0.0.1" "https://${sub}.${DOMAIN}" 2>/dev/null || echo "000")
-  [ "$CODE" = "403" ] && echo -e "$OK ${sub}.${DOMAIN} dış erişime kapalı (403 Forbidden)" || echo -e "$WARN ${sub}.${DOMAIN} beklenmeyen durum kodu: $CODE (403 beklenir)"
+  [[ "$CODE" == "403" ]] && echo "[OK] ${sub}.${DOMAIN} dış erişime kapalı (403 Forbidden)" || echo "[UYARI] ${sub}.${DOMAIN} beklenmeyen durum kodu: $CODE (403 beklenir)"
 done
 
-# 5. Kritik Dosya İzinleri
 echo -e "\n--- 5. Dosya İzinleri ---"
 PERM=$(stat -c "%a" "$ENV_FILE" 2>/dev/null || echo "yok")
-[ "$PERM" = "600" ] && echo -e "$OK infra/.env izni 600" || echo -e "$WARN infra/.env izni: $PERM (600 önerilir)"
-'
+[[ "$PERM" == "600" ]] && echo "[OK] infra/.env izni 600" || echo "[UYARI] infra/.env izni: $PERM (600 önerilir)"
+EOF
+sudo chmod +x /usr/local/bin/pr2-health
+
 ```
 
 </DynamicSnippet>
