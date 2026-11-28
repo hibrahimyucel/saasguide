@@ -71,8 +71,15 @@ cat << 'EOF' > <-SOURCE_DIR->/infra/scripts/backup-pr2cloud.sh
 #!/bin/bash
 set -euo pipefail
 
-SOURCE_DIR="<-SOURCE_DIR->"
-DATA_DIR="<-DATA_DIR->"
+# Betik konumundan SOURCE_DIR kokunu otomatik coz (infra/scripts -> SOURCE_DIR)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOURCE_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+# 1. Merkezi .env degiskenlerini yukle (DATA_DIR ve MYSQL_ROOT_PASSWORD buradan gelir)
+set -a
+source "${SOURCE_DIR}/infra/.env"
+set +a
+
 BACKUP_DIR="${DATA_DIR}/backups"
 REMOTE_DEST="gdrive:pr2cloud-backups"
 RETENTION_DAYS=7
@@ -80,11 +87,6 @@ TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 TARGET_DIR="${BACKUP_DIR}/${TIMESTAMP}"
 
 mkdir -p "${TARGET_DIR}"
-
-# 1. Merkezi .env degiskenlerini yukle
-set -a
-source "${SOURCE_DIR}/infra/.env"
-set +a
 
 # 2. MariaDB tutarli SQL dokumu
 docker exec pr2-mariadb mariadb-dump \

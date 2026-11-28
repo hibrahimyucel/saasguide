@@ -117,7 +117,7 @@ services:
       - "465:465"
       - "587:587"
       - "993:993"
-      - "<-TAILSCALE_100_IP->:8080:8080"
+      - "${TAILSCALE_IP:-127.0.0.1}:8080:8080"
     volumes:
       - ${DATA_DIR}/stalwart/etc:/etc/stalwart:z
       - ${DATA_DIR}/stalwart/data:/var/lib/stalwart:z

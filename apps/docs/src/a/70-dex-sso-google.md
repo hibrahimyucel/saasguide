@@ -76,7 +76,7 @@ Dex yapılandırması ortam değişkenlerini (`$DEX_GOOGLE_CLIENT_ID`, `$DEX_GIT
 
 ```bash
 cat << 'EOF' > <-SOURCE_DIR->/infra/dex-config.yaml
-issuer: https://auth.<-DOMAIN->
+issuer: https://auth.$DOMAIN
 
 storage:
   type: sqlite3
@@ -93,7 +93,7 @@ connectors:
     config:
       clientID: $DEX_GOOGLE_CLIENT_ID
       clientSecret: $DEX_GOOGLE_CLIENT_SECRET
-      redirectURI: https://auth.<-DOMAIN->/callback
+      redirectURI: https://auth.$DOMAIN/callback
       # İsteğe bağlı: Sadece belirli bir Google Workspace alan adına izin vermek için aktif edin
       # hostedDomains:
       #   - <-DOMAIN->
@@ -104,7 +104,7 @@ oauth2:
 staticClients:
   - id: gitea
     redirectURIs:
-      - 'https://gitea.<-DOMAIN->/user/oauth2/dex/callback'
+      - 'https://gitea.$DOMAIN/user/oauth2/dex/callback'
     name: 'Gitea'
     secretEnv: DEX_GITEA_CLIENT_SECRET
 
