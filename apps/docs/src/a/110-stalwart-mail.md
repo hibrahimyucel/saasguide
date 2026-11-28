@@ -97,6 +97,19 @@ v=DKIM1; k=rsa; p=<-DKIM_RSA_PUBLIC_KEY->
 <DynamicSnippet title="Mail Compose Parametreleri" >
 
 ```bash
+
+ENV_FILE="<-SOURCE_DIR->/infra/.env"
+if ! grep -q "^TAILSCALE_IP=" "$ENV_FILE"; then
+  echo "TAILSCALE_IP=$(tailscale ip -4)" >> "$ENV_FILE"
+fi
+```
+
+</DynamicSnippet>
+
+
+<DynamicSnippet title="Mail Compose Parametreleri" >
+
+```bash
 cat << 'EOF' > <-SOURCE_DIR->/infra/compose.mail.yml
 name: pr2_mail
 services:
@@ -282,13 +295,13 @@ if envelope :domain :is "from" "<-DOMAIN->" {
         if header :mime :type :is "Content-Disposition" "attachment" {
             # Dosya eklerine müdahale etme
         } elsif header :mime :contenttype "Content-Type" "text/plain" {
-            replace "\${part.text}\(\r\n\r\n--\r\nKurumsal\) İletişim | https://<-DOMAIN\(->\r\\)n";
+            replace "${part.text}\(\r\n\r\n--\r\nKurumsal\) İletişim | https://<-DOMAIN\(->\r\\)n";
         } elsif header :mime :contenttype "Content-Type" "text/html" {
             replace :mime text:
 Content-Type: text/html; charset=utf-8
 
 <div style="font-family: Arial, sans-serif; color: #1e293b; font-size: 14px; line-height: 1.6;">
-  \${part.text}
+  ${part.text}
   <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0 16px 0;" />
   <table cellpadding="0" cellspacing="0" border="0" style="font-size: 12px; color: #64748b;">
     <tr>
@@ -327,7 +340,7 @@ docker restart pr2-stalwart
 </DynamicSnippet>
 
 
-## 6. SnappyMail Webmail Yapılandırması
+## 7. SnappyMail Webmail Yapılandırması
 
 1. **Admin Parolasını Görüntüleme:**
 
@@ -346,7 +359,7 @@ docker restart pr2-stalwart
 
 ---
 
-## 7. E-Posta Gövde ve Eklerini PGSTY SILO S3 Kovasına Taşıma
+## 8. E-Posta Gövde ve Eklerini PGSTY SILO S3 Kovasına Taşıma
 
 Sunucu diskinin e-posta ekleriyle dolmasını önlemek için Stalwart depolamasını iç ağ üzerinden (http://silo:9000) SILO'ya bağlayın:
 1. SILO Kova ve En Az Yetki (IAM) Politikası:
