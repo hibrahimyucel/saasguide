@@ -29,7 +29,7 @@ Sistemdeki tüm mikroservislere ve ön yüz (frontend) uygulamalarına gelen ist
 Sisteme ikinci bir alan adı (örneğin canlı alan adınızın yanına test amaçlı bir DuckDNS adresi veya ikinci bir proje domaini) bağlamak için:
 1. **DNS ve Wildcard TLS** adımında ikinci alan adı için (`<-DATA_DIR->/certs/live/ikincidomain.com` altına) sertifika üretin.
 2. `<-SOURCE_DIR->/infra/nginx/templates/` klasörüne `03-ikinci-domain.conf.template` adında yeni bir dosya ekleyip `server_name` ve `ssl_certificate` satırlarını bu alan adına göre tanımlayın.
-3. `docker compose -f compose.gateway.yml restart` komutuyla yeni alan adını devreye alın.
+3. `docker restart pr2-gateway` komutuyla yeni alan adını devreye alın.
 :::
 
 

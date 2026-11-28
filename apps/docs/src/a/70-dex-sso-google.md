@@ -106,7 +106,7 @@ staticClients:
     redirectURIs:
       - 'https://gitea.<-DOMAIN->/user/oauth2/dex/callback'
     name: 'Gitea'
-    secret: $DEX_GITEA_CLIENT_SECRET
+    secretEnv: DEX_GITEA_CLIENT_SECRET
 
   # Gelecek SaaS Uygulamaları İçin Örnek Şablon:
   # - id: saas-app
@@ -185,7 +185,7 @@ server {
 Nginx konteynerini yeniden başlatarak şablonun `.conf` dosyasına derlenmesini sağlayın:
 
 ```bash
-docker compose -f compose.gateway.yml restart
+docker restart pr2-gateway
 ```
 
 ---

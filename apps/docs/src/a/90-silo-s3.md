@@ -98,7 +98,6 @@ services:
       pr2_internal_net:
         aliases:
           - silo
-          - minio
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 30s
@@ -124,7 +123,7 @@ docker compose -f compose.silo.yml up -d
 
 S3 API (`s3.${DOMAIN}`) ve WebSocket destekli Web Yönetim Konsolu (`s3-console.${DOMAIN}`) yönlendirmelerini tanımlayın. Yönetim konsolu yalnızca Tailscale VPN IP aralığına (`100.64.0.0/10`) açık tutulur:
 
-```nginx
+```nginx                                            
 # 1. S3 API Uç Noktası (s3.${DOMAIN})
 server {
     listen 443 ssl;
@@ -144,7 +143,7 @@ server {
         set $upstream http://pr2-silo:9000;
         proxy_pass $upstream;
         include /etc/nginx/snippets/proxy-headers.conf;
-        proxy_set_header Host $http_host;
+
     }
 }
 
@@ -169,7 +168,6 @@ server {
         set $upstream http://pr2-silo:9001;
         proxy_pass $upstream;
         include /etc/nginx/snippets/proxy-headers.conf;
-        proxy_set_header Host $http_host;
     }
 }
 ```
@@ -177,16 +175,26 @@ server {
 Nginx konteynerini yeniden başlatarak yeni şablonu aktif edin:
 
 ```bash
-docker compose -f compose.gateway.yml restart
+docker restart pr2-gateway
 ```
 
 ::: tip Yerel Bilgisayardan VPN Yönetim Paneline Erişim (`/etc/hosts`)
 Cloudflare DNS kayıtları **DNS Only (Gri Bulut)** modunda olduğu için bilgisayarınız `s3-console.${DOMAIN}` adresini sorguladığında sunucunun genel IP'sine gider ve Nginx'ten `403 Forbidden` yanıtı alır. Tailscale Exit Node kullanmıyorsanız yerel bilgisayarınızın `/etc/hosts` dosyasına Tailscale IP yönlendirmesini ekleyin:
 
-```bash
-sudo sed -i.bak '/s3-console\./d' /etc/hosts && echo "<TAILSCALE_100_IP> s3-console.<DOMAIN> db.<DOMAIN> mail.<DOMAIN>" | sudo tee -a /etc/hosts
-```
 :::
+
+-
+
+
+<DynamicSnippet title="SILO Ortam ve Dizin Ayarları"  default-open>
+
+```bash
+sudo sed -i.bak '/s3-console\./d' /etc/hosts && echo "<-TAILSCALE_100_IP-> s3-console.<-DOMAIN-> db.<-DOMAIN-> mail.<-DOMAIN->" | sudo tee -a /etc/hosts
+
+```
+
+</DynamicSnippet>
+
 
 ---
 

@@ -192,7 +192,7 @@ server {
 Nginx konteynerini yeniden başlatın:
 
 ```bash
-docker compose -f compose.gateway.yml restart
+docker restart pr2-gateway
 ```
 
 ---

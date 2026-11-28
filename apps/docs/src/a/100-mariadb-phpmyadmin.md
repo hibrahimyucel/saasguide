@@ -158,7 +158,7 @@ server {
 Nginx konteynerini yeniden başlatarak şablonu aktif edin:
 
 ```bash
-docker compose -f compose.gateway.yml restart
+docker restart pr2-gateway
 ```
 
 ---
