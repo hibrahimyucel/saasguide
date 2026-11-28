@@ -22,7 +22,7 @@ Cloudflare panelinde **DNS › Records** bölümünden aşağıdaki iki `A` kayd
 | **`A`** | `*` (`*.<-DOMAIN->`) | `<-VPS_PUBLIC_IP->` | DNS Only (Gri Bulut) |
 
 
-<DynamicSnippet title="Cloudflare DNS Zone Oluşturucu">
+<DynamicSnippet title="Cloudflare DNS Kayıt Dosyası">
 
 ```bind
 ;; 1. Temel Alan Adı ve Alt Alan Adı Yönlendirmeleri (A Kayıtları - DNS Only)
